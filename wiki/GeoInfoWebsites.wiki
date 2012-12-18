@@ -1,0 +1,13 @@
+#summary Websites with geographical info about movies/tv series.
+
+First of all, while not containing geographic data, our main data source for information about TV/Films:
+ # http://www.freebase.com/view/film
+ # http://www.freebase.com/view/tv
+
+Now geographic websites (found by Yoav):
+ # http://www.gearthhacks.com/dlcat42/TV-show,-movie-locations.htm
+ # http://www.seeing-stars.com/Locations/TVLocations.shtml
+ # http://www.filmaps.com/
+
+In addition, Wikipedia articles like:
+ # http://en.wikipedia.org/wiki/List_of_television_shows_filmed_in_New_York_City
