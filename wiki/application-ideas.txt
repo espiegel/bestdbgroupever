@@ -1,0 +1,26 @@
+#########
+# Ideas #
+#########
+
+- Search media by location.
+- Search location by media.
+- Search by actor.
+- Search by map.
+
+- Application recommends places that you should visit.
+- Path between different locations on the map.
+- Different types of users: admins and regular users.
+- Ability to add new places by text and/or map.
+- Photo upload.
+- Admins have elevated privileges. Can edit privileges
+  and add/delete data.
+
+- Connect with Facebook.
+- Twitter(?)
+- Ads(?)
+- Flights(?)
+
+- Upvotes, Downvotes.
+- Ability to check-in into places.
+- Badges for users.
+- Comments.
