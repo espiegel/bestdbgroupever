@@ -1,0 +1,23 @@
+##############
+# SQL Tables #
+##############
+
+// Media table holds everything thats common to tv and films.
+Media Table: media_id(key), name, year, director, etc...
+TV Table: media_id(key), seasons, episodes, etc...
+Films Table: media_id(key), etc... 
+
+
+Actors Table: actor_id(key), etc...
+ActorsInMedia: actor_id(key), media_id(key), char_name, char_role, etc...
+
+Users Table: user_id(key), name, password, upvotes, downvotes, badges, is_admin
+
+Locations Table: location_id(key), country, city, street, upvotes, downvotes
+
+Comments Table: comment_id(key), location_id(key), comment, upvotes, downvotes,  is_check_in, photo
+
+Badges Table: badge_id(key), description
+
+LocationOfMedia: media_id(key), location_id(key)
+
