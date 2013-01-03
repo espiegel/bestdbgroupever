@@ -13,7 +13,7 @@ import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-
+import main.*;
 public class Login {
 
 	protected Shell shlTvTraveller;
@@ -94,16 +94,15 @@ public class Login {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				String username = txtUsername.getText();
-				String password = txtUsername.getText();
+				String password = txtPassword.getText();
 				
 				// Need to check with the database correct username and password combination
-				if( !(username.equals("admin") && password.equals("admin")) )
+				if(!(Main.login(username, password))) 
 				{
-					lblError.setText("Please login with admin/admin");
+					lblError.setText("No such user or invalid password!");
 				}
 				else
 				{
-					// Need to pass username parameter later...
 					shlTvTraveller.close();
 					shlTvTraveller.dispose();
 					
@@ -126,5 +125,11 @@ public class Login {
 		btnRegister.setBounds(220, 195, 90, 30);
 		btnRegister.setText("Register");
 
+	}
+	
+	// For setting errors 
+	public void setError(String str)
+	{
+		lblError.setText(str);
 	}
 }
