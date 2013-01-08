@@ -24,10 +24,31 @@ public class Main
 		Main.currentUser = currentUser;
 	}
 
-	private static User generateUser(String username) {
-		// TODO Auto-generated method stub
-		// TODO gets a username and returns an appropriate User object
-		return null;
+	private static User generateUser(ResultSet rs)
+	{
+		if(rs == null) // Should never actually be null because we catch the exception earlier.
+			return null;
+		
+		User user = new User();
+		
+		try
+		{
+			user.setUsername(rs.getString(2));
+			user.setPassword(rs.getString(3));
+			user.setUpvotes(rs.getInt(4));
+			user.setDownvotes(rs.getInt(5));
+			user.setBadges(rs.getInt(6));
+			user.setAdmin(rs.getBoolean(7));
+			
+			return user;
+		}
+		catch (SQLException e)
+		{
+			System.out.println("ERROR executeQuery - " + e.toString());
+			java.lang.System.exit(0); 
+			return null;
+		}
+		
 	}
 	
 	public static void main(String[] args)
@@ -35,6 +56,27 @@ public class Main
 		openConnection();
 		Login.main(null); // Call the main GUI. In this case Login is the first GUI window.
 		closeConnection();
+	}
+	
+	private static ResultSet getUserData(String username)
+	{
+		Statement stmt;
+		ResultSet rs;
+		
+		try
+		{
+			stmt	=	conn.createStatement();
+			rs		=	stmt.executeQuery("SELECT * FROM Users WHERE name = '" + username + "'");
+			
+			return rs;
+		}
+		catch (SQLException e)
+		{
+			System.out.println("ERROR executeQuery - " + e.toString());
+			java.lang.System.exit(0); 
+			return null;
+		}
+		
 	}
 	
 	/**
@@ -58,7 +100,7 @@ public class Main
 				return false;
 			
 			// Otherwise we successfully logged in.
-			currentUser = generateUser(user);
+			currentUser = generateUser(rs);
 						
 			// closing
 			rs.close();
@@ -90,14 +132,16 @@ public class Main
 		
 		try
 		{
-			stmt	=	conn.createStatement();
-			rs		=	stmt.executeQuery("SELECT * FROM Users WHERE name = '" + user + "'");
+			
+			rs = getUserData(user);
 
 			// This means there is already a user of this name
 			if(rs.next())
 				return false;
 			
+			
 			// Otherwise we successfully registered.
+			stmt = conn.createStatement();
 			stmt.executeUpdate("INSERT INTO Users (name, password, upvotes, downvotes, badges, is_admin) "+
 			                   "VALUES ('"+user+"', '"+password+"', 0, 0, 0, 0)");
 						
