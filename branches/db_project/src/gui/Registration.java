@@ -110,7 +110,7 @@ public class Registration {
 			}
 		});
 		btnNewButton.setBounds(238, 154, 100, 50);
-		btnNewButton.setText("Exit");
+		btnNewButton.setText("Back");
 		
 		lblError = new Label(shlRegistration, SWT.NONE);
 		lblError.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));

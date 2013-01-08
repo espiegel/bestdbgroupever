@@ -74,13 +74,13 @@ public class Profile {
 		Label lblPassword = new Label(shlProfile, SWT.BORDER);
 		lblPassword.setBounds(99, 82, 150, 20);
 		
-		Label lblUpvotes = new Label(shlProfile, SWT.NONE);
-		lblUpvotes.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblUpvotes.setBounds(10, 118, 83, 20);
-		lblUpvotes.setText("Upvotes:");
+		Label lblNewLabel_3 = new Label(shlProfile, SWT.NONE);
+		lblNewLabel_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
+		lblNewLabel_3.setBounds(10, 118, 83, 20);
+		lblNewLabel_3.setText("Upvotes:");
 		
-		Label lblUpvotes_1 = new Label(shlProfile, SWT.NONE);
-		lblUpvotes_1.setBounds(99, 118, 70, 20);
+		Label lblUpvotes = new Label(shlProfile, SWT.NONE);
+		lblUpvotes.setBounds(99, 118, 70, 20);
 		
 		Label lblNewLabel_4 = new Label(shlProfile, SWT.NONE);
 		lblNewLabel_4.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));

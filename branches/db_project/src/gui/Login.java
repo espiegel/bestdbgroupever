@@ -116,9 +116,6 @@ public class Login {
 		btnRegister.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				shlTvTraveller.close();
-				shlTvTraveller.dispose();
-				
 				Registration r = new Registration(); 
 				r.open();
 			}

@@ -9,6 +9,15 @@ public class User {
 	private int badges;
 	private boolean isAdmin;
 	
+	public User()
+	{
+		username = "";
+		password = "";
+		upvotes = 0;
+		downvotes = 0;
+		badges = 0;
+		isAdmin = false;
+	}
 	public String getUsername() {
 		return username;
 	}
