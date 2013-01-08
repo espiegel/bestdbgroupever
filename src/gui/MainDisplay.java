@@ -249,6 +249,13 @@ public class MainDisplay {
 		tblclmnComment.setText("Comment");
 		
 		Button btnAddComment = new Button(grpComments, SWT.NONE);
+		btnAddComment.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				WriteComment wc = new WriteComment();
+				wc.open();
+			}
+		});
 		btnAddComment.setBounds(284, 20, 141, 37);
 		btnAddComment.setText("Add Comment");
 		
