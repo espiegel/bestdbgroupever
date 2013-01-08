@@ -50,7 +50,7 @@ public class Registration {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shlRegistration = new Shell();
+		shlRegistration = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		shlRegistration.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
 		shlRegistration.setSize(407, 260);
 		shlRegistration.setText("Registration");
