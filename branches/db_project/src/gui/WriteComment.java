@@ -5,6 +5,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class WriteComment {
 
@@ -55,6 +57,13 @@ public class WriteComment {
 		btnSubmit.setText("Submit");
 		
 		Button btnBack = new Button(shlWriteAComment, SWT.NONE);
+		btnBack.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				shlWriteAComment.close();
+				shlWriteAComment.dispose();
+			}
+		});
 		btnBack.setBounds(196, 204, 140, 40);
 		btnBack.setText("Back");
 
