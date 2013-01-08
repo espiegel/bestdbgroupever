@@ -17,7 +17,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Label;
-import com.roots.swtmap.MapWidget;
+//import com.roots.swtmap.MapWidget;
 import org.eclipse.swt.custom.TableTree;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.custom.ScrolledComposite;
@@ -211,8 +211,13 @@ public class MainDisplay {
 		grpMap.setText("Map");
 		
 		//Composite compositeMap = new Composite(grpMap, SWT.NONE);
-		MapWidget map = new MapWidget(grpMap, SWT.NONE, new Point(9500,6500), 6);
-		map.setBounds(10, 24, 540, 291);
+		/*MapWidget map = new MapWidget(grpMap, SWT.NONE, new Point(9500,6500), 6);
+		map.setBounds(10, 24, 540, 291);*/
+		
+		//new google map
+		/*look at the documentation in the MapWidget class*/
+		MapWidget map =new MapWidget(grpMap, "map.txt");
+		map.init();
 		
 		Group grpComments = new Group(shell, SWT.NONE);
 		FormData fd_grpComments = new FormData();
