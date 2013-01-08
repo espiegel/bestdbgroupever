@@ -4,6 +4,8 @@ import gui.*;
 
 import java.sql.*;
 
+import objects.User;
+
 public class Main
 {
 	static Connection conn; // DB Connection
@@ -12,7 +14,21 @@ public class Main
 	final static String USER = "DbMysql02";
 	final static String PASS = "DbMysql02"; // Is there a better way of storing these two? Maybe in a file?
 
-	private static String currentUser = ""; // The current user thats logged in.
+	private static User currentUser; // The current user thats logged in.
+	
+	public static User getCurrentUser() {
+		return currentUser;
+	}
+
+	public static void setCurrentUser(User currentUser) {
+		Main.currentUser = currentUser;
+	}
+
+	private static User generateUser(String username) {
+		// TODO Auto-generated method stub
+		// TODO gets a username and returns an appropriate User object
+		return null;
+	}
 	
 	public static void main(String[] args)
 	{
@@ -42,7 +58,7 @@ public class Main
 				return false;
 			
 			// Otherwise we successfully logged in.
-			currentUser = user;
+			currentUser = generateUser(user);
 						
 			// closing
 			rs.close();
@@ -58,6 +74,8 @@ public class Main
 			return false;
 		}
 	}
+
+
 
 	/**
 	 * 
@@ -154,11 +172,4 @@ public class Main
 		System.out.println("Closed.");
 	}
 
-	public String getCurrentUser() {
-		return currentUser;
-	}
-
-	public void setCurrentUser(String currentUser) {
-		this.currentUser = currentUser;
-	}
 }

@@ -6,10 +6,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
@@ -54,13 +51,14 @@ public class Login {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shlTvTraveller = new Shell();
+		shlTvTraveller = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		shlTvTraveller.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
 		shlTvTraveller.setMinimumSize(new Point(360, 280));
 		shlTvTraveller.setSize(360, 280);
 		shlTvTraveller.setText("TV Traveller");
 		shlTvTraveller.setLayout(null);
 		
+		//SWT.CLOSE | SWT.TITLE | SWT.MIN
 		txtLoginToTv = new Label(shlTvTraveller, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL | SWT.SHADOW_IN | SWT.CENTER);
 		txtLoginToTv.setBounds(70, 10, 210, 36);
 		txtLoginToTv.setAlignment(SWT.CENTER);
@@ -118,6 +116,9 @@ public class Login {
 		btnRegister.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				shlTvTraveller.close();
+				shlTvTraveller.dispose();
+				
 				Registration r = new Registration(); 
 				r.open();
 			}

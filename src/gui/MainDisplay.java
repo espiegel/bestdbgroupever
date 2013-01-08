@@ -13,9 +13,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Composite;
-
-import com.roots.swtmap.MapBrowser;
 import com.roots.swtmap.MapWidget;
 
 public class MainDisplay {
@@ -55,7 +52,7 @@ public class MainDisplay {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell();
+		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		shell.setSize(1150, 635);
 		shell.setText("SWT Application");
 		
@@ -68,7 +65,27 @@ public class MainDisplay {
 		Menu menu_1 = new Menu(mntmAccount);
 		mntmAccount.setMenu(menu_1);
 		
+		MenuItem mntmProfile = new MenuItem(menu_1, SWT.NONE);
+		mntmProfile.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Profile profile = new Profile();
+				profile.open();
+			}
+		});
+		mntmProfile.setText("Profile");
+		
 		MenuItem mntmLogout = new MenuItem(menu_1, SWT.NONE);
+		mntmLogout.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				shell.close();
+				shell.dispose();
+				
+				Login login = new Login();
+				login.open();
+			}
+		});
 		mntmLogout.setText("Logout");
 		
 		Group grpSearch = new Group(shell, SWT.NONE);
