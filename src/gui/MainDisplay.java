@@ -41,7 +41,7 @@ import org.eclipse.swt.custom.CLabel;
 
 public class MainDisplay {
 
-	protected Shell shell;
+	protected Shell shlTvTraveler;
 	protected Display display;
 	private Text txtSearch;
 	private Table table;
@@ -65,9 +65,9 @@ public class MainDisplay {
 	public void open() {
 		display = Display.getDefault();
 		createContents();
-		shell.open();
-		shell.layout();
-		while (!shell.isDisposed()) {
+		shlTvTraveler.open();
+		shlTvTraveler.layout();
+		while (!shlTvTraveler.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -78,13 +78,14 @@ public class MainDisplay {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shell = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
-		shell.setSize(1150, 635);
-		shell.setText("SWT Application");
-		shell.setLayout(new FormLayout());
+		shlTvTraveler = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
+		shlTvTraveler.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/tv.png"));
+		shlTvTraveler.setSize(1150, 635);
+		shlTvTraveler.setText("TV Traveler");
+		shlTvTraveler.setLayout(new FormLayout());
 		
-		Menu menu = new Menu(shell, SWT.BAR);
-		shell.setMenuBar(menu);
+		Menu menu = new Menu(shlTvTraveler, SWT.BAR);
+		shlTvTraveler.setMenuBar(menu);
 		
 		MenuItem mntmAccount = new MenuItem(menu, SWT.CASCADE);
 		mntmAccount.setText("Account");
@@ -106,8 +107,8 @@ public class MainDisplay {
 		mntmLogout.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				shell.close();
-				shell.dispose();
+				shlTvTraveler.close();
+				shlTvTraveler.dispose();
 				
 				Login login = new Login();
 				login.open();
@@ -115,7 +116,7 @@ public class MainDisplay {
 		});
 		mntmLogout.setText("Logout");
 		
-		Group grpSearch = new Group(shell, SWT.NONE);
+		Group grpSearch = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpSearch = new FormData();
 		fd_grpSearch.bottom = new FormAttachment(0, 230);
 		fd_grpSearch.right = new FormAttachment(0, 570);
@@ -158,7 +159,7 @@ public class MainDisplay {
 		List list = new List(grpSearch, SWT.BORDER);
 		list.setBounds(185, 72, 365, 148);
 		
-		Group grpDetails = new Group(shell, SWT.NONE);
+		Group grpDetails = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpDetails = new FormData();
 		fd_grpDetails.bottom = new FormAttachment(0, 230);
 		fd_grpDetails.right = new FormAttachment(0, 1122);
@@ -201,7 +202,7 @@ public class MainDisplay {
 		fd_composite.top = new FormAttachment(0);
 		fd_composite.left = new FormAttachment(0);
 		
-		Group grpMap = new Group(shell, SWT.NONE);
+		Group grpMap = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpMap = new FormData();
 		fd_grpMap.bottom = new FormAttachment(0, 555);
 		fd_grpMap.right = new FormAttachment(0, 570);
@@ -220,7 +221,7 @@ public class MainDisplay {
 		map.init();
 		map.getBrowser().setBounds(10, 24, 540, 291);
 		
-		Group grpComments = new Group(shell, SWT.NONE);
+		Group grpComments = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpComments = new FormData();
 		fd_grpComments.top = new FormAttachment(grpMap, 0, SWT.TOP);
 		fd_grpComments.left = new FormAttachment(grpDetails, 0, SWT.LEFT);

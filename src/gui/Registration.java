@@ -51,6 +51,7 @@ public class Registration {
 	 */
 	protected void createContents() {
 		shlRegistration = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
+		shlRegistration.setImage(SWTResourceManager.getImage(Registration.class, "/gui/tv.png"));
 		shlRegistration.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
 		shlRegistration.setSize(407, 260);
 		shlRegistration.setText("Registration");

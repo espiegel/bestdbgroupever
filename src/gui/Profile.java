@@ -55,52 +55,54 @@ public class Profile {
 		currentUser = Main.getCurrentUser();
 
 		shlProfile = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
+		shlProfile.setText("User Profile");
+		shlProfile.setImage(SWTResourceManager.getImage(Profile.class, "/gui/tv.png"));
 		shlProfile.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		shlProfile.setSize(275, 452);
+		shlProfile.setSize(481, 448);
 		
 		Label lblUsername = new Label(shlProfile, SWT.NONE);
 		lblUsername.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblUsername.setBounds(10, 46, 83, 20);
+		lblUsername.setBounds(10, 101, 71, 20);
 		lblUsername.setText("Username:");
 		
 		Label lblUserName = new Label(shlProfile, SWT.BORDER);
-		lblUserName.setBounds(99, 46, 150, 20);
+		lblUserName.setBounds(87, 100, 184, 20);
 		
 		Label lblNewLabel_1 = new Label(shlProfile, SWT.NONE);
 		lblNewLabel_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblNewLabel_1.setBounds(10, 82, 83, 20);
+		lblNewLabel_1.setBounds(10, 138, 70, 20);
 		lblNewLabel_1.setText("Password:");
 		
 		Label lblPassword = new Label(shlProfile, SWT.BORDER);
-		lblPassword.setBounds(99, 82, 150, 20);
+		lblPassword.setBounds(87, 137, 184, 20);
 		
 		Label lblNewLabel_3 = new Label(shlProfile, SWT.NONE);
 		lblNewLabel_3.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblNewLabel_3.setBounds(10, 118, 83, 20);
+		lblNewLabel_3.setBounds(299, 101, 70, 20);
 		lblNewLabel_3.setText("Upvotes:");
 		
-		Label lblUpvotes = new Label(shlProfile, SWT.NONE);
-		lblUpvotes.setBounds(99, 118, 70, 20);
+		Label lblUpvotes = new Label(shlProfile, SWT.BORDER);
+		lblUpvotes.setBounds(388, 100, 70, 20);
 		
 		Label lblNewLabel_4 = new Label(shlProfile, SWT.NONE);
 		lblNewLabel_4.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblNewLabel_4.setBounds(10, 155, 83, 20);
+		lblNewLabel_4.setBounds(299, 138, 83, 20);
 		lblNewLabel_4.setText("Downvotes:");
 		
 		Label lblDownvotes = new Label(shlProfile, SWT.BORDER);
-		lblDownvotes.setBounds(99, 155, 70, 20);
+		lblDownvotes.setBounds(388, 137, 70, 20);
 		
 		Label lblAdmin = new Label(shlProfile, SWT.NONE);
 		lblAdmin.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblAdmin.setBounds(10, 193, 83, 20);
+		lblAdmin.setBounds(10, 176, 60, 20);
 		lblAdmin.setText("Admin:");
 		
 		Label lblIsAdmin = new Label(shlProfile, SWT.BORDER);
-		lblIsAdmin.setBounds(99, 193, 70, 20);
+		lblIsAdmin.setBounds(87, 175, 70, 20);
 		
 		Group grpBadges = new Group(shlProfile, SWT.NONE);
 		grpBadges.setText("Badges");
-		grpBadges.setBounds(10, 229, 239, 125);
+		grpBadges.setBounds(10, 224, 448, 110);
 		
 		Button btnOk = new Button(shlProfile, SWT.NONE);
 		btnOk.addSelectionListener(new SelectionAdapter() {
@@ -110,16 +112,16 @@ public class Profile {
 				shlProfile.dispose();
 			}
 		});
-		btnOk.setBounds(63, 376, 140, 30);
+		btnOk.setBounds(158, 359, 157, 46);
 		btnOk.setText("Ok");
 		
 		Label lblProfile = new Label(shlProfile, SWT.NONE);
-		lblProfile.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND));
+		lblProfile.setImage(SWTResourceManager.getImage(Profile.class, "/gui/user.png"));
+		lblProfile.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
 		lblProfile.setForeground(SWTResourceManager.getColor(SWT.COLOR_INFO_FOREGROUND));
 		lblProfile.setFont(SWTResourceManager.getFont("Segoe UI", 14, SWT.BOLD));
 		lblProfile.setAlignment(SWT.CENTER);
-		lblProfile.setBounds(10, 10, 249, 30);
-		lblProfile.setText("User Profile");
+		lblProfile.setBounds(10, 10, 463, 85);
 		
 		if(currentUser != null)
 		{
