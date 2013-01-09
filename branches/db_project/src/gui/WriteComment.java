@@ -7,6 +7,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class WriteComment {
 
@@ -46,6 +47,7 @@ public class WriteComment {
 	 */
 	protected void createContents() {
 		shlWriteAComment = new Shell();
+		shlWriteAComment.setImage(SWTResourceManager.getImage(WriteComment.class, "/gui/tv.png"));
 		shlWriteAComment.setSize(364, 300);
 		shlWriteAComment.setText("Write a comment");
 		

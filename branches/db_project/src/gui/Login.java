@@ -13,7 +13,7 @@ import org.eclipse.swt.graphics.Point;
 import main.*;
 public class Login {
 
-	protected Shell shlTvTraveller;
+	protected Shell shlTvTraveler;
 	private Label txtLoginToTv;
 	private Text txtUsername;
 	private Text txtPassword;
@@ -38,9 +38,9 @@ public class Login {
 	public void open() {
 		Display display = Display.getDefault();
 		createContents();
-		shlTvTraveller.open();
-		shlTvTraveller.layout();
-		while (!shlTvTraveller.isDisposed()) {
+		shlTvTraveler.open();
+		shlTvTraveler.layout();
+		while (!shlTvTraveler.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
@@ -51,43 +51,44 @@ public class Login {
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		shlTvTraveller = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
-		shlTvTraveller.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		shlTvTraveller.setMinimumSize(new Point(360, 280));
-		shlTvTraveller.setSize(360, 280);
-		shlTvTraveller.setText("TV Traveller");
-		shlTvTraveller.setLayout(null);
+		shlTvTraveler = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
+		shlTvTraveler.setImage(SWTResourceManager.getImage(Login.class, "/gui/tv.png"));
+		shlTvTraveler.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
+		shlTvTraveler.setMinimumSize(new Point(360, 280));
+		shlTvTraveler.setSize(472, 291);
+		shlTvTraveler.setText("TV Traveler");
+		shlTvTraveler.setLayout(null);
 		
 		//SWT.CLOSE | SWT.TITLE | SWT.MIN
-		txtLoginToTv = new Label(shlTvTraveller, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL | SWT.SHADOW_IN | SWT.CENTER);
-		txtLoginToTv.setBounds(70, 10, 210, 36);
+		txtLoginToTv = new Label(shlTvTraveler, SWT.WRAP | SWT.HORIZONTAL | SWT.SHADOW_IN | SWT.CENTER);
+		txtLoginToTv.setImage(SWTResourceManager.getImage(Login.class, "/gui/title.png"));
+		txtLoginToTv.setBounds(10, 10, 436, 88);
 		txtLoginToTv.setAlignment(SWT.CENTER);
 		txtLoginToTv.setFont(SWTResourceManager.getFont("Segoe UI", 12, SWT.BOLD));
 		txtLoginToTv.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		txtLoginToTv.setText("Login to TV Traveller");
 		
-		Label lblUsername = new Label(shlTvTraveller, SWT.NONE);
+		Label lblUsername = new Label(shlTvTraveler, SWT.NONE);
 		lblUsername.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblUsername.setBounds(39, 78, 70, 20);
+		lblUsername.setBounds(85, 104, 70, 20);
 		lblUsername.setText("Username:");
 		
-		Label lblPassword = new Label(shlTvTraveller, SWT.NONE);
+		Label lblPassword = new Label(shlTvTraveler, SWT.NONE);
 		lblPassword.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblPassword.setBounds(39, 114, 70, 20);
+		lblPassword.setBounds(85, 140, 70, 20);
 		lblPassword.setText("Password:");
 		
-		lblError = new Label(shlTvTraveller, SWT.NONE);
+		lblError = new Label(shlTvTraveler, SWT.NONE);
 		lblError.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
 		lblError.setText("Version: pre-alpha");
-		lblError.setBounds(39, 153, 262, 36);
+		lblError.setBounds(85, 179, 262, 26);
 		
-		txtUsername = new Text(shlTvTraveller, SWT.BORDER);
-		txtUsername.setBounds(115, 75, 186, 26);
+		txtUsername = new Text(shlTvTraveler, SWT.BORDER);
+		txtUsername.setBounds(161, 104, 186, 26);
 		
-		txtPassword = new Text(shlTvTraveller, SWT.BORDER);
-		txtPassword.setBounds(114, 111, 187, 26);
+		txtPassword = new Text(shlTvTraveler, SWT.BORDER);
+		txtPassword.setBounds(160, 137, 187, 26);
 		
-		Button btnLogin = new Button(shlTvTraveller, SWT.NONE);
+		Button btnLogin = new Button(shlTvTraveler, SWT.NONE);
 		btnLogin.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -101,18 +102,18 @@ public class Login {
 				}
 				else
 				{
-					shlTvTraveller.close();
-					shlTvTraveller.dispose();
+					shlTvTraveler.close();
+					shlTvTraveler.dispose();
 					
 					MainDisplay maindisplay = new MainDisplay();
 					maindisplay.open();							
 				}
 			}
 		});
-		btnLogin.setBounds(40, 195, 90, 30);
+		btnLogin.setBounds(85, 211, 90, 30);
 		btnLogin.setText("Login");
 		
-		Button btnRegister = new Button(shlTvTraveller, SWT.NONE);
+		Button btnRegister = new Button(shlTvTraveler, SWT.NONE);
 		btnRegister.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -120,7 +121,7 @@ public class Login {
 				r.open();
 			}
 		});
-		btnRegister.setBounds(220, 195, 90, 30);
+		btnRegister.setBounds(274, 211, 90, 30);
 		btnRegister.setText("Register");
 
 	}
