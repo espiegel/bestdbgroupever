@@ -216,8 +216,9 @@ public class MainDisplay {
 		
 		//new google map
 		/*look at the documentation in the MapWidget class*/
-		MapWidget map =new MapWidget(grpMap, "map.txt");
+		MapWidget map = new MapWidget(grpMap, "map.txt");
 		map.init();
+		map.getBrowser().setBounds(10, 24, 540, 291);
 		
 		Group grpComments = new Group(shell, SWT.NONE);
 		FormData fd_grpComments = new FormData();
