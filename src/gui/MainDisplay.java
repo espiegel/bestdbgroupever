@@ -1,5 +1,11 @@
 package gui;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import main.Main;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Menu;
@@ -45,6 +51,15 @@ public class MainDisplay {
 	protected Display display;
 	private Text txtSearch;
 	private Table table;
+	private String currentSearch = "";
+	
+	public String getCurrentSearch() {
+		return currentSearch;
+	}
+
+	public void setCurrentSearch(String currentSearch) {
+		this.currentSearch = currentSearch;
+	}
 
 	/**
 	 * Launch the application.
@@ -126,38 +141,151 @@ public class MainDisplay {
 		grpSearch.setText("Search");
 		
 		txtSearch = new Text(grpSearch, SWT.BORDER);
-		txtSearch.setBounds(10, 28, 421, 26);
+		txtSearch.setBounds(10, 28, 421, 26);		
+		
+		Group group = new Group(grpSearch, SWT.NONE);
+		group.setBounds(10, 60, 153, 160);
+		
+		final Button btnRadioTv = new Button(group, SWT.RADIO);
+		btnRadioTv.setBounds(10, 20, 111, 20);
+		btnRadioTv.setText("Television");
+		
+		final Button btnRadioFilm = new Button(group, SWT.RADIO);
+		btnRadioFilm.setBounds(10, 55, 111, 20);
+		btnRadioFilm.setText("Film");
+		
+		final Button btnRadioLocation = new Button(group, SWT.RADIO);
+		btnRadioLocation.setBounds(10, 91, 111, 20);
+		btnRadioLocation.setText("Location");
+		
+		final Button btnRadioUsername = new Button(group, SWT.RADIO);
+		btnRadioUsername.setBounds(10, 127, 111, 20);
+		btnRadioUsername.setText("Username");
+		
+		final List list = new List(grpSearch, SWT.BORDER | SWT.V_SCROLL);
+		list.setBounds(185, 72, 365, 148);
+		
 		
 		Button btnSearch = new Button(grpSearch, SWT.NONE);
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				String sql = null;
+				String text = txtSearch.getText();
+				ResultSet rs;
+				
+				list.removeAll(); // Initialize the list
+				
+				if(btnRadioTv.getSelection())
+				{
+					setCurrentSearch("TV");
+					sql = "SELECT * FROM Media, TV WHERE Media.media_id = TV.media_id AND Media.name LIKE '%"+text+"%'";
+					rs = Main.performQuery(sql);
+					
+					if(rs == null)
+					{
+						System.out.println("Empty resultset");
+						return;
+					}						
+										
+					try
+					{					
+						while(rs.next())
+						{
+							list.add(rs.getString("name")+" | ID:"+rs.getString("media_id"));
+						}
+						
+					}
+					catch (SQLException e)
+					{
+						System.out.println("Sql error!");
+						e.printStackTrace();
+					}
+				}
+				
+				if(btnRadioFilm.getSelection())
+				{
+					setCurrentSearch("Film");
+					sql = "SELECT * FROM Media, Films WHERE Media.media_id = Films.media_id AND Media.name LIKE '%"+text+"%'";
+					rs = Main.performQuery(sql);
+					
+					try
+					{
+						if(rs == null)
+						{
+							System.out.println("Empty resultset");
+							return;
+						}	
+						
+						while(rs.next())
+						{
+							list.add(rs.getString("name")+" | ID:"+rs.getString("media_id"));
+						}
+						
+					}
+					catch (SQLException e)
+					{
+						System.out.println("Sql error!");
+						e.printStackTrace();
+					}
+				}
+				
+				if(btnRadioUsername.getSelection())
+				{
+					setCurrentSearch("User");
+					sql = "SELECT * FROM Users WHERE name LIKE '%"+text+"%'";
+					rs = Main.performQuery(sql);
+					
+					try
+					{
+						if(rs == null)
+						{
+							System.out.println("Empty resultset");
+							return;
+						}	
+						
+						while(rs.next())
+						{
+							list.add(rs.getString("name")+" | ID:"+rs.getString("user_id"));
+						}
+					}
+					catch (SQLException e)
+					{
+						System.out.println("Sql error!");
+						e.printStackTrace();
+					}
+				}
+				if(btnRadioLocation.getSelection())
+				{
+					setCurrentSearch("Location");
+					sql = "SELECT * FROM Locations WHERE country LIKE '%"+text+"%' OR city LIKE '%"+text+"%' OR street LIKE '%"+text+"%'";
+					rs = Main.performQuery(sql);
+					
+					try
+					{
+						if(rs == null)
+						{
+							System.out.println("Empty resultset");
+							return;
+						}	
+						
+						while(rs.next())
+						{
+							list.add(rs.getString("name")+" | ID:"+rs.getString("location_id"));
+						}
+					}
+					catch (SQLException e)
+					{
+						System.out.println("Sql error!");
+						e.printStackTrace();
+					}
+				}
+					
+							
 			}
 		});
 		btnSearch.setBounds(441, 26, 109, 30);
 		btnSearch.setText("Search");
-		
-		Group group = new Group(grpSearch, SWT.NONE);
-		group.setBounds(10, 60, 153, 160);
-		
-		Button btnRadioTv = new Button(group, SWT.RADIO);
-		btnRadioTv.setBounds(10, 20, 111, 20);
-		btnRadioTv.setText("Television");
-		
-		Button btnRadioFilm = new Button(group, SWT.RADIO);
-		btnRadioFilm.setBounds(10, 55, 111, 20);
-		btnRadioFilm.setText("Film");
-		
-		Button btnRadioLocation = new Button(group, SWT.RADIO);
-		btnRadioLocation.setBounds(10, 91, 111, 20);
-		btnRadioLocation.setText("Location");
-		
-		Button btnRadioUsername = new Button(group, SWT.RADIO);
-		btnRadioUsername.setBounds(10, 127, 111, 20);
-		btnRadioUsername.setText("Username");
-		
-		List list = new List(grpSearch, SWT.BORDER);
-		list.setBounds(185, 72, 365, 148);
 		
 		Group grpDetails = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpDetails = new FormData();
