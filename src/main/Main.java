@@ -24,6 +24,26 @@ public class Main
 		Main.currentUser = currentUser;
 	}
 
+	public static ResultSet performQuery(String sql)
+	{
+		Statement stmt;
+		ResultSet rs;
+		
+		try
+		{
+			stmt	=	conn.createStatement();
+			rs		=	stmt.executeQuery(sql);
+			
+			return rs;
+		}
+		catch (SQLException e)
+		{
+			System.out.println("ERROR executeQuery - " + e.toString());
+			//java.lang.System.exit(0); 
+			return null;
+		}
+	}
+	
 	private static User generateUser(ResultSet rs)
 	{
 		if(rs == null) // Should never actually be null because we catch the exception earlier.
