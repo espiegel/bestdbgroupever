@@ -10,10 +10,6 @@ public class Main
 {
 	static Connection conn; // DB Connection
 	
-	final static String DB   = "DbMysql02";
-	final static String USER = "DbMysql02";
-	final static String PASS = "DbMysql02"; // Is there a better way of storing these two? Maybe in a file?
-
 	private static User currentUser; // The current user thats logged in.
 	
 	public static User getCurrentUser() {
@@ -73,6 +69,7 @@ public class Main
 	
 	public static void main(String[] args)
 	{
+		ConfigurationManager.init();
 		openConnection();
 		Login.main(null); // Call the main GUI. In this case Login is the first GUI window.
 		closeConnection();
@@ -206,7 +203,9 @@ public class Main
 		try
 		{
 			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3305/"+DB,USER,PASS);
+					"jdbc:mysql://localhost:3305/"+ConfigurationManager.DB_SCHEMA,
+					ConfigurationManager.DB_USER,
+					ConfigurationManager.DB_PASS);
 		}
 		catch (SQLException e)
 		{
