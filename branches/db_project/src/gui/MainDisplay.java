@@ -6,37 +6,50 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.imageio.ImageIO;
 
 import main.Main;
 
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-<<<<<<< .mine
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageLoader;
-import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
-=======
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
->>>>>>> .r37
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Label;
+//import com.roots.swtmap.MapWidget;
+import org.eclipse.swt.custom.TableTree;
+import org.eclipse.swt.widgets.CoolBar;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.wb.swt.SWTResourceManager;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.wb.swt.SWTResourceManager;
-//import com.roots.swtmap.MapWidget;
+import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.custom.CLabel;
 
 public class MainDisplay {
 
