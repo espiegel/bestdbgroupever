@@ -221,8 +221,7 @@ public class MainDisplay {
 						
 						String address = rs.getString("image");
 						
-						String name = rs.getString("name");
-						name = name.replaceAll("&#039","'");
+						String name = canonicalize(rs.getString("name"));
 						String director =canonicalize(rs.getString("directors"));
 						String first = canonicalize(rs.getString("first_episode"));
 						String last = canonicalize(rs.getString("last_episode"));
