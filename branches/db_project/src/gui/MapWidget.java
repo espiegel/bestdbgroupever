@@ -35,7 +35,7 @@ public class MapWidget {
 		try {
 			browser = new Browser(parent, SWT.NONE);
 		} catch (SWTError e) {
-			System.out.println("Couldn't instantiate browser");
+			System.err.println("Couldn't instantiate browser");
 		}
 		loaded = false;
 		map = getTextFile(filePath);

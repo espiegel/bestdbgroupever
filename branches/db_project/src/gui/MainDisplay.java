@@ -400,13 +400,9 @@ public class MainDisplay {
 		grpMap.setLayoutData(fd_grpMap);
 		grpMap.setText("Map");
 		
-		//Composite compositeMap = new Composite(grpMap, SWT.NONE);
-		/*MapWidget map = new MapWidget(grpMap, SWT.NONE, new Point(9500,6500), 6);
-		map.setBounds(10, 24, 540, 291);*/
-		
 		//new google map
 		/*look at the documentation in the MapWidget class*/
-		MapWidget map = new MapWidget(grpMap, "map.txt");
+		MapWidget map = new MapWidget(grpMap, "map.html");
 		map.init();
 		map.getBrowser().setBounds(10, 24, 540, 291);
 		
@@ -462,8 +458,8 @@ public class MainDisplay {
 		Button btnNewButton_1 = new Button(grpComments, SWT.NONE);
 		btnNewButton_1.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down_black.png"));
 		btnNewButton_1.setBounds(489, 20, 41, 37);
-
 	}
+
 	public String canonicalize(String str){
 		if(str == null || str.equals("null") || str.equals(""))
 			return "Unknown";
