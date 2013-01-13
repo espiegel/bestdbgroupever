@@ -3,7 +3,6 @@ package gui;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -28,7 +27,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
-//import com.roots.swtmap.MapWidget;
 
 public class MainDisplay {
 
@@ -228,25 +226,25 @@ public class MainDisplay {
 						int numSeasons = rs.getInt("num_seasons");
 						int numEpisodes = rs.getInt("num_episodes");
 
-	if(address.length()>1 && address!=null){
-						final URL url = new URL("http://img.freebase.com/api/trans/image_thumb"+address+"?maxheight=200&mode=fit&maxwidth=150");
-						
-						display.asyncExec(new Runnable() {
+						if(address!=null && address.length()>1){
+							final URL url = new URL("http://img.freebase.com/api/trans/image_thumb"+address+"?maxheight=200&mode=fit&maxwidth=150");
 							
-							@Override
-							public void run() {
-								Image img;
-								try {
-									img = new Image(display, url.openStream());
-									lblPic.setImage(img);
-									
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+							display.asyncExec(new Runnable() {
+								
+								@Override
+								public void run() {
+									Image img;
+									try {
+										img = new Image(display, url.openStream());
+										lblPic.setImage(img);
+										
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
 								}
-							}
-						});
-	}
+							});
+						}
 
 						lblDetails1.setText("Name: "+name);
 						lblDetails2.setText("Director(s): "+director);
@@ -472,7 +470,7 @@ public class MainDisplay {
 		else{
 			str=str.replaceAll("&#039","'");
 			str=str.replaceAll("&amp;", "&");
-			//str=str.replaceAll()
+
 			return str;
 		}
 	}
