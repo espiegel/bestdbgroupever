@@ -135,10 +135,6 @@ public class Main
 			System.out.println("ERROR executeQuery - " + e.toString());
 			java.lang.System.exit(0); 
 			return false;
-		} catch (Exception e) {
-			System.err.println("Error checking login details.");
-			e.printStackTrace();
-			return false;
 		}
 	}
 
