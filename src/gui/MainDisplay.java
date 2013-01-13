@@ -222,12 +222,14 @@ public class MainDisplay {
 						String address = rs.getString("image");
 						
 						String name = rs.getString("name");
-						String director = rs.getString("directors");
-						Date first = rs.getDate("first_episode");
-						Date last = rs.getDate("last_episode");
+						name = name.replaceAll("&#039","'");
+						String director =canonicalize(rs.getString("directors"));
+						String first = canonicalize(rs.getString("first_episode"));
+						String last = canonicalize(rs.getString("last_episode"));
 						int numSeasons = rs.getInt("num_seasons");
 						int numEpisodes = rs.getInt("num_episodes");
-						
+
+	if(address.length()>1 && address!=null){
 						final URL url = new URL("http://img.freebase.com/api/trans/image_thumb"+address+"?maxheight=200&mode=fit&maxwidth=150");
 						
 						display.asyncExec(new Runnable() {
@@ -238,13 +240,15 @@ public class MainDisplay {
 								try {
 									img = new Image(display, url.openStream());
 									lblPic.setImage(img);
+									
 								} catch (IOException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 							}
 						});
-						
+	}
+
 						lblDetails1.setText("Name: "+name);
 						lblDetails2.setText("Director(s): "+director);
 						lblDetails3.setText("First Episode: "+first.toString());
@@ -289,7 +293,7 @@ public class MainDisplay {
 					{					
 						while(rs.next())
 						{
-							list.add(rs.getString("name")+" | ID:"+rs.getString("media_id"));
+							list.add(canonicalize(rs.getString("name"))+" | ID:"+rs.getString("media_id"));
 						}
 						
 					}
@@ -316,7 +320,7 @@ public class MainDisplay {
 						
 						while(rs.next())
 						{
-							list.add(rs.getString("name")+" | ID:"+rs.getString("media_id"));
+							list.add(canonicalize(rs.getString("name"))+" | ID:"+rs.getString("media_id"));
 						}
 						
 					}
@@ -343,7 +347,7 @@ public class MainDisplay {
 						
 						while(rs.next())
 						{
-							list.add(rs.getString("name")+" | ID:"+rs.getString("user_id"));
+							list.add(canonicalize(rs.getString("name"))+" | ID:"+rs.getString("user_id"));
 						}
 					}
 					catch (SQLException e)
@@ -368,7 +372,7 @@ public class MainDisplay {
 						
 						while(rs.next())
 						{
-							list.add(rs.getString("name")+" | ID:"+rs.getString("location_id"));
+							list.add(canonicalize(rs.getString("name"))+" | ID:"+rs.getString("location_id"));
 						}
 					}
 					catch (SQLException e)
@@ -462,5 +466,15 @@ public class MainDisplay {
 		btnNewButton_1.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down_black.png"));
 		btnNewButton_1.setBounds(489, 20, 41, 37);
 
+	}
+	public String canonicalize(String str){
+		if(str == null || str.equals("null") || str.equals(""))
+			return "Unknown";
+		else{
+			str=str.replaceAll("&#039","'");
+			str=str.replaceAll("&amp;", "&");
+			//str=str.replaceAll()
+			return str;
+		}
 	}
 }
