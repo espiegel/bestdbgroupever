@@ -11,6 +11,8 @@ import main.Main;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
@@ -153,13 +155,23 @@ public class MainDisplay {
 		grpSearch.setLayoutData(fd_grpSearch);
 		grpSearch.setText("Search");
 		
+		final Button btnSearch = new Button(grpSearch, SWT.NONE);
+		
 		txtSearch = new Text(grpSearch, SWT.BORDER);
+		txtSearch.addTraverseListener(new TraverseListener() {
+			public void keyTraversed(TraverseEvent arg0) {
+				if (arg0.detail==SWT.TRAVERSE_RETURN) {
+					btnSearch.notifyListeners(SWT.Selection, null);
+				}
+			}
+		});
 		txtSearch.setBounds(10, 28, 421, 26);		
 		
 		Group group = new Group(grpSearch, SWT.NONE);
 		group.setBounds(10, 60, 153, 160);
 		
 		final Button btnRadioTv = new Button(group, SWT.RADIO);
+		btnRadioTv.setSelection(true);
 		btnRadioTv.setBounds(10, 20, 111, 20);
 		btnRadioTv.setText("Television");
 		
@@ -263,8 +275,6 @@ public class MainDisplay {
 		list.setBounds(185, 72, 365, 148);
 		
 
-		
-		Button btnSearch = new Button(grpSearch, SWT.NONE);
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
