@@ -1,8 +1,12 @@
 package main;
 
-import gui.*;
+import gui.Login;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import objects.User;
 
@@ -130,6 +134,10 @@ public class Main
 		{
 			System.out.println("ERROR executeQuery - " + e.toString());
 			java.lang.System.exit(0); 
+			return false;
+		} catch (Exception e) {
+			System.err.println("Error checking login details.");
+			e.printStackTrace();
 			return false;
 		}
 	}
