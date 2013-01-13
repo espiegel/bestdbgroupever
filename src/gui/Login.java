@@ -1,16 +1,17 @@
 package gui;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
+import main.Main;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Point;
-import main.*;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 public class Login {
 
 	protected Shell shlTvTraveler;
@@ -85,7 +86,7 @@ public class Login {
 		txtUsername = new Text(shlTvTraveler, SWT.BORDER);
 		txtUsername.setBounds(161, 104, 186, 26);
 		
-		txtPassword = new Text(shlTvTraveler, SWT.BORDER);
+		txtPassword = new Text(shlTvTraveler, SWT.PASSWORD | SWT.BORDER);
 		txtPassword.setBounds(160, 137, 187, 26);
 		
 		Button btnLogin = new Button(shlTvTraveler, SWT.NONE);
