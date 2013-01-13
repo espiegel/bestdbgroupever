@@ -5,8 +5,11 @@ import main.Main;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.TraverseEvent;
+import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -84,31 +87,26 @@ public class Login {
 		lblError.setBounds(85, 179, 262, 26);
 		
 		txtUsername = new Text(shlTvTraveler, SWT.BORDER);
+		txtUsername.addTraverseListener(new TraverseListener() {
+			public void keyTraversed(TraverseEvent arg0) {
+				if (arg0.detail==SWT.TRAVERSE_RETURN) tryToLogin();
+			}
+		});
 		txtUsername.setBounds(161, 104, 186, 26);
 		
 		txtPassword = new Text(shlTvTraveler, SWT.PASSWORD | SWT.BORDER);
+		txtPassword.addTraverseListener(new TraverseListener() {
+			public void keyTraversed(TraverseEvent arg0) {
+				if (arg0.detail==SWT.TRAVERSE_RETURN) tryToLogin();
+			}
+		});
 		txtPassword.setBounds(160, 137, 187, 26);
 		
 		Button btnLogin = new Button(shlTvTraveler, SWT.NONE);
 		btnLogin.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String username = txtUsername.getText();
-				String password = txtPassword.getText();
-				
-				// Need to check with the database correct username and password combination
-				if(!(Main.login(username, password))) 
-				{
-					lblError.setText("No such user or invalid password!");
-				}
-				else
-				{
-					shlTvTraveler.close();
-					shlTvTraveler.dispose();
-					
-					MainDisplay maindisplay = new MainDisplay();
-					maindisplay.open();							
-				}
+				tryToLogin();
 			}
 		});
 		btnLogin.setBounds(85, 211, 90, 30);
@@ -124,7 +122,27 @@ public class Login {
 		});
 		btnRegister.setBounds(274, 211, 90, 30);
 		btnRegister.setText("Register");
+		shlTvTraveler.setTabList(new Control[]{txtUsername, txtPassword, btnLogin, btnRegister});
 
+	}
+	
+	private void tryToLogin() {
+		String username = txtUsername.getText();
+		String password = txtPassword.getText();
+		
+		// Need to check with the database correct username and password combination
+		if(!(Main.login(username, password))) 
+		{
+			lblError.setText("No such user or invalid password!");
+		}
+		else
+		{
+			shlTvTraveler.close();
+			shlTvTraveler.dispose();
+			
+			MainDisplay maindisplay = new MainDisplay();
+			maindisplay.open();							
+		}
 	}
 	
 	// For setting errors 
