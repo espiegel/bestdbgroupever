@@ -30,12 +30,8 @@ public class ConfigurationManager {
 			e.printStackTrace();
 		}
 		
-		System.out.println(props.entrySet());
-		
 		final Class<ConfigurationManager> thisStaticClass = ConfigurationManager.class;
 		for (Field field : thisStaticClass.getDeclaredFields()) {
-			
-			
 			if (isFieldToLoad(field)) {
 				final String propname = field.getName();
 				String value = props.getProperty(propname);
@@ -65,9 +61,5 @@ public class ConfigurationManager {
 				}
 			}
 		}
-		
-		System.out.println(DB_HOSTNAME);
-		System.out.println(DB_USER);
-		System.out.println(DB_PORT);
 	}
 }
