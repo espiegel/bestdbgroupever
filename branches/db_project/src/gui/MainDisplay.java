@@ -2,6 +2,7 @@ package gui;
 
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.ResultSet;
 
@@ -81,6 +82,15 @@ public class MainDisplay {
 		}
 	}
 
+	private URL getFullUrl(String address)
+	{
+		try {
+			return new URL("http://img.freebase.com/api/trans/image_thumb"+address+"?maxheight=200&mode=fit&maxwidth=150");
+		} catch (MalformedURLException e) {
+			System.err.println("Couldn't get the url");
+			return null;
+		}
+	}
 	/**
 	 * Create contents of the window.
 	 */
@@ -133,25 +143,25 @@ public class MainDisplay {
 		grpDetails.setText("Details");
 		
 		final Label lblDetails1 = new Label(grpDetails, SWT.BORDER);
-		lblDetails1.setBounds(235, 20, 285, 25);
+		lblDetails1.setBounds(185, 20, 335, 25);
 		
 		final Label lblDetails2 = new Label(grpDetails, SWT.BORDER);
-		lblDetails2.setBounds(235, 57, 285, 25);
+		lblDetails2.setBounds(185, 57, 335, 25);
 		
 		final Label lblDetails3 = new Label(grpDetails, SWT.BORDER);
-		lblDetails3.setBounds(235, 92, 285, 25);
+		lblDetails3.setBounds(185, 92, 335, 25);
 		
 		final Label lblDetails4 = new Label(grpDetails, SWT.BORDER);
-		lblDetails4.setBounds(235, 127, 285, 25);
+		lblDetails4.setBounds(185, 127, 335, 25);
 		
 		final Label lblDetails5 = new Label(grpDetails, SWT.BORDER);
-		lblDetails5.setBounds(235, 162, 285, 25);
+		lblDetails5.setBounds(185, 162, 335, 25);
 		
 		final Label lblDetails6 = new Label(grpDetails, SWT.BORDER);
-		lblDetails6.setBounds(235, 200, 285, 25);
+		lblDetails6.setBounds(185, 200, 335, 25);
 		
 		final Label lblPic = new Label(grpDetails, SWT.NONE);
-		lblPic.setBounds(10, 20, 200, 200);
+		lblPic.setBounds(10, 20, 150, 200);
 		
 		Group grpSearch = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpSearch = new FormData();
@@ -243,7 +253,7 @@ public class MainDisplay {
 						int numEpisodes = show.num_episodes;
 
 						if(address!=null && address.length()>1){
-							final URL url = new URL("http://img.freebase.com/api/trans/image_thumb"+address+"?maxheight=200&mode=fit&maxwidth=150");
+							final URL url = getFullUrl(address);
 							
 							display.asyncExec(new Runnable() {
 								
@@ -273,7 +283,56 @@ public class MainDisplay {
 						e.printStackTrace();
 					}
 						
+				} // End of TV if
+			
+			if(currentSearch.equals("Film"))
+			{
+				Film film = new FilmRetriever().retrieve(id);
+							
+				try
+				{
+					if(film == null)
+					{
+						System.out.println("Empty resultset");
+						return;
+					}
+					
+					String address = film.image;
+					
+					String name = canonicalize(film.name);
+					String director =canonicalize(film.directors);
+					String release = canonicalize(film.release_date);
+
+					if(address!=null && address.length()>1)
+					{
+						final URL url = getFullUrl(address);
+						
+						display.asyncExec(new Runnable() {
+							
+							@Override
+							public void run() {
+								Image img;
+								try {
+									img = new Image(display, url.openStream());
+									lblPic.setImage(img);
+									
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+						});
+					}
+
+					lblDetails1.setText("Name: "+name);
+					lblDetails2.setText("Director(s): "+director);
+					lblDetails3.setText("Release Date: "+release);
+				} catch (Exception ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
 				}
+					
+			} // End of Film If
 			}
 		});
 		list.setBounds(185, 72, 365, 148);
