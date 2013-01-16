@@ -4,9 +4,11 @@ package gui;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import main.Main;
+import objects.Film;
+import objects.Location;
+import objects.TVShow;
+import objects.User;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -29,6 +31,11 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import db.FilmRetriever;
+import db.LocationRetriever;
+import db.TVRetriever;
+import db.UserRetriever;
 
 public class MainDisplay {
 
@@ -192,7 +199,6 @@ public class MainDisplay {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				int index = list.getSelectionIndex();
-				String sql = "";
 				
 				// Need to clean the labels...
 				lblDetails1.setText("");
@@ -217,26 +223,24 @@ public class MainDisplay {
 				
 				if(currentSearch.equals("TV"))
 				{
-					ResultSet rs;
-					sql = "SELECT * FROM Media, TV WHERE Media.media_id = TV.media_id AND Media.media_id = "+id;
-					rs = Main.performQuery(sql);
+					TVShow show = new TVRetriever().retrieve(id);
 								
 					try
 					{
-						if(rs == null || !rs.next())
+						if(show == null)
 						{
 							System.out.println("Empty resultset");
 							return;
 						}
 						
-						String address = rs.getString("image");
+						String address = show.image;
 						
-						String name = canonicalize(rs.getString("name"));
-						String director =canonicalize(rs.getString("directors"));
-						String first = canonicalize(rs.getString("first_episode"));
-						String last = canonicalize(rs.getString("last_episode"));
-						int numSeasons = rs.getInt("num_seasons");
-						int numEpisodes = rs.getInt("num_episodes");
+						String name = canonicalize(show.name);
+						String director =canonicalize(show.directors);
+						String first = canonicalize(show.first_episode);
+						String last = canonicalize(show.last_episode);
+						int numSeasons = show.num_seasons;
+						int numEpisodes = show.num_episodes;
 
 						if(address!=null && address.length()>1){
 							final URL url = new URL("http://img.freebase.com/api/trans/image_thumb"+address+"?maxheight=200&mode=fit&maxwidth=150");
@@ -287,105 +291,69 @@ public class MainDisplay {
 				if(btnRadioTv.getSelection())
 				{
 					setCurrentSearch("TV");
-					sql = "SELECT * FROM Media, TV WHERE Media.media_id = TV.media_id AND Media.name LIKE '%"+text+"%'";
-					rs = Main.performQuery(sql);
+					TVRetriever ret = new TVRetriever();
+					java.util.List<TVShow> shows = ret.searchBySearchField(text);
 					
-					if(rs == null)
+					if(shows.isEmpty())
 					{
 						System.out.println("Empty resultset");
 						return;
-					}						
-										
-					try
-					{					
-						while(rs.next())
-						{
-							list.add(canonicalize(rs.getString("name"))+" | ID:"+rs.getString("media_id"));
-						}
-						
-					}
-					catch (SQLException e)
-					{
-						System.out.println("Sql error!");
-						e.printStackTrace();
+					}	
+					
+					for (TVShow show : shows) {
+						list.add(canonicalize(show.name)+" | ID:"+show.media_id);
 					}
 				}
 				
 				if(btnRadioFilm.getSelection())
 				{
 					setCurrentSearch("Film");
-					sql = "SELECT * FROM Media, Films WHERE Media.media_id = Films.media_id AND Media.name LIKE '%"+text+"%'";
-					rs = Main.performQuery(sql);
+					FilmRetriever ret = new FilmRetriever();
+					java.util.List<Film> films = ret.searchBySearchField(text);
 					
-					try
+					if(films.isEmpty())
 					{
-						if(rs == null)
-						{
-							System.out.println("Empty resultset");
-							return;
-						}	
-						
-						while(rs.next())
-						{
-							list.add(canonicalize(rs.getString("name"))+" | ID:"+rs.getString("media_id"));
-						}
-						
-					}
-					catch (SQLException e)
-					{
-						System.out.println("Sql error!");
-						e.printStackTrace();
+						System.out.println("Empty resultset");
+						return;
+					}	
+					
+					for (Film film : films) {
+						list.add(canonicalize(film.name)+" | ID:"+film.media_id);
 					}
 				}
 				
 				if(btnRadioUsername.getSelection())
 				{
 					setCurrentSearch("User");
-					sql = "SELECT * FROM Users WHERE name LIKE '%"+text+"%'";
-					rs = Main.performQuery(sql);
 					
-					try
+					UserRetriever ret = new UserRetriever();
+					java.util.List<User> users_with_name = ret.searchBySearchField(text);
+					
+					if(users_with_name == null)
 					{
-						if(rs == null)
-						{
-							System.out.println("Empty resultset");
-							return;
-						}	
-						
-						while(rs.next())
-						{
-							list.add(canonicalize(rs.getString("name"))+" | ID:"+rs.getString("user_id"));
-						}
-					}
-					catch (SQLException e)
-					{
-						System.out.println("Sql error!");
-						e.printStackTrace();
+						System.out.println("Empty resultset");
+						return;
+					}	
+					
+					for (User user : users_with_name) {
+						list.add(canonicalize(user.getUsername())+" | ID:"+user.getID());
 					}
 				}
 				if(btnRadioLocation.getSelection())
 				{
 					setCurrentSearch("Location");
-					sql = "SELECT * FROM Locations WHERE country LIKE '%"+text+"%' OR city LIKE '%"+text+"%' OR street LIKE '%"+text+"%'";
-					rs = Main.performQuery(sql);
 					
-					try
+					LocationRetriever ret = new LocationRetriever();
+					java.util.List<Location> locs = ret.searchBySearchField(text, text, text);
+					
+					if(locs.isEmpty())
 					{
-						if(rs == null)
-						{
-							System.out.println("Empty resultset");
-							return;
-						}	
-						
-						while(rs.next())
-						{
-							list.add(canonicalize(rs.getString("name"))+" | ID:"+rs.getString("location_id"));
-						}
-					}
-					catch (SQLException e)
-					{
-						System.out.println("Sql error!");
-						e.printStackTrace();
+						System.out.println("Empty resultset");
+						return;
+					}	
+					
+					for (Location location : locs) {
+						list.add(canonicalize(location.place)+" | ID:"+location.location_id);
 					}
 				}
 					

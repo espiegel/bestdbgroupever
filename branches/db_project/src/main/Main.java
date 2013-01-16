@@ -2,102 +2,31 @@ package main;
 
 import gui.Login;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import objects.User;
+import db.ConnectionManager;
+import db.UserRetriever;
 
 public class Main
-{
-	static Connection conn; // DB Connection
-	
+{	
 	private static User currentUser; // The current user thats logged in.
 	
 	public static User getCurrentUser() {
 		return currentUser;
 	}
 
-	public static void setCurrentUser(User currentUser) {
-		Main.currentUser = currentUser;
-	}
-
-	public static ResultSet performQuery(String sql)
-	{
-		Statement stmt;
-		ResultSet rs;
-		
-		try
-		{
-			stmt	=	conn.createStatement();
-			rs		=	stmt.executeQuery(sql);
-			
-			return rs;
-		}
-		catch (SQLException e)
-		{
-			System.out.println("ERROR executeQuery - " + e.toString());
-			//java.lang.System.exit(0); 
-			return null;
-		}
-	}
-	
-	private static User generateUser(ResultSet rs)
-	{
-		if(rs == null) // Should never actually be null because we catch the exception earlier.
-			return null;
-		
-		User user = new User();
-		
-		try
-		{
-			user.setUsername(rs.getString(2));
-			user.setPassword(rs.getString(3));
-			user.setUpvotes(rs.getInt(4));
-			user.setDownvotes(rs.getInt(5));
-			user.setBadges(rs.getInt(6));
-			user.setAdmin(rs.getBoolean(7));
-			
-			return user;
-		}
-		catch (SQLException e)
-		{
-			System.out.println("ERROR executeQuery - " + e.toString());
-			java.lang.System.exit(0); 
-			return null;
-		}
-		
+	public static void setCurrentUser(User _currentUser) {
+		currentUser = _currentUser;
 	}
 	
 	public static void main(String[] args)
 	{
 		ConfigurationManager.init();
-		openConnection();
+		ConnectionManager.openConnection();
 		Login.main(null); // Call the main GUI. In this case Login is the first GUI window.
-		closeConnection();
-	}
-	
-	private static ResultSet getUserData(String username)
-	{
-		Statement stmt;
-		ResultSet rs;
-		
-		try
-		{
-			stmt	=	conn.createStatement();
-			rs		=	stmt.executeQuery("SELECT * FROM Users WHERE name = '" + username + "'");
-			
-			return rs;
-		}
-		catch (SQLException e)
-		{
-			System.out.println("ERROR executeQuery - " + e.toString());
-			java.lang.System.exit(0); 
-			return null;
-		}
-		
+		ConnectionManager.closeConnection();
 	}
 	
 	/**
@@ -108,37 +37,15 @@ public class Main
 	 */
 	public static boolean login(String user, String password)
 	{
-		Statement stmt;
-		ResultSet rs;
+		UserRetriever ret = new UserRetriever();
+	
+		currentUser = ret.retrieveByUserAndPassword(user,password);
 		
-		try
-		{
-			stmt	=	conn.createStatement();
-			rs		=	stmt.executeQuery("SELECT * FROM Users WHERE name = '" + user + "' AND password = '" + password +"'");
-
-			// This means there is no user of this name
-			if(!rs.next())
-				return false;
-			
-			// Otherwise we successfully logged in.
-			currentUser = generateUser(rs);
-						
-			// closing
-			rs.close();
-			stmt.close();
-			
-			return true;
-
-		}
-		catch (SQLException e)
-		{
-			System.out.println("ERROR executeQuery - " + e.toString());
-			java.lang.System.exit(0); 
+		if (currentUser==null)
 			return false;
-		}
+						
+		return true;
 	}
-
-
 
 	/**
 	 * 
@@ -149,25 +56,21 @@ public class Main
 	public static boolean register(String user, String password)
 	{
 		Statement stmt;
-		ResultSet rs;
 		
 		try
 		{
-			
-			rs = getUserData(user);
-
-			// This means there is already a user of this name
-			if(rs.next())
+			UserRetriever ret = new UserRetriever();
+			if (ret.retrieve(user)!=null) {
 				return false;
-			
+			}
 			
 			// Otherwise we successfully registered.
-			stmt = conn.createStatement();
+			//TODO: should be moved to db package
+			stmt = ConnectionManager.conn.createStatement();
 			stmt.executeUpdate("INSERT INTO Users (name, password, upvotes, downvotes, badges, is_admin) "+
 			                   "VALUES ('"+user+"', '"+password+"', 0, 0, 0, 0)");
 						
 			// closing
-			rs.close();
 			stmt.close();
 			
 			return true;
@@ -180,63 +83,4 @@ public class Main
 			return false;
 		}
 	}
-	
-	/**
-	 * 
-	 * @return the connection (null on error)
-	 */
-	private static void openConnection()
-	{
-		
-		// loading the driver
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-		}
-		catch (ClassNotFoundException e)
-		{
-			System.out.println("Unable to load the MySQL JDBC driver..");
-			java.lang.System.exit(0); 
-		}
-		System.out.println("Driver loaded successfully");
-		
-		
-		
-		// creating the connection
-		System.out.print("Trying to connect... ");
-		try
-		{
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3305/"+ConfigurationManager.DB_SCHEMA,
-					ConfigurationManager.DB_USER,
-					ConfigurationManager.DB_PASS);
-		}
-		catch (SQLException e)
-		{
-			System.out.println("Unable to connect - " + e.toString());
-			java.lang.System.exit(0); 
-		}
-		System.out.println("Connected!");
-		
-	}
-	
-	/**
-	 * close the connection
-	 */
-	private static void closeConnection()
-	{
-		// closing the connection
-		try
-		{
-			System.out.print("Closing the connection... ");
-			conn.close();
-		}
-		catch (SQLException e)
-		{
-			System.out.println("Unable to close the connection - " + e.toString());
-			java.lang.System.exit(0); 
-		}
-		System.out.println("Closed.");
-	}
-
 }
