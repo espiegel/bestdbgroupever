@@ -7,6 +7,7 @@ public class User {
 	private int upvotes;
 	private int downvotes;
 	private int badges;
+	private int id;
 	private boolean isAdmin;
 	
 	public User()
@@ -17,6 +18,7 @@ public class User {
 		downvotes = 0;
 		badges = 0;
 		isAdmin = false;
+		id = -1;
 	}
 	public String getUsername() {
 		return username;
@@ -53,5 +55,13 @@ public class User {
 	}
 	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
+	}
+	
+	public void setID(int id) {
+		this.id = id;
+	}
+	
+	public int getID() {
+		return this.id;
 	}
 }
