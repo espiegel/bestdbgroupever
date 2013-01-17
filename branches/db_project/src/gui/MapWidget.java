@@ -91,7 +91,11 @@ public class MapWidget {
 		}
 		return false;
 	}
-
+	public boolean clearAllMarkers(){
+		String[] temp={};
+		boolean ok = browserExecute("clearOverlays",temp);
+		return ok;
+	}
 	private boolean browserExecute(String funcName, String[] params) {
 		String paramsStr = "";
 		int length = params.length;

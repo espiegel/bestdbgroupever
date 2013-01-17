@@ -14,7 +14,7 @@
 			
 				var map;
 				var i=0;
-
+				var markersArray = [];
 				function initialize() {
 					var coordenadas = new google.maps.LatLng(32.112313,34.801512);
 					var myOptions = {
@@ -33,6 +33,7 @@
 						map: map,
 						position: coordenadas
 					});
+					markersArray.push(marker);
 					var infoWindow = new google.maps.InfoWindow();
 					google.maps.event.addListener(marker, 'click', function () {
 							map.setZoom(16);
@@ -45,6 +46,12 @@
 				function setCenter(lat,lng){
 				var coordenadas = new google.maps.LatLng(lat,lng);
 				map.setCenter(coordenadas);
+				}
+				function clearOverlays() {
+  					for (var i = 0; i < markersArray.length; i++ ) {
+    				markersArray[i].setMap(null);
+  					}
+  					markersArray=[];
 				}
 				
 			</script>
