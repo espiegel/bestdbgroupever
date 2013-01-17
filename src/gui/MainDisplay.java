@@ -7,6 +7,7 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import main.Main;
 import objects.Film;
 import objects.Location;
 import objects.TVShow;
@@ -338,7 +339,25 @@ public class MainDisplay {
 				}
 					
 			} // End of Film If
+			if(currentSearch.equals("User"))
+			{
+				User user = new UserRetriever().retrieveById(id);
+				System.out.println("retrieved id="+id);
+				if(user == null)
+				{
+					System.out.println("Empty resultset");
+					return;
+				}		
+				
+				boolean show_password = false;
+				if(user.equals(Main.getCurrentUser()))
+					show_password = true;
+				
+				Profile profile = new Profile(user, show_password);
+				profile.open();
+					
 			}
+			} // End of widgetSelected
 		});
 		list.setBounds(185, 72, 365, 148);
 		
@@ -405,6 +424,7 @@ public class MainDisplay {
 					for (User user : users_with_name) {
 						list.add(canonicalize(user.getUsername()));
 						listIds.add(user.getID());
+						System.out.println("added id "+user.getID());
 					}
 				}
 				if(btnRadioLocation.getSelection())
