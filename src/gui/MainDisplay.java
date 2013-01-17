@@ -35,6 +35,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import db.ConnectionManager;
 import db.FilmRetriever;
 import db.LocationRetriever;
 import db.TVRetriever;
@@ -274,6 +275,18 @@ public class MainDisplay {
 						lblDetails4.setText("Last Episode: "+last.toString());
 						lblDetails5.setText("Number of Seasons: "+String.valueOf(numSeasons));
 						lblDetails6.setText("Number of Episodes: "+String.valueOf(numEpisodes));
+						
+						java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
+								"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
+						        "LocationOfMedia.media_id = "+id));
+						// Put all location markers on the map
+						map.clearAllMarkers();
+						
+						for(Location l : locations)
+							map.addMarker(l.lat, l.lng, l.place);
+						
+						// TODO: Zoom Out on all of these markers ???
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -325,6 +338,18 @@ public class MainDisplay {
 					lblDetails1.setText("Name: "+name);
 					lblDetails2.setText("Director(s): "+director);
 					lblDetails3.setText("Release Date: "+release);
+					
+					java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
+							"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
+					        "LocationOfMedia.media_id = "+id));
+					// Put all location markers on the map
+					map.clearAllMarkers();
+					
+					for(Location l : locations)
+						map.addMarker(l.lat, l.lng, l.place);
+					
+					// TODO: Zoom Out on all of these markers ???
+					
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
