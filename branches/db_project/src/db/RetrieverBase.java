@@ -7,6 +7,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author maayan
+ *	This class is to be inherited and used to implement classes that serve as the main gateway to retrieve information
+ *	from the database. It asks for certain information from the inheritors (represented by the abstract methods) and
+ *	supplies common functions to retrieve data.
+ * @param <T>
+ */
 public abstract class RetrieverBase<T> {
 	
 	protected abstract String getTableNames();
@@ -79,7 +86,7 @@ public abstract class RetrieverBase<T> {
 		} 
 	}
 	
-	private List<T> retrieve(PreparedStatement statement) {
+	public List<T> retrieve(PreparedStatement statement) {
 		ResultSet result_set = null;
 		
 		try {
