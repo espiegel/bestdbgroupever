@@ -345,8 +345,6 @@ public class MainDisplay {
 					
 					String country = location.country;
 					String city = location.city;
-					String street = location.street;
-					if(street==null || street.isEmpty()) street = "None";
 					String place = location.place;
 					float lat = Float.parseFloat(location.lat);
 					float lng = Float.parseFloat(location.lng);
@@ -360,9 +358,8 @@ public class MainDisplay {
 					lblDetails1.setText("Place: "+place);
 					lblDetails2.setText("Country: "+country);
 					lblDetails3.setText("City: "+city);
-					lblDetails4.setText("Street: "+street);
-					lblDetails5.setText("Latitude: "+lat+", Longtitude: "+lng);
-					lblDetails6.setText("Upvotes: "+up+", Downvotes: "+down);
+					lblDetails4.setText("Latitude: "+lat+", Longtitude: "+lng);
+					lblDetails5.setText("Upvotes: "+up+", Downvotes: "+down);
 					
 					// TODO: Add this location to the map according to the lat and lng.
 					
@@ -476,7 +473,7 @@ public class MainDisplay {
 					setCurrentSearch("Location");
 					
 					LocationRetriever ret = new LocationRetriever();
-					java.util.List<Location> locs = ret.searchBySearchField(text, text, text, text);
+					java.util.List<Location> locs = ret.searchBySearchField(text, text, text);
 					
 					if(locs.isEmpty())
 					{

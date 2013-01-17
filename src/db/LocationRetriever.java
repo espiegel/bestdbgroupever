@@ -7,7 +7,7 @@ import objects.Location;
 public class LocationRetriever extends RetrieverBase<Location> {
 
 	private final String[] default_fields = {"location_id"};
-	private final String[] search_fields = {"country", "city", "street","place"};
+	private final String[] search_fields = {"country", "city","place"};
 
 	@Override
 	protected String getTableNames() {

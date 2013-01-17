@@ -6,7 +6,6 @@ public class Location {
 	public String lng;
 	public String country;
 	public String city;
-	public String street;
 	public String place;
 	public int upvotes;
 	public int downvotes;
