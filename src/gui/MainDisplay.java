@@ -37,6 +37,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 
 import db.ConnectionManager;
 import db.FilmRetriever;
+import db.LocationByActorRetriever;
 import db.LocationRetriever;
 import db.TVRetriever;
 import db.UserRetriever;
@@ -203,16 +204,21 @@ public class MainDisplay {
 		btnRadioTv.setText("Television");
 		
 		final Button btnRadioFilm = new Button(group, SWT.RADIO);
-		btnRadioFilm.setBounds(10, 55, 111, 20);
+		btnRadioFilm.setBounds(10, 45, 111, 20);
 		btnRadioFilm.setText("Film");
 		
 		final Button btnRadioLocation = new Button(group, SWT.RADIO);
-		btnRadioLocation.setBounds(10, 91, 111, 20);
+		btnRadioLocation.setBounds(10, 70, 111, 20);
 		btnRadioLocation.setText("Location");
 		
 		final Button btnRadioUsername = new Button(group, SWT.RADIO);
-		btnRadioUsername.setBounds(10, 127, 111, 20);
+		btnRadioUsername.setBounds(10, 95, 111, 20);
 		btnRadioUsername.setText("Username");
+		
+		final Button btnRadioLocByActor = new Button(group, SWT.RADIO);
+		btnRadioLocByActor.setBounds(10, 120, 120, 20);
+		btnRadioLocByActor.setText("Location By Actor");
+
 		
 		final List list = new List(grpSearch, SWT.BORDER | SWT.V_SCROLL);
 		list.addSelectionListener(new SelectionAdapter() {
@@ -395,6 +401,45 @@ public class MainDisplay {
 					
 			} // End of Location If
 			
+			if(currentSearch.equals("Location By Actor"))  //code replication..
+			{ 
+				Location location = new LocationRetriever().retrieve(id); 
+							
+				try
+				{
+					if(location == null)
+					{
+						System.out.println("Empty resultset");
+						return;
+					}
+					
+					String country = location.country;
+					String city = location.city;
+					String place = location.place;
+					float lat = Float.parseFloat(location.lat);
+					float lng = Float.parseFloat(location.lng);
+					int up = location.upvotes;
+					int down = location.downvotes;
+					
+					// locations dont have images
+					lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+
+					
+					lblDetails1.setText("Place: "+place);
+					lblDetails2.setText("Country: "+country);
+					lblDetails3.setText("City: "+city);
+					lblDetails4.setText("Latitude: "+lat+", Longtitude: "+lng);
+					lblDetails5.setText("Upvotes: "+up+", Downvotes: "+down);
+					
+					// TODO: Add this location to the map according to the lat and lng.
+					map.clearAllMarkers();
+					map.addMarker(location.lat, location.lng, place);
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+					
+			} // End of LocationByActor If
+			
 			if(currentSearch.equals("User"))
 			{
 				User user = new UserRetriever().retrieveById(id);
@@ -512,7 +557,23 @@ public class MainDisplay {
 						listIds.add(location.location_id);
 					}
 				}
-					
+				
+				if (btnRadioLocByActor.getSelection()) {
+
+					setCurrentSearch("Location By Actor");
+					LocationByActorRetriever ret = new LocationByActorRetriever();
+					java.util.List<Location> locs = ret.searchBySearchField(text);
+
+					if (locs.isEmpty()) {
+						System.out.println("Empty resultset");
+						return;
+					}
+
+					for (Location location : locs) {
+						list.add(canonicalize(location.place));
+						listIds.add(location.location_id);
+					}
+				}					
 							
 			}
 		});
