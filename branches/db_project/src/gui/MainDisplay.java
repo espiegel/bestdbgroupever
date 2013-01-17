@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import objects.Film;
 import objects.Location;
@@ -37,6 +38,9 @@ import db.FilmRetriever;
 import db.LocationRetriever;
 import db.TVRetriever;
 import db.UserRetriever;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.widgets.Link;
 
 public class MainDisplay {
 
@@ -45,6 +49,7 @@ public class MainDisplay {
 	private Text txtSearch;
 	private Table table;
 	private String currentSearch = "";
+	private ArrayList<Integer> listIds = new ArrayList<Integer>();
 	
 	public String getCurrentSearch() {
 		return currentSearch;
@@ -142,22 +147,24 @@ public class MainDisplay {
 		grpDetails.setLayoutData(fd_grpDetails);
 		grpDetails.setText("Details");
 		
-		final Label lblDetails1 = new Label(grpDetails, SWT.BORDER);
+		
+		
+		final Label lblDetails1 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
 		lblDetails1.setBounds(185, 20, 335, 25);
 		
-		final Label lblDetails2 = new Label(grpDetails, SWT.BORDER);
+		final Label lblDetails2 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
 		lblDetails2.setBounds(185, 57, 335, 25);
 		
-		final Label lblDetails3 = new Label(grpDetails, SWT.BORDER);
+		final Label lblDetails3 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
 		lblDetails3.setBounds(185, 92, 335, 25);
 		
-		final Label lblDetails4 = new Label(grpDetails, SWT.BORDER);
+		final Label lblDetails4 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
 		lblDetails4.setBounds(185, 127, 335, 25);
 		
-		final Label lblDetails5 = new Label(grpDetails, SWT.BORDER);
+		final Label lblDetails5 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
 		lblDetails5.setBounds(185, 162, 335, 25);
 		
-		final Label lblDetails6 = new Label(grpDetails, SWT.BORDER);
+		final Label lblDetails6 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
 		lblDetails6.setBounds(185, 200, 335, 25);
 		
 		final Label lblPic = new Label(grpDetails, SWT.NONE);
@@ -208,8 +215,6 @@ public class MainDisplay {
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				int index = list.getSelectionIndex();
-				
 				// Need to clean the labels...
 				lblDetails1.setText("");
 				lblDetails2.setText("");
@@ -219,17 +224,10 @@ public class MainDisplay {
 				lblDetails6.setText("");
 				lblPic.setImage(null);
 				
-				String currentSelection = list.getItem(index);				
-				if(currentSelection == null || currentSelection.isEmpty())
-					return;
-				
+				int index = list.getSelectionIndex();
 				int id = -1;
-				
-				String[] split = currentSelection.split("ID:");
-				if(split.length != 2)
-					return;
-				
-				id = Integer.parseInt(split[1]);
+			
+				id = listIds.get(index);
 				
 				if(currentSearch.equals("TV"))
 				{
@@ -346,6 +344,7 @@ public class MainDisplay {
 				ResultSet rs;
 				
 				list.removeAll(); // Initialize the list
+				listIds.removeAll(listIds); // Initialize the id list
 				
 				if(btnRadioTv.getSelection())
 				{
@@ -360,7 +359,8 @@ public class MainDisplay {
 					}	
 					
 					for (TVShow show : shows) {
-						list.add(canonicalize(show.name)+" | ID:"+show.media_id);
+						list.add(canonicalize(show.name));
+						listIds.add(show.media_id);
 					}
 				}
 				
@@ -377,7 +377,8 @@ public class MainDisplay {
 					}	
 					
 					for (Film film : films) {
-						list.add(canonicalize(film.name)+" | ID:"+film.media_id);
+						list.add(canonicalize(film.name));
+						listIds.add(film.media_id);
 					}
 				}
 				
@@ -395,7 +396,8 @@ public class MainDisplay {
 					}	
 					
 					for (User user : users_with_name) {
-						list.add(canonicalize(user.getUsername())+" | ID:"+user.getID());
+						list.add(canonicalize(user.getUsername()));
+						listIds.add(user.getID());
 					}
 				}
 				if(btnRadioLocation.getSelection())
@@ -412,7 +414,8 @@ public class MainDisplay {
 					}	
 					
 					for (Location location : locs) {
-						list.add(canonicalize(location.place)+" | ID:"+location.location_id);
+						list.add(canonicalize(location.place));
+						listIds.add(location.location_id);
 					}
 				}
 					
@@ -444,18 +447,14 @@ public class MainDisplay {
 		map.getBrowser().setBounds(10, 24, 540, 291);
 		
 		Group grpComments = new Group(shlTvTraveler, SWT.NONE);
+		grpComments.setText("Comments");
 		FormData fd_grpComments = new FormData();
 		fd_grpComments.top = new FormAttachment(grpMap, 0, SWT.TOP);
-		fd_grpComments.left = new FormAttachment(grpDetails, 0, SWT.LEFT);
+		fd_grpComments.left = new FormAttachment(grpDetails, 0, SWT.LEFT);		
+		
 		fd_grpComments.bottom = new FormAttachment(grpMap, 0, SWT.BOTTOM);
 		fd_grpComments.right = new FormAttachment(100, -10);
 		grpComments.setLayoutData(fd_grpComments);
-		
-		Label lblNewLabel = new Label(grpComments, SWT.CENTER);
-		lblNewLabel.setLocation(10, 20);
-		lblNewLabel.setSize(158, 37);
-		lblNewLabel.setFont(SWTResourceManager.getFont("Segoe UI", 16, SWT.BOLD));
-		lblNewLabel.setText("Comments");
 		
 		table = new Table(grpComments, SWT.BORDER | SWT.FULL_SELECTION);
 		table.setHeaderVisible(true);
