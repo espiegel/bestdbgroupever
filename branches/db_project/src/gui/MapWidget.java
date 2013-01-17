@@ -91,10 +91,19 @@ public class MapWidget {
 		}
 		return false;
 	}
+	public boolean setZoom(int zoom){
+		if (isLoaded()) {
+			String[] params = { Integer.toString(zoom)};
+			return browserExecute("setCenter", params);
+		}
+		return false;
+	}
 	public boolean clearAllMarkers(){
+		if (isLoaded()) {
 		String[] temp={};
-		boolean ok = browserExecute("clearOverlays",temp);
-		return ok;
+		return browserExecute("clearOverlays",temp);
+		}
+		return false;
 	}
 	private boolean browserExecute(String funcName, String[] params) {
 		String paramsStr = "";

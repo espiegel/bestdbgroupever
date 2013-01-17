@@ -18,7 +18,7 @@
 				function initialize() {
 					var coordenadas = new google.maps.LatLng(32.112313,34.801512);
 					var myOptions = {
-						zoom: 16, 
+						zoom: 9, 
 						center: coordenadas,
 						mapTypeId: google.maps.MapTypeId.ROADMAP
 					};
@@ -53,7 +53,9 @@
   					}
   					markersArray=[];
 				}
-				
+				function setZoom(zoom){
+				map.setZoom(zoom);
+				}
 			</script>
 		</head>
 		<body onload="initialize()">
