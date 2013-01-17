@@ -17,7 +17,21 @@ import org.eclipse.swt.events.SelectionEvent;
 public class Profile {
 
 	protected Shell shlProfile;
-
+	private User currentUser;
+	boolean show_password = false;
+	
+	public Profile()
+	{
+		currentUser = Main.getCurrentUser();
+		show_password = true;
+	}
+	
+	public Profile(User user, boolean show_password)
+	{
+		currentUser = user;
+		this.show_password = show_password;
+	}
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -46,13 +60,11 @@ public class Profile {
 		}
 	}
 
+	
 	/**
 	 * Create contents of the window.
 	 */
 	protected void createContents() {
-		User currentUser;
-		
-		currentUser = Main.getCurrentUser();
 
 		shlProfile = new Shell(SWT.CLOSE | SWT.TITLE | SWT.MIN);
 		shlProfile.setText("User Profile");
@@ -68,12 +80,12 @@ public class Profile {
 		Label lblUserName = new Label(shlProfile, SWT.BORDER);
 		lblUserName.setBounds(87, 100, 184, 20);
 		
+		Label lblPassword = new Label(shlProfile, SWT.BORDER);
 		Label lblNewLabel_1 = new Label(shlProfile, SWT.NONE);
+		
 		lblNewLabel_1.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
 		lblNewLabel_1.setBounds(10, 138, 70, 20);
-		lblNewLabel_1.setText("Password:");
-		
-		Label lblPassword = new Label(shlProfile, SWT.BORDER);
+		lblNewLabel_1.setText("Password:");			
 		lblPassword.setBounds(87, 137, 184, 20);
 		
 		Label lblNewLabel_3 = new Label(shlProfile, SWT.NONE);
@@ -128,7 +140,9 @@ public class Profile {
 			shlProfile.setText("Profile of "+currentUser.getUsername());
 			
 			lblUserName.setText(currentUser.getUsername());
-			lblPassword.setText(currentUser.getPassword());
+			if(show_password) lblPassword.setText(currentUser.getPassword());
+			else lblPassword.setText("*****");
+			
 			lblUpvotes.setText(String.valueOf(currentUser.getUpvotes()));
 			lblDownvotes.setText(String.valueOf(currentUser.getDownvotes()));
 			lblIsAdmin.setText((currentUser.isAdmin()?"Yes":"No"));
