@@ -97,6 +97,7 @@ public class MainDisplay {
 			return null;
 		}
 	}
+	
 	/**
 	 * Create contents of the window.
 	 */
@@ -216,14 +217,8 @@ public class MainDisplay {
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				// Need to clean the labels...
-				lblDetails1.setText("");
-				lblDetails2.setText("");
-				lblDetails3.setText("");
-				lblDetails4.setText("");
-				lblDetails5.setText("");
-				lblDetails6.setText("");
-				lblPic.setImage(null);
+				clearAllLabels(lblDetails1, lblDetails2, lblDetails3,
+						lblDetails4, lblDetails5, lblDetails6, lblPic);
 				
 				int index = list.getSelectionIndex();
 				int id = -1;
@@ -342,7 +337,6 @@ public class MainDisplay {
 			if(currentSearch.equals("User"))
 			{
 				User user = new UserRetriever().retrieveById(id);
-				System.out.println("retrieved id="+id);
 				if(user == null)
 				{
 					System.out.println("Empty resultset");
@@ -358,6 +352,21 @@ public class MainDisplay {
 					
 			}
 			} // End of widgetSelected
+
+			// NOTE: this method is part of the SelectionAdapater!
+			private void clearAllLabels(final Label lblDetails1,
+					final Label lblDetails2, final Label lblDetails3,
+					final Label lblDetails4, final Label lblDetails5,
+					final Label lblDetails6, final Label lblPic) {
+				// Need to clean the labels...
+				lblDetails1.setText("");
+				lblDetails2.setText("");
+				lblDetails3.setText("");
+				lblDetails4.setText("");
+				lblDetails5.setText("");
+				lblDetails6.setText("");
+				lblPic.setImage(null);
+			}
 		});
 		list.setBounds(185, 72, 365, 148);
 		
@@ -424,7 +433,6 @@ public class MainDisplay {
 					for (User user : users_with_name) {
 						list.add(canonicalize(user.getUsername()));
 						listIds.add(user.getID());
-						System.out.println("added id "+user.getID());
 					}
 				}
 				if(btnRadioLocation.getSelection())
