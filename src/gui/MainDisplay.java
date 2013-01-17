@@ -259,7 +259,6 @@ public class MainDisplay {
 										lblPic.setImage(img);
 										
 									} catch (IOException e) {
-										// TODO Auto-generated catch block
 										e.printStackTrace();
 									}
 								}
@@ -276,7 +275,6 @@ public class MainDisplay {
 						lblDetails5.setText("Number of Seasons: "+String.valueOf(numSeasons));
 						lblDetails6.setText("Number of Episodes: "+String.valueOf(numEpisodes));
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 						
@@ -314,7 +312,6 @@ public class MainDisplay {
 									lblPic.setImage(img);
 									
 								} catch (IOException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 							}
@@ -329,11 +326,52 @@ public class MainDisplay {
 					lblDetails2.setText("Director(s): "+director);
 					lblDetails3.setText("Release Date: "+release);
 				} catch (Exception ex) {
-					// TODO Auto-generated catch block
 					ex.printStackTrace();
 				}
 					
 			} // End of Film If
+			
+			if(currentSearch.equals("Location"))
+			{
+				Location location = new LocationRetriever().retrieve(id);
+							
+				try
+				{
+					if(location == null)
+					{
+						System.out.println("Empty resultset");
+						return;
+					}
+					
+					String country = location.country;
+					String city = location.city;
+					String street = location.street;
+					if(street==null || street.isEmpty()) street = "None";
+					String place = location.place;
+					float lat = Float.parseFloat(location.lat);
+					float lng = Float.parseFloat(location.lng);
+					int up = location.upvotes;
+					int down = location.downvotes;
+					
+					// locations dont have images
+					lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+
+					
+					lblDetails1.setText("Place: "+place);
+					lblDetails2.setText("Country: "+country);
+					lblDetails3.setText("City: "+city);
+					lblDetails4.setText("Street: "+street);
+					lblDetails5.setText("Latitude: "+lat+", Longtitude: "+lng);
+					lblDetails6.setText("Upvotes: "+up+", Downvotes: "+down);
+					
+					// TODO: Add this location to the map according to the lat and lng.
+					
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+					
+			} // End of Location If
+			
 			if(currentSearch.equals("User"))
 			{
 				User user = new UserRetriever().retrieveById(id);
@@ -374,9 +412,7 @@ public class MainDisplay {
 		btnSearch.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String sql = null;
 				String text = txtSearch.getText();
-				ResultSet rs;
 				
 				list.removeAll(); // Initialize the list
 				listIds.removeAll(listIds); // Initialize the id list
@@ -440,7 +476,7 @@ public class MainDisplay {
 					setCurrentSearch("Location");
 					
 					LocationRetriever ret = new LocationRetriever();
-					java.util.List<Location> locs = ret.searchBySearchField(text, text, text);
+					java.util.List<Location> locs = ret.searchBySearchField(text, text, text, text);
 					
 					if(locs.isEmpty())
 					{
