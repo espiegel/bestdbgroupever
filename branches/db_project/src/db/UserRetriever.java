@@ -59,4 +59,7 @@ public class UserRetriever extends RetrieverBase<User> {
 		return retrieveFirst("name = '" + user + "' AND password = '" + password +"'");
 	}
 
+	public User retrieveById(int id) {
+		return retrieveFirst("user_id = " + id);
+	}
 }
