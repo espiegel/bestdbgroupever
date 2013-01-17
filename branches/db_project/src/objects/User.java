@@ -2,6 +2,14 @@ package objects;
 
 public class User {
 
+	private String username;
+	private String password;
+	private int upvotes;
+	private int downvotes;
+	private int badges;
+	private int id;
+	private boolean isAdmin;
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -50,13 +58,7 @@ public class User {
 		return true;
 	}
 
-	private String username;
-	private String password;
-	private int upvotes;
-	private int downvotes;
-	private int badges;
-	private int id;
-	private boolean isAdmin;
+
 	
 	public User()
 	{
