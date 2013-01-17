@@ -51,7 +51,7 @@ public class MainDisplay {
 	private Table table;
 	private String currentSearch = "";
 	private ArrayList<Integer> listIds = new ArrayList<Integer>();
-	
+	private MapWidget map;
 	public String getCurrentSearch() {
 		return currentSearch;
 	}
@@ -362,7 +362,8 @@ public class MainDisplay {
 					lblDetails5.setText("Upvotes: "+up+", Downvotes: "+down);
 					
 					// TODO: Add this location to the map according to the lat and lng.
-					
+					map.clearAllMarkers();
+					map.addMarker(location.lat, location.lng, place);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -510,7 +511,7 @@ public class MainDisplay {
 		
 		//new google map
 		/*look at the documentation in the MapWidget class*/
-		MapWidget map = new MapWidget(grpMap, "map.html");
+		map = new MapWidget(grpMap, "map.html");
 		map.init();
 		map.getBrowser().setBounds(10, 24, 540, 291);
 		
