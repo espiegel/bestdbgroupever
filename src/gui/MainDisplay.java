@@ -269,7 +269,10 @@ public class MainDisplay {
 								}
 							});
 						}
-
+						else
+						{
+							lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+						}
 						lblDetails1.setText("Name: "+name);
 						lblDetails2.setText("Director(s): "+director);
 						lblDetails3.setText("First Episode: "+first.toString());
@@ -321,7 +324,11 @@ public class MainDisplay {
 							}
 						});
 					}
-
+					else
+					{
+						lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+					}
+					
 					lblDetails1.setText("Name: "+name);
 					lblDetails2.setText("Director(s): "+director);
 					lblDetails3.setText("Release Date: "+release);
