@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+			<style type="text/css">
+				html { height: 100% }
+				body { height: 100%; margin: 0; padding: 0 }
+				#map_canvas { height: 100% }
+			</style>
+			<script type="text/javascript"
+				src="http://maps.googleapis.com/maps/api/js?sensor=false">
+			</script>
+			<script type="text/javascript">
+			
+				var map;
+				var i=0;
+
+				function initialize() {
+					var coordenadas = new google.maps.LatLng(37.8262,-122.423);
+					var myOptions = {
+						zoom: 1, 
+						center: coordenadas,
+						mapTypeId: google.maps.MapTypeId.ROADMAP
+					};
+					
+					map = new google.maps.Map(document.getElementById("map_canvas"),
+						myOptions);
+
+				}
+				function codeAddress(address,episode) {
+					i=i+1;
+					var out;
+					var coordenadas;
+					var geocoder = new google.maps.Geocoder();
+					geocoder.geocode( { 'address': address}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK) {
+						coordenadas=results[0].geometry.location;
+						addRow('dataTable',address,coordenadas,episode);
+					} else {
+						/*alert("Request"+i+" : Geocode was not successful for the following reason: " + status);*/
+						window.document.title="error";
+					}
+					}); 
+					return out;
+				}
+				function getLat(){
+					return mylats;
+				}
+				function addRow(tableID,place,cord,episode) {
+					var table = document.getElementById(tableID);
+					var rowCount = table.rows.length;
+					var row = table.insertRow(rowCount);	
+					var cell1 = row.insertCell(0);
+					cell1.innerHTML = "#place#"+place+"#/place#";
+					cell1 = row.insertCell(1);
+					cell1.innerHTML = "#coordinates#"+cord.lat()+","+cord.lng()+"#/coordinates#";
+					cell1 = row.insertCell(2);
+					cell1.innerHTML = "#scene#"+episode+"#/scene#";
+					window.document.title="tableloaded";
+				}
+				function clearTable()
+				{
+					var tableRef = document.getElementById('dataTable');
+					while ( tableRef.rows.length > 0 )
+					{
+					  tableRef.deleteRow(0);
+					}
+				}
+			</script>
+		</head>
+		<body onload="initialize()">
+			<TABLE id="dataTable" width="350px" border="1"></TABLE>
+		</body>
+	</html>

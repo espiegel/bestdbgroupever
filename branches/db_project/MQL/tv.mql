@@ -1,0 +1,35 @@
+[{
+  "img:/common/topic/image": [{
+    "id":       null,
+    "limit":    1,
+    "optional": true
+  }],
+  "firstep:air_date_of_final_episode": null,
+  "lastep:air_date_of_first_episode": null,
+  "nume:number_of_episodes":null,
+  "nums:number_of_seasons":null,
+  "limit":         500,
+  "nam:name":      null,
+  "freebaseid:mid":null,
+  "creators:program_creator": [{
+    "index":    null,
+    "limit":    5,
+    "name":     null,
+    "optional": true,
+    "sort":     "index",
+    "type":     "/tv/tv_program_creator"
+  }],
+  "type":          "/tv/tv_program",
+  "cast:regular_cast": [{
+    "actor": {
+      "name": null,
+      "mid":  null
+    },
+    "character": {
+      "name":     null,
+      "optional": true
+    },
+    "limit": 20,
+    "type":  "/tv/regular_tv_appearance"
+  }]
+}]

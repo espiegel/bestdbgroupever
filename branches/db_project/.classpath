@@ -9,5 +9,11 @@
 	<classpathentry kind="lib" path="swt-4.2.1-gtk-linux-x86.jar"/>
 	<classpathentry kind="lib" path="org.eclipse.swt_3.100.1.v4234e.jar"/>
 	<classpathentry kind="lib" path="swt-4.2.1-cocoa-macosx-x86_64.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Yoav/שולחן העבודה/commons-codec-1.5.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Yoav/שולחן העבודה/commons-httpclient-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Yoav/שולחן העבודה/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Yoav/שולחן העבודה/Freebase.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Yoav/שולחן העבודה/mysql-connector-java-5.0.8-bin.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Yoav/שולחן העבודה/stringtree-json-2.0.5.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
