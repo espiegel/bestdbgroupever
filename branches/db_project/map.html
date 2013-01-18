@@ -22,10 +22,10 @@
 						center: coordenadas,
 						mapTypeId: google.maps.MapTypeId.ROADMAP
 					};
+              
 					
 					map = new google.maps.Map(document.getElementById("map_canvas"),
 						myOptions);
-
 				}
 				function newMarker(lat,lng,info){  
 					var coordenadas = new google.maps.LatLng(lat,lng);
@@ -33,6 +33,7 @@
 						map: map,
 						position: coordenadas
 					});
+					marker.setTitle(info);
 					markersArray.push(marker);
 					var infoWindow = new google.maps.InfoWindow();
 					google.maps.event.addListener(marker, 'click', function () {
@@ -42,6 +43,8 @@
 							infoWindow.open(map, this);
 						});
 					map.setCenter(coordenadas);
+					
+					
 				}
 				function setCenter(lat,lng){
 				var coordenadas = new google.maps.LatLng(lat,lng);
@@ -56,6 +59,7 @@
 				function setZoom(zoom){
 				map.setZoom(zoom);
 				}
+				
 			</script>
 		</head>
 		<body onload="initialize()">
