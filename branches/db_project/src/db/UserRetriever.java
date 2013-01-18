@@ -64,6 +64,6 @@ public class UserRetriever extends RetrieverBase<User> {
 	}
 	
 	public User retrieveByName(String name) {
-		return retrieveFirst("name = " + name);
+		return retrieveFirst("name = '" + name+"'");
 	}
 }
