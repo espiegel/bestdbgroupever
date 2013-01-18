@@ -7,9 +7,11 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import main.Main;
+import objects.CommentOfUser;
 import objects.Comment;
 import objects.Film;
 import objects.Location;
@@ -41,6 +43,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import db.CommentOfUserRetriever;
 import db.CommentRetriever;
 import db.ConnectionManager;
 import db.FilmRetriever;
@@ -62,10 +65,20 @@ public class MainDisplay {
 	private Table commentTable;
 	private String currentSearch = "";
 	private ArrayList<Integer> listIds = new ArrayList<Integer>();
+	private ArrayList<Integer> commentIds = new ArrayList<Integer>();
 	private MapWidget map;
 	private int currentLocationId;
 	private CLabel lblCurrentLocation=null;
+	private Comment currentComment = null;
 	
+	public Comment getCurrentComment() {
+		return currentComment;
+	}
+
+	public void setCurrentComment(Comment currentComment) {
+		this.currentComment = currentComment;
+	}
+
 	public int getCurrentLocationId() {
 		return currentLocationId;
 	}
@@ -229,7 +242,7 @@ public class MainDisplay {
 		lblCurrentLocation.setAlignment(SWT.CENTER);
 		lblCurrentLocation.setBounds(17, 24, 261, 29);
 		lblCurrentLocation.setText("");
-		
+
 		commentTable = new Table(grpComments, SWT.BORDER | SWT.FULL_SELECTION);
 		commentTable.setHeaderVisible(true);
 		commentTable.setBounds(10, 59, 538, 256);
@@ -269,14 +282,209 @@ public class MainDisplay {
 		btnAddComment.setBounds(284, 20, 141, 37);
 		btnAddComment.setText("Add Comment");
 		
-		Button btnUpvote = new Button(grpComments, SWT.NONE);
+		final Button btnUpvote = new Button(grpComments, SWT.NONE);
 		btnUpvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_up_black.png"));
 		btnUpvote.setBounds(442, 20, 41, 37);
 		
-		Button btnDownvote = new Button(grpComments, SWT.NONE);
+		final Button btnDownvote = new Button(grpComments, SWT.NONE);
 		btnDownvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down_black.png"));
 		btnDownvote.setBounds(489, 20, 41, 37);
 		
+		// Take care of upvotes
+		btnUpvote.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+				// Do nothing if no comment selected
+				if(currentComment == null)
+					return;
+				
+				Statement stmt;
+				
+				// Get the current vote. -1 for downvote. 0 for nothing. +1 for upvote.
+				int vote = checkUserVote();
+				
+				// User has already upvoted. undo the upvote
+				if(vote == 1)
+				{
+					btnUpvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_up_black.png"));
+					
+					try {
+						stmt = ConnectionManager.conn.createStatement();
+						
+						// Update these tables with new upvote
+						stmt.executeUpdate("UPDATE CommentOfUser SET vote=0 WHERE comment_id="+currentComment.getId());
+						
+						stmt.executeUpdate("UPDATE Comments SET upvotes=upvotes-1 WHERE comment_id="+currentComment.getId());
+
+						stmt.executeUpdate("UPDATE Users SET upvotes=upvotes-1 WHERE user_id="+currentComment.getUser_id());
+						
+						stmt.executeUpdate("UPDATE Locations SET upvotes=upvotes-1 WHERE location_id="+currentComment.getLocation_id());
+						
+						stmt.close();
+						
+						// Reload comment table
+						loadCommentsByLocationId(currentLocationId);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				// Perform an upvote
+				// Add an upvote to the Comments table; add an upvote to the user who wrote the comment; add an upvote to the location itself
+				// also add an upvote to the CommentOfUser table 
+				if(vote == 0)
+				{
+					btnUpvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_up.png"));
+								
+					try {
+						stmt = ConnectionManager.conn.createStatement();
+						
+						// Update these tables with new upvote
+						stmt.executeUpdate("UPDATE CommentOfUser SET vote=1 WHERE comment_id="+currentComment.getId());
+						
+						stmt.executeUpdate("UPDATE Comments SET upvotes=upvotes+1 WHERE comment_id="+currentComment.getId());
+
+						stmt.executeUpdate("UPDATE Users SET upvotes=upvotes+1 WHERE user_id="+currentComment.getUser_id());
+						
+						stmt.executeUpdate("UPDATE Locations SET upvotes=upvotes+1 WHERE location_id="+currentComment.getLocation_id());
+						
+						stmt.close();
+						
+						// Reload comment table
+						loadCommentsByLocationId(currentLocationId);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}					
+				}
+				
+				// This was previously downvoted. change now to upvote
+				if(vote == -1)
+				{
+					btnUpvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_up.png"));
+					btnDownvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down_black.png"));
+					
+					try {
+						stmt = ConnectionManager.conn.createStatement();
+						
+						// Update these tables with new upvote
+						stmt.executeUpdate("UPDATE CommentOfUser SET vote=1 WHERE comment_id="+currentComment.getId());
+						
+						stmt.executeUpdate("UPDATE Comments SET upvotes=upvotes+1, downvotes=downvotes-1 WHERE comment_id="+currentComment.getId());
+
+						stmt.executeUpdate("UPDATE Users SET upvotes=upvotes+1, downvotes=downvotes-1 WHERE user_id="+currentComment.getUser_id());
+						
+						stmt.executeUpdate("UPDATE Locations SET upvotes=upvotes+1, downvotes=downvotes-1 WHERE location_id="+currentComment.getLocation_id());
+						
+						stmt.close();
+						
+						// Reload comment table
+						loadCommentsByLocationId(currentLocationId);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}					
+				}
+				
+			}
+		});
+
+		// Take care of downvotes
+		btnDownvote.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				
+				// Do nothing if no comment selected
+				if(currentComment == null)
+					return;
+				
+				Statement stmt;
+				
+				// Get the current vote. -1 for downvote. 0 for nothing. +1 for upvote.
+				int vote = checkUserVote();
+				
+				// User has already downvoted. undo the downvote
+				if(vote == -1)
+				{
+					btnDownvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down_black.png"));
+					
+					try {
+						stmt = ConnectionManager.conn.createStatement();
+						
+						// Update these tables with new downvote
+						stmt.executeUpdate("UPDATE CommentOfUser SET vote=0 WHERE comment_id="+currentComment.getId());
+						
+						stmt.executeUpdate("UPDATE Comments SET downvotes=downvotes-1 WHERE comment_id="+currentComment.getId());
+
+						stmt.executeUpdate("UPDATE Users SET downvotes=downvotes-1 WHERE user_id="+currentComment.getUser_id());
+						
+						stmt.executeUpdate("UPDATE Locations SET downvotes=downvotes-1 WHERE location_id="+currentComment.getLocation_id());
+						
+						stmt.close();
+						
+						// Reload comment table
+						loadCommentsByLocationId(currentLocationId);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				
+				// Perform a downvote
+				// Add a downvote to the Comments table; add a downvote to the user who wrote the comment; add a downvote to the location itself
+				// also add a downvote to the CommentOfUser table 
+				if(vote == 0)
+				{
+					btnDownvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down.png"));
+								
+					try {
+						stmt = ConnectionManager.conn.createStatement();
+						
+						// Update these tables with new downvote
+						stmt.executeUpdate("UPDATE CommentOfUser SET vote=-1 WHERE comment_id="+currentComment.getId());
+						
+						stmt.executeUpdate("UPDATE Comments SET downvotes=downvotes+1 WHERE comment_id="+currentComment.getId());
+
+						stmt.executeUpdate("UPDATE Users SET downvotes=downvotes+1 WHERE user_id="+currentComment.getUser_id());
+						
+						stmt.executeUpdate("UPDATE Locations SET downvotes=downvotes+1 WHERE location_id="+currentComment.getLocation_id());
+						
+						stmt.close();
+						
+						// Reload comment table
+						loadCommentsByLocationId(currentLocationId);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}					
+				}
+				
+				// This was previously upvoted. change now to downvote
+				if(vote == 1)
+				{
+					btnUpvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_up_black.png"));
+					btnDownvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down.png"));
+					
+					try {
+						stmt = ConnectionManager.conn.createStatement();
+						
+						// Update these tables with new downvote
+						stmt.executeUpdate("UPDATE CommentOfUser SET vote=-1 WHERE comment_id="+currentComment.getId());
+						
+						stmt.executeUpdate("UPDATE Comments SET upvotes=upvotes-1, downvotes=downvotes+1 WHERE comment_id="+currentComment.getId());
+
+						stmt.executeUpdate("UPDATE Users SET upvotes=upvotes-1, downvotes=downvotes+1 WHERE user_id="+currentComment.getUser_id());
+						
+						stmt.executeUpdate("UPDATE Locations SET upvotes=upvotes-1, downvotes=downvotes+1 WHERE location_id="+currentComment.getLocation_id());
+						
+						stmt.close();
+						
+						// Reload comment table
+						loadCommentsByLocationId(currentLocationId);
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}					
+				}
+				
+			}
+		});
 		
 		
 		Group grpSearch = new Group(shlTvTraveler, SWT.NONE);
@@ -683,6 +891,22 @@ public class MainDisplay {
 		btnSearch.setBounds(441, 26, 109, 30);
 		btnSearch.setText("Search");
 		
+		// All listeners should either be at the end or in a different file...
+		commentTable.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				int index = commentTable.getSelectionIndex();
+				
+				int id = -1;
+				id = commentIds.get(index);
+				setCurrentComment(new CommentRetriever().retrieveFirst("comment_id="+id));				
+				
+				// Set the button images accordingly...
+				btnDownvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down"+(checkUserVote()==-1?"":"_black")+".png"));
+				btnUpvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_up"+(checkUserVote()==1?"":"_black")+".png"));
+
+			}
+		});
 	}
 
 	public String canonicalize(String str){
@@ -696,10 +920,19 @@ public class MainDisplay {
 		}
 	}
 
+	private void clearCommentTable() {
+		// Clear the Comment Table
+		commentTable.removeAll();
+		commentIds.removeAll(commentIds);
+		currentComment = null;
+	}
+	
 	public void loadCommentsByLocationId(int id) {
 		// Now loading all the comments
 		java.util.List<Comment> commentList = new CommentRetriever().searchBySearchField(String.valueOf(id));
-		commentTable.removeAll();
+		
+		// Clear the comment table
+		clearCommentTable();
 		
 		int i = 0;
 		TableItem ti;
@@ -714,8 +947,11 @@ public class MainDisplay {
 			String comment = c.getComment();
 			Date date = c.getDatetime();
 			ti.setText(new String[]{date.toString(), user, String.valueOf(upvotes), String.valueOf(downvotes), comment});
+			commentIds.add(c.getId());
 		}
 	}
+
+
 	public void loadCommentsByLocationCoord(String lat,String lng){
 		java.util.List<Location> locations=null ;
 		try {
@@ -752,5 +988,18 @@ public class MainDisplay {
 		
 		for(Location l : locations)
 			map.addMarker(l.lat, l.lng, l.place,getScene(l.location_id, media_id, locationsOfMedia));
+	}
+
+	/**
+	 * 
+	 * @return -1 for downvote. 0 for no votes. +1 for upvote.
+	 */
+	private int checkUserVote() {
+		// Check if the user hasn't already upvoted the current selected comment
+		CommentOfUser commentOfUser = new CommentOfUserRetriever().retrieveFirst("comment_id="+currentComment.getId()+
+				" AND user_id="+Main.getCurrentUser().getID());
+		
+		// This means he has already upvoted
+		return commentOfUser.getVote();
 	}
 }

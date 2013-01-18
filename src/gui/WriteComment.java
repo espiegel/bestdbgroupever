@@ -3,6 +3,7 @@ package gui;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import objects.Comment;
 import objects.User;
 
 import org.eclipse.swt.widgets.Display;
@@ -14,6 +15,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import db.CommentRetriever;
 import db.ConnectionManager;
 import db.UserRetriever;
 
@@ -91,11 +93,20 @@ public class WriteComment {
 					// Otherwise we successfully registered.
 					stmt = ConnectionManager.conn.createStatement();
 					System.out.println("Attempting to do:\nINSERT INTO Comments (user_id, location_id, comment, upvotes, downvotes, is_check_in, date) "+
-					                   "VALUES ("+currentUser.getID()+", "+currentLocationId+", '"+parsedText+"', 0, 0, 1, '"+new java.sql.Date(new java.util.Date().getTime())+"')");
+					                   "VALUES ("+currentUser.getID()+", "+currentLocationId+", '"+parsedText+"', 0, 0, 1, '"+new java.sql.Timestamp(new java.util.Date().getTime())+"')");
 					
 					// TODO: add time to the date.. its only 2013-01-18 without any time...
 					stmt.executeUpdate("INSERT INTO Comments (user_id, location_id, comment, upvotes, downvotes, is_check_in, date) "+
-					                   "VALUES ("+currentUser.getID()+", "+currentLocationId+", '"+parsedText+"', 0, 0, 1, '"+new java.sql.Date(new java.util.Date().getTime())+"')");
+					                   "VALUES ("+currentUser.getID()+", "+currentLocationId+", '"+parsedText+"', 0, 0, 1, '"+new java.sql.Timestamp(new java.util.Date().getTime())+"')");
+					
+					// Get the current comment_id. (which is maximal because comment_id is auto-incrementing)
+					Comment c = new CommentRetriever().retrieveFirst(ConnectionManager.conn.prepareStatement("SELECT * FROM Comments WHERE comment_id = "+
+					"( SELECT MAX(comment_id) FROM Comments)"));
+					
+					int commentId = c.getId();
+					
+					stmt.executeUpdate("INSERT INTO CommentOfUser (comment_id, user_id, vote) "+
+			                   "VALUES ("+commentId+", "+currentUser.getID()+", 0)");
 								
 					// closing
 					stmt.close();
