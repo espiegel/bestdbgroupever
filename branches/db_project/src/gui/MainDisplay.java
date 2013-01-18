@@ -13,6 +13,7 @@ import main.Main;
 import objects.Comment;
 import objects.Film;
 import objects.Location;
+import objects.LocationOfMedia;
 import objects.TVShow;
 import objects.User;
 
@@ -44,6 +45,7 @@ import db.CommentRetriever;
 import db.ConnectionManager;
 import db.FilmRetriever;
 import db.LocationByActorRetriever;
+import db.LocationOfMediaRetriever;
 import db.LocationRetriever;
 import db.TVRetriever;
 import db.UserRetriever;
@@ -385,14 +387,15 @@ public class MainDisplay {
 						lblDetails5.setText("Number of Seasons: "+String.valueOf(numSeasons));
 						lblDetails6.setText("Number of Episodes: "+String.valueOf(numEpisodes));
 						
-						java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
+						/*java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
 								"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
 						        "LocationOfMedia.media_id = "+id));
 						// Put all location markers on the map
 						map.clearAllMarkers();
 						
 						for(Location l : locations)
-							map.addMarker(l.lat, l.lng, l.place);
+							map.addMarker(l.lat, l.lng, l.place);*/
+						addLocaionMarkers(id);
 						
 						// TODO: Zoom Out on all of these markers ???
 						
@@ -733,5 +736,28 @@ public class MainDisplay {
 		currentLocationId=location_id;
 		lblCurrentLocation.setText(locations.get(0).place);
 		loadCommentsByLocationId(location_id);
+	}
+	public String getScene(int location_id,int media_id,java.util.List<LocationOfMedia> locationsOfMedia){
+		for(LocationOfMedia locationOfMedia : locationsOfMedia){
+			if(locationOfMedia.location_id == location_id &&
+					locationOfMedia.media_id == media_id){
+				return canonicalize(locationOfMedia.scene_episode);
+			}
+		}
+		return "no info";
+	}
+	public void addLocaionMarkers(int media_id) throws SQLException{
+		java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
+				"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
+		        "LocationOfMedia.media_id = "+media_id));
+		
+		java.util.List<LocationOfMedia> locationsOfMedia = new LocationOfMediaRetriever().retrieve(ConnectionManager.conn.prepareStatement(
+				"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
+		        "LocationOfMedia.media_id = "+media_id));
+		// Put all location markers on the map
+		map.clearAllMarkers();
+		
+		for(Location l : locations)
+			map.addMarker(l.lat, l.lng, l.place,getScene(l.location_id, media_id, locationsOfMedia));
 	}
 }
