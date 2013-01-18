@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import objects.Comment;
-import objects.User;
 
 public class CommentRetriever extends RetrieverBase<Comment> {
 
