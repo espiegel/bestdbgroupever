@@ -11,19 +11,41 @@ import java.util.List;
  * @author maayan
  *	This class is to be inherited and used to implement classes that serve as the main gateway to retrieve information
  *	from the database. It asks for certain information from the inheritors (represented by the abstract methods) and
- *	supplies common functions to retrieve data.
+ *	supplies common functions to retrieve data using the objects package objects as output.
  * @param <T>
  */
 public abstract class RetrieverBase<T> {
 	
+	/**
+	 * @return The table names that are used to retrieve from. For example, the string "foo, bar"
+	 */
 	protected abstract String getTableNames();
+	
+	/**
+	 * @return The part of the where statement that performs the join for (conceptual) objects that span across tables. For example, for a film the data is both in "film" and "media" tables. 
+	 */
 	protected abstract String getJoinLine();
+	
+	/**
+	 * @return The fields with which we would commonly want to retrieve a specific item. For example, the username for User. 
+	 */
 	protected abstract String[] getDefaultFields();
+	
+	/**
+	 * @return A general search here is a "LIKE '%...%'" retrieval, used for a broad search. The fields here will be compared using the "LIKE" operator and ORed.  
+	 */
 	protected abstract String[] getFieldForGeneralSearch();
+	
+	/**
+	 * @param result_set A result set that is currently pointing to a row
+	 * @return a db_project concrete Java object representing the item in the row.
+	 */
 	protected abstract T makeObject(ResultSet result_set);
 	
 	/**
-	 * Works only on items objects with public fields whose name corresponds to the fieldnames in the db
+	 * Tries to fill automatically using reflection the fields of an 'objects' object from the result set.
+	 * Works only on items objects with public fields whose name corresponds to the fieldnames in the db.
+	 * To be called by the inheritor where appropriate.
 	 * @param result_set
 	 * @return
 	 * @throws SQLException 
@@ -39,6 +61,11 @@ public abstract class RetrieverBase<T> {
 		return instance;
 	}
 	
+	/**
+	 * Makes a select statement with the proper join AND the added where conditions, if any 
+	 * @param added_where_conditions added where conditions, if any
+	 * @return
+	 */
 	protected String makeSelect(String added_where_conditions) {
 		final StringBuilder sb = new StringBuilder("SELECT * FROM ");
 		sb.append(getTableNames());
@@ -60,6 +87,11 @@ public abstract class RetrieverBase<T> {
 		return sb.toString();
 	}
 	
+	/**
+	 * Automatically handles the join for the tables.
+	 * @param where_clause added where conditions, if any
+	 * @return the first object returned for the where_clause, null if non.
+	 */
 	public T retrieveFirst (String where_clause) {
 		List<T> all_results = retrieve(where_clause);
 		
@@ -68,6 +100,10 @@ public abstract class RetrieverBase<T> {
 		return all_results.get(0);
 	}
 	
+	/**
+	 * @param statement
+	 * @return the first object returned for the query, null if non.
+	 */
 	public T retrieveFirst (PreparedStatement statement) {
 		List<T> all_results = retrieve(statement);
 		
@@ -76,16 +112,25 @@ public abstract class RetrieverBase<T> {
 		return all_results.get(0);
 	}
 	
+	/**
+	 * Automatically handles the join for the tables.
+	 * @param where_clause added where conditions, if any
+	 * @return A list of all the returned objects, empty list if non.
+	 */
 	public List<T> retrieve(String where_clause) {
 		final String select_statement = makeSelect(where_clause);
 		try {
 			return retrieve(ConnectionManager.conn.prepareStatement(select_statement));
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
+			return Collections.emptyList();
 		} 
 	}
 	
+	/**
+	 * @param statement
+	 * @return A list of all the returned objects, empty list if non.
+	 */
 	public List<T> retrieve(PreparedStatement statement) {
 		ResultSet result_set = null;
 		
@@ -145,6 +190,14 @@ public abstract class RetrieverBase<T> {
 		return ConnectionManager.conn.prepareStatement(makeSelect(full_sql.toString()));
 	}
 	
+	/**
+	 * Used for a common search for the inheritor related elements. This is used for searching over strings,
+	 * for example when searching on a name. The fields will be searched with the LIKE operator and the LIKE statements
+	 * will be ORed.
+	 * The fields (and their order) are determined by the inheritor.
+	 * @param field_values
+	 * @return A list of all the found objects, empty list if non. 
+	 */
 	public List<T> searchBySearchField(String... field_values) {
 		try {
 			if (general_search_statement==null) general_search_statement=makeGeneralSearchStatement();
@@ -166,6 +219,12 @@ public abstract class RetrieverBase<T> {
 		}
 	}
 
+	/**
+	 * Used to retrieve a specific object from the database, identified by the default fields (these are set by the inheritor).
+	 * The order of evaluation of the received values is determined by the order of the fields in the inheritor class.
+	 * @param default_field_values
+	 * @return The object defined by this values, null if non.
+	 */
 	public T retrieve(Object... default_field_values) {
 		try {
 			if(default_statement==null) default_statement=makeDefaultStatement();
