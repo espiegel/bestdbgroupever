@@ -13,12 +13,19 @@ import com.narphorium.freebase.services.exceptions.FreebaseServiceException;
 import FreeBase.Uploader;
 import IMDB_Filmaps.IMDBGeoCoding;
 import IMDB_Filmaps.XMLParser;
-
+/**
+ * GUI should call one of this class methods using one of the examples
+ * in the comment in the constructor.
+ * @author Yoav
+ *
+ */
 public class DataUploader {
 
-	private DataUploader(){
-		/* example of all oprions*/
-		Connection connect = null;
+
+	public DataUploader(){
+		/* example of all options*/
+		
+		/*Connection connect = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver").newInstance();
 			String address = "jdbc:mysql://localhost:3305/DbMysql02";
@@ -26,8 +33,10 @@ public class DataUploader {
 			connect = DriverManager.getConnection(address, user, pass);
 		} catch (Exception e) {
 
-		}
+		}*/
+		
 		// IMDB Upload
+		/*
 		String IMDBListBeforeParsing = "IMDB\\IMDBLocations.list";
 		String geoCodeHTML = "IMDB\\geocode.html";
 		String IMDBListAfterParsing = "IMDB\\IMDBLocations.xml";
@@ -48,8 +57,10 @@ public class DataUploader {
 		}
 		if (!IMDB_OK)
 			System.out.println("error parsing :" + IMDBListAfterParsing + " !");
-
+		*/
+		
 		// Filmaps Upload
+		/*
 		int FilmapsLimit = 10;
 		String FilmapsLocationsPath = "Filmaps\\FilmapsLocations.list";
 		boolean Filmaps_OK = false;
@@ -67,8 +78,10 @@ public class DataUploader {
 		}
 		if (!Filmaps_OK)
 			System.out.println("error parsing filmaps !");
-
+		*/
+		
 		// Freebase Upload
+		/*
 		int FreebaseLimit = 1;// will be 10*500=5000
 		// TV Shows
 		try {
@@ -79,9 +92,10 @@ public class DataUploader {
 			System.out.println("SQLException");
 		} catch (FreebaseServiceException e) {
 			System.out.println("FreebaseServiceException");
-		}
+		}*/
+		
 		// Films
-		try {
+		/*try {
 			FreebaseUpload(connect, FreebaseLimit, false);
 		} catch (IOException e) {
 			System.out.println("IOException");
@@ -89,7 +103,7 @@ public class DataUploader {
 			System.out.println("SQLException");
 		} catch (FreebaseServiceException e) {
 			System.out.println("FreebaseServiceException");
-		}
+		}*/
 	}
 	public static boolean IMDBUpload(Connection connect,
 			String IMDBListBeforeParsing, String IMDBListAfterParsing,
