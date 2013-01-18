@@ -62,4 +62,8 @@ public class UserRetriever extends RetrieverBase<User> {
 	public User retrieveById(int id) {
 		return retrieveFirst("user_id = " + id);
 	}
+	
+	public User retrieveByName(String name) {
+		return retrieveFirst("name = " + name);
+	}
 }
