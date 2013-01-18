@@ -395,7 +395,7 @@ public class MainDisplay {
 						
 						for(Location l : locations)
 							map.addMarker(l.lat, l.lng, l.place);*/
-						addLocaionMarkers(id);
+						addLocationMarkers(id);
 						
 						// TODO: Zoom Out on all of these markers ???
 						
@@ -451,7 +451,7 @@ public class MainDisplay {
 					lblDetails2.setText("Director(s): "+director);
 					lblDetails3.setText("Release Date: "+release);
 					
-					addLocaionMarkers(id);
+					addLocationMarkers(id);
 					
 					// TODO: Zoom Out on all of these markers ???
 					
@@ -739,7 +739,7 @@ public class MainDisplay {
 		}
 		return "no info";
 	}
-	public void addLocaionMarkers(int media_id) throws SQLException{
+	public void addLocationMarkers(int media_id) throws SQLException{
 		java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
 				"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
 		        "LocationOfMedia.media_id = "+media_id));
