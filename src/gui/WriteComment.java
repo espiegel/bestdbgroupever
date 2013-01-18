@@ -1,5 +1,10 @@
 package gui;
 
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import objects.User;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -9,10 +14,25 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import db.ConnectionManager;
+import db.UserRetriever;
+
 public class WriteComment {
 
 	protected Shell shlWriteAComment;
 	private Text text;
+	private int currentLocationId;
+	private User currentUser;
+	private MainDisplay mainDisplay;
+	
+	public WriteComment() {}
+	
+	public WriteComment(User user, int locationId, MainDisplay mainDisplay) {
+		super();
+		this.currentUser = user;
+		this.currentLocationId = locationId;
+		this.mainDisplay = mainDisplay;
+	}
 
 	/**
 	 * Launch the application.
@@ -55,6 +75,44 @@ public class WriteComment {
 		text.setBounds(10, 10, 326, 188);
 		
 		Button btnSubmit = new Button(shlWriteAComment, SWT.NONE);
+		btnSubmit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				Statement stmt;
+				
+				try
+				{
+					String parsedText = text.getText().replaceAll("'", ""); // cant allow '
+					
+					if (text.getText().isEmpty() || parsedText.isEmpty()) {
+						return;
+					}
+									
+					// Otherwise we successfully registered.
+					stmt = ConnectionManager.conn.createStatement();
+					System.out.println("Attempting to do:\nINSERT INTO Comments (user_id, location_id, comment, upvotes, downvotes, is_check_in, date) "+
+					                   "VALUES ("+currentUser.getID()+", "+currentLocationId+", '"+parsedText+"', 0, 0, 1, '"+new java.sql.Date(new java.util.Date().getTime())+"')");
+					
+					// TODO: add time to the date.. its only 2013-01-18 without any time...
+					stmt.executeUpdate("INSERT INTO Comments (user_id, location_id, comment, upvotes, downvotes, is_check_in, date) "+
+					                   "VALUES ("+currentUser.getID()+", "+currentLocationId+", '"+parsedText+"', 0, 0, 1, '"+new java.sql.Date(new java.util.Date().getTime())+"')");
+								
+					// closing
+					stmt.close();
+
+					shlWriteAComment.close();
+					shlWriteAComment.dispose();
+					mainDisplay.loadCommentsByLocationId(currentLocationId);
+									
+				}
+				catch (SQLException e)
+				{
+					System.out.println("ERROR executeQuery in WriteComment - " + e.toString());
+					java.lang.System.exit(0); 
+					return;
+				}
+			}
+		});
 		btnSubmit.setBounds(10, 204, 140, 40);
 		btnSubmit.setText("Submit");
 		
