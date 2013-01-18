@@ -93,8 +93,9 @@ public class Registration {
 					shlRegistration.close();
 					shlRegistration.dispose();
 					
-					MainDisplay maindisplay = new MainDisplay();
-					maindisplay.open();							
+					
+					//MainDisplay maindisplay = new MainDisplay();
+					//maindisplay.open();							
 				}
 				
 			}

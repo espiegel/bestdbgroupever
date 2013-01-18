@@ -27,6 +27,7 @@ public class Main
 		ConnectionManager.openConnection();
 		Login.main(null); // Call the main GUI. In this case Login is the first GUI window.
 		ConnectionManager.closeConnection();
+		
 	}
 	
 	/**
@@ -39,7 +40,7 @@ public class Main
 	{
 		UserRetriever ret = new UserRetriever();
 	
-		currentUser = ret.retrieveByUserAndPassword(user,password);
+		currentUser = ret.retrieveByName(user);
 		
 		if (currentUser==null)
 			return false;
@@ -60,7 +61,7 @@ public class Main
 		try
 		{
 			UserRetriever ret = new UserRetriever();
-			if (ret.retrieve(user)!=null) {
+			if (ret.retrieveByUserAndPassword(user,password)!=null) {
 				return false;
 			}
 			
