@@ -62,6 +62,7 @@ public class MainDisplay {
 	private ArrayList<Integer> listIds = new ArrayList<Integer>();
 	private MapWidget map;
 	private int currentLocationId;
+	private CLabel lblCurrentLocation=null;
 	
 	public int getCurrentLocationId() {
 		return currentLocationId;
@@ -204,7 +205,7 @@ public class MainDisplay {
 		
 		//new google map
 		/*look at the documentation in the MapWidget class*/
-		map = new MapWidget(grpMap, "map.html");
+		map = new MapWidget(grpMap, "map.html",this);
 		map.init();
 		map.getBrowser().setBounds(10, 24, 540, 291);
 		
@@ -219,7 +220,7 @@ public class MainDisplay {
 		fd_grpComments.right = new FormAttachment(100, -10);
 		grpComments.setLayoutData(fd_grpComments);
 		
-		final CLabel lblCurrentLocation = new CLabel(grpComments, SWT.BORDER | SWT.WRAP);
+		lblCurrentLocation = new CLabel(grpComments, SWT.BORDER | SWT.WRAP);
 		lblCurrentLocation.setRightMargin(0);
 		lblCurrentLocation.setLeftMargin(0);
 		lblCurrentLocation.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
@@ -723,12 +724,14 @@ public class MainDisplay {
 		java.util.List<Location> locations=null ;
 		try {
 			 locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
-					"Select location_id FROM Locations WHERE Locations.lat = "+lat+" AND "+
-					"Locations.lng = "+lat));
+					 "Select * FROM Locations WHERE Locations.lat = \""+lat+"\" AND "+
+						"Locations.lng = \""+lng+"\""));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		int location_id=locations.get(0).location_id;
+		currentLocationId=location_id;
+		lblCurrentLocation.setText(locations.get(0).place);
 		loadCommentsByLocationId(location_id);
 	}
 }
