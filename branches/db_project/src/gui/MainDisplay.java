@@ -4,10 +4,12 @@ package gui;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import main.Main;
+import objects.Comment;
 import objects.Film;
 import objects.Location;
 import objects.TVShow;
@@ -22,6 +24,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -32,9 +35,11 @@ import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import db.CommentRetriever;
 import db.ConnectionManager;
 import db.FilmRetriever;
 import db.LocationByActorRetriever;
@@ -44,16 +49,27 @@ import db.UserRetriever;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.custom.CLabel;
 
 public class MainDisplay {
 
 	protected Shell shlTvTraveler;
 	protected Display display;
 	private Text txtSearch;
-	private Table table;
+	private Table commentTable;
 	private String currentSearch = "";
 	private ArrayList<Integer> listIds = new ArrayList<Integer>();
 	private MapWidget map;
+	private int currentLocationId;
+	
+	public int getCurrentLocationId() {
+		return currentLocationId;
+	}
+
+	public void setCurrentLocationId(int currentLocationId) {
+		this.currentLocationId = currentLocationId;
+	}
+
 	public String getCurrentSearch() {
 		return currentSearch;
 	}
@@ -173,6 +189,90 @@ public class MainDisplay {
 		
 		final Label lblPic = new Label(grpDetails, SWT.NONE);
 		lblPic.setBounds(10, 20, 150, 200);
+		// End of details group
+		
+
+		Group grpMap = new Group(shlTvTraveler, SWT.NONE);
+		FormData fd_grpMap = new FormData();
+		fd_grpMap.bottom = new FormAttachment(0, 555);
+		fd_grpMap.right = new FormAttachment(0, 570);
+		fd_grpMap.top = new FormAttachment(0, 230);
+		fd_grpMap.left = new FormAttachment(0, 10);
+		grpMap.setLayoutData(fd_grpMap);
+		grpMap.setText("Map");
+		
+		//new google map
+		/*look at the documentation in the MapWidget class*/
+		map = new MapWidget(grpMap, "map.html");
+		map.init();
+		map.getBrowser().setBounds(10, 24, 540, 291);
+		
+		Group grpComments = new Group(shlTvTraveler, SWT.NONE);
+		grpComments.setText("Comments");
+		FormData fd_grpComments = new FormData();
+		fd_grpComments.top = new FormAttachment(grpMap, 0, SWT.TOP);
+		fd_grpComments.left = new FormAttachment(grpDetails, 0, SWT.LEFT);		
+		
+		fd_grpComments.bottom = new FormAttachment(grpMap, 0, SWT.BOTTOM);
+		fd_grpComments.right = new FormAttachment(100, -10);
+		grpComments.setLayoutData(fd_grpComments);
+		
+		final CLabel lblCurrentLocation = new CLabel(grpComments, SWT.BORDER | SWT.WRAP);
+		lblCurrentLocation.setRightMargin(0);
+		lblCurrentLocation.setLeftMargin(0);
+		lblCurrentLocation.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblCurrentLocation.setAlignment(SWT.CENTER);
+		lblCurrentLocation.setBounds(17, 24, 261, 29);
+		lblCurrentLocation.setText("");
+		
+		commentTable = new Table(grpComments, SWT.BORDER | SWT.FULL_SELECTION);
+		commentTable.setHeaderVisible(true);
+		commentTable.setBounds(10, 59, 538, 256);
+		
+		TableColumn tblclmnDate = new TableColumn(commentTable, SWT.NONE);
+		tblclmnDate.setWidth(89);
+		tblclmnDate.setText("Date");
+		
+		TableColumn tblclmnUsername = new TableColumn(commentTable, SWT.NONE);
+		tblclmnUsername.setWidth(64);
+		tblclmnUsername.setText("User");
+		
+		TableColumn tblclmnUpvotes = new TableColumn(commentTable, SWT.NONE);
+		tblclmnUpvotes.setWidth(69);
+		tblclmnUpvotes.setText("Upvotes");
+		
+		TableColumn tblclmnDownvotes = new TableColumn(commentTable, SWT.NONE);
+		tblclmnDownvotes.setWidth(89);
+		tblclmnDownvotes.setText("Downvotes");
+		
+		TableColumn tblclmnComment = new TableColumn(commentTable, SWT.NONE);
+		tblclmnComment.setWidth(333);
+		tblclmnComment.setText("Comment");
+		
+		Button btnAddComment = new Button(grpComments, SWT.NONE);
+		final MainDisplay mainDisplay = this;
+		btnAddComment.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if(lblCurrentLocation.getText().isEmpty())
+					return;
+				
+				WriteComment wc = new WriteComment(Main.getCurrentUser(), currentLocationId, mainDisplay);
+				wc.open();
+			}
+		});
+		btnAddComment.setBounds(284, 20, 141, 37);
+		btnAddComment.setText("Add Comment");
+		
+		Button btnUpvote = new Button(grpComments, SWT.NONE);
+		btnUpvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_up_black.png"));
+		btnUpvote.setBounds(442, 20, 41, 37);
+		
+		Button btnDownvote = new Button(grpComments, SWT.NONE);
+		btnDownvote.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down_black.png"));
+		btnDownvote.setBounds(489, 20, 41, 37);
+		
+		
 		
 		Group grpSearch = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpSearch = new FormData();
@@ -395,10 +495,14 @@ public class MainDisplay {
 					// TODO: Add this location to the map according to the lat and lng.
 					map.clearAllMarkers();
 					map.addMarker(location.lat, location.lng, place);
+					
+					loadCommentsByLocationId(id);				
+					lblCurrentLocation.setText(place);
+					currentLocationId = id;
 				} catch (Exception ex) {
 					ex.printStackTrace();
-				}
-					
+				}				
+
 			} // End of Location If
 			
 			if(currentSearch.equals("Location By Actor"))  //code replication..
@@ -580,75 +684,6 @@ public class MainDisplay {
 		btnSearch.setBounds(441, 26, 109, 30);
 		btnSearch.setText("Search");
 		
-		FormData fd_composite = new FormData();
-		fd_composite.bottom = new FormAttachment(0, 64);
-		fd_composite.right = new FormAttachment(0, 64);
-		fd_composite.top = new FormAttachment(0);
-		fd_composite.left = new FormAttachment(0);
-		
-		Group grpMap = new Group(shlTvTraveler, SWT.NONE);
-		FormData fd_grpMap = new FormData();
-		fd_grpMap.bottom = new FormAttachment(0, 555);
-		fd_grpMap.right = new FormAttachment(0, 570);
-		fd_grpMap.top = new FormAttachment(0, 230);
-		fd_grpMap.left = new FormAttachment(0, 10);
-		grpMap.setLayoutData(fd_grpMap);
-		grpMap.setText("Map");
-		
-		//new google map
-		/*look at the documentation in the MapWidget class*/
-		map = new MapWidget(grpMap, "map.html");
-		map.init();
-		map.getBrowser().setBounds(10, 24, 540, 291);
-		
-		Group grpComments = new Group(shlTvTraveler, SWT.NONE);
-		grpComments.setText("Comments");
-		FormData fd_grpComments = new FormData();
-		fd_grpComments.top = new FormAttachment(grpMap, 0, SWT.TOP);
-		fd_grpComments.left = new FormAttachment(grpDetails, 0, SWT.LEFT);		
-		
-		fd_grpComments.bottom = new FormAttachment(grpMap, 0, SWT.BOTTOM);
-		fd_grpComments.right = new FormAttachment(100, -10);
-		grpComments.setLayoutData(fd_grpComments);
-		
-		table = new Table(grpComments, SWT.BORDER | SWT.FULL_SELECTION);
-		table.setHeaderVisible(true);
-		table.setBounds(10, 59, 538, 256);
-		
-		TableColumn tblclmnUsername = new TableColumn(table, SWT.NONE);
-		tblclmnUsername.setWidth(64);
-		tblclmnUsername.setText("User");
-		
-		TableColumn tblclmnUpvotes = new TableColumn(table, SWT.NONE);
-		tblclmnUpvotes.setWidth(69);
-		tblclmnUpvotes.setText("Upvotes");
-		
-		TableColumn tblclmnDownvotes = new TableColumn(table, SWT.NONE);
-		tblclmnDownvotes.setWidth(89);
-		tblclmnDownvotes.setText("Downvotes");
-		
-		TableColumn tblclmnComment = new TableColumn(table, SWT.NONE);
-		tblclmnComment.setWidth(333);
-		tblclmnComment.setText("Comment");
-		
-		Button btnAddComment = new Button(grpComments, SWT.NONE);
-		btnAddComment.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				WriteComment wc = new WriteComment();
-				wc.open();
-			}
-		});
-		btnAddComment.setBounds(284, 20, 141, 37);
-		btnAddComment.setText("Add Comment");
-		
-		Button btnNewButton = new Button(grpComments, SWT.NONE);
-		btnNewButton.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_up_black.png"));
-		btnNewButton.setBounds(442, 20, 41, 37);
-		
-		Button btnNewButton_1 = new Button(grpComments, SWT.NONE);
-		btnNewButton_1.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/thumbs_down_black.png"));
-		btnNewButton_1.setBounds(489, 20, 41, 37);
 	}
 
 	public String canonicalize(String str){
@@ -659,6 +694,27 @@ public class MainDisplay {
 			str=str.replaceAll("&amp;", "&");
 
 			return str;
+		}
+	}
+
+	public void loadCommentsByLocationId(int id) {
+		// Now loading all the comments
+		java.util.List<Comment> commentList = new CommentRetriever().searchBySearchField(String.valueOf(id));
+		commentTable.removeAll();
+		
+		int i = 0;
+		TableItem ti;
+		for(Comment c : commentList)
+		{
+			System.out.println(c);
+			ti = new TableItem(commentTable, SWT.NONE, i);
+			i++;
+			String user = new UserRetriever().retrieveById(c.getUser_id()).getUsername();
+			int upvotes = c.getUpvotes();
+			int downvotes = c.getDownvotes();
+			String comment = c.getComment();
+			Date date = c.getDatetime();
+			ti.setText(new String[]{date.toString(), user, String.valueOf(upvotes), String.valueOf(downvotes), comment});
 		}
 	}
 }

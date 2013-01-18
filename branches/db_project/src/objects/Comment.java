@@ -3,6 +3,13 @@ package objects;
 import java.sql.Date;
 
 public class Comment {
+	@Override
+	public String toString() {
+		return "Comment [id=" + id + ", user_id=" + user_id + ", location_id="
+				+ location_id + ", comment=" + comment + ", upvotes=" + upvotes
+				+ ", downvotes=" + downvotes + ", is_check_in=" + is_check_in
+				+ ", photo=" + photo + ", datetime=" + datetime + "]";
+	}
 	private int id;
 	private int user_id;
 	private int location_id;

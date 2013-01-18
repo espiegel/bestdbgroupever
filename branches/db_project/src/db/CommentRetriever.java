@@ -1,17 +1,19 @@
 package db;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import objects.Comment;
+import objects.User;
 
 public class CommentRetriever extends RetrieverBase<Comment> {
 
-	private final String[] default_fields = {"comment_id", "user_id","location_id"};
-	private final String[] search_fields = {"comment"};
+	private final String[] default_fields = {"location_id"};
+	private final String[] search_fields = {"location_id"};
 
 	@Override
 	protected String getTableNames() {
-		return "Locations";
+		return "Comments";
 	}
 
 	@Override
@@ -30,11 +32,28 @@ public class CommentRetriever extends RetrieverBase<Comment> {
 	}
 
 	@Override
-	protected Comment makeObject(ResultSet result_set) {
-		try {
-			return fillObjectByFields(result_set, new Comment());
-		} catch (Exception e) {
-			e.printStackTrace();
+	protected Comment makeObject(ResultSet rs) {
+		if(rs == null) // Should never actually be null
+			return null;
+		
+		Comment comment = new Comment();
+		
+		try
+		{
+			comment.setId(rs.getInt(1));
+			comment.setUser_id(rs.getInt(2));
+			comment.setLocation_id(rs.getInt(3));
+			comment.setComment(rs.getString(4));
+			comment.setUpvotes(rs.getInt(5));
+			comment.setDownvotes(rs.getInt(6));
+			comment.setIs_check_in(rs.getInt(7));
+			comment.setDatetime(rs.getDate(9));
+			
+			return comment;
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace(); 
 			return null;
 		}
 	}
