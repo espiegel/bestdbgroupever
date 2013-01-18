@@ -14,6 +14,12 @@ public class Main
 	private static User currentUser; // The current user thats logged in.
 	
 	public static User getCurrentUser() {
+		// Make it update the currentUser
+		if(currentUser == null)
+			return null;
+		
+		User newUser = new UserRetriever().retrieveById(currentUser.getID());
+		setCurrentUser(newUser);
 		return currentUser;
 	}
 
@@ -40,7 +46,7 @@ public class Main
 	{
 		UserRetriever ret = new UserRetriever();
 	
-		currentUser = ret.retrieveByName(user);
+		currentUser = ret.retrieveByUserAndPassword(user,password);
 		
 		if (currentUser==null)
 			return false;
@@ -61,7 +67,7 @@ public class Main
 		try
 		{
 			UserRetriever ret = new UserRetriever();
-			if (ret.retrieveByUserAndPassword(user,password)!=null) {
+			if (ret.retrieveByName(user)!=null) {
 				return false;
 			}
 			
