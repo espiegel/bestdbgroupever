@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 import main.Main;
-import objects.CommentOfUser;
 import objects.Comment;
+import objects.CommentOfUser;
 import objects.Film;
 import objects.Location;
 import objects.LocationOfMedia;
@@ -20,6 +19,7 @@ import objects.TVShow;
 import objects.User;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
@@ -28,7 +28,6 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -52,10 +51,6 @@ import db.LocationOfMediaRetriever;
 import db.LocationRetriever;
 import db.TVRetriever;
 import db.UserRetriever;
-import org.eclipse.swt.custom.ScrolledComposite;
-import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.widgets.Link;
-import org.eclipse.swt.custom.CLabel;
 
 public class MainDisplay {
 
