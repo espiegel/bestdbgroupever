@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import main.Main;
@@ -206,6 +207,7 @@ public class MainDisplay {
 		map = new MapWidget(grpMap, "map.html");
 		map.init();
 		map.getBrowser().setBounds(10, 24, 540, 291);
+		
 		
 		Group grpComments = new Group(shlTvTraveler, SWT.NONE);
 		grpComments.setText("Comments");
@@ -716,5 +718,17 @@ public class MainDisplay {
 			Date date = c.getDatetime();
 			ti.setText(new String[]{date.toString(), user, String.valueOf(upvotes), String.valueOf(downvotes), comment});
 		}
+	}
+	public void loadCommentsByLocationCoord(String lat,String lng){
+		java.util.List<Location> locations=null ;
+		try {
+			 locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
+					"Select location_id FROM Locations WHERE Locations.lat = "+lat+" AND "+
+					"Locations.lng = "+lat));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		int location_id=locations.get(0).location_id;
+		loadCommentsByLocationId(location_id);
 	}
 }

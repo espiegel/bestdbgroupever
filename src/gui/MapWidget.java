@@ -8,6 +8,8 @@ import org.eclipse.swt.SWTError;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.ProgressEvent;
 import org.eclipse.swt.browser.ProgressListener;
+import org.eclipse.swt.browser.TitleEvent;
+import org.eclipse.swt.browser.TitleListener;
 import org.eclipse.swt.widgets.Composite;
 
 public class MapWidget {
@@ -49,8 +51,19 @@ public class MapWidget {
 			public void changed(ProgressEvent arg0) {
 			}
 		});
+		browser.addTitleListener(new TitleListener() {
+			public void changed(TitleEvent arg0) {
+				String[] title = arg0.title.split(",");
+				if(title[0].equals("clicked"))
+				{
+					setLat(title[1]);
+					setLng(title[2]);
+					//TODO : Call loadCommentsByLocationCoord from Main Display
+				}
+			}
+		});
+		
 	}
-
 	/**
 	 * Should only be called after map loaded !
 	 * 
