@@ -20,6 +20,7 @@ public class MapWidget {
 	private Browser browser;
 	private String map;
 	private boolean loaded;
+	private final gui.MainDisplay display;
 
 	/**
 	 * 
@@ -28,9 +29,10 @@ public class MapWidget {
 	 * @param fileName
 	 *            map html file path
 	 */
-	public MapWidget(Composite parent, String filePath) {
+	public MapWidget(Composite parent, String filePath,gui.MainDisplay display) {
 		this.parent = parent;
 		this.filePath = filePath;
+		this.display=display;
 	}
 
 	public void init() {
@@ -58,7 +60,7 @@ public class MapWidget {
 				{
 					setLat(title[1]);
 					setLng(title[2]);
-					//TODO : Call loadCommentsByLocationCoord from Main Display
+					display.loadCommentsByLocationCoord(getLat(), getLng());
 				}
 			}
 		});
