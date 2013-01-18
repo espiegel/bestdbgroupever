@@ -451,14 +451,7 @@ public class MainDisplay {
 					lblDetails2.setText("Director(s): "+director);
 					lblDetails3.setText("Release Date: "+release);
 					
-					java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
-							"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
-					        "LocationOfMedia.media_id = "+id));
-					// Put all location markers on the map
-					map.clearAllMarkers();
-					
-					for(Location l : locations)
-						map.addMarker(l.lat, l.lng, l.place);
+					addLocaionMarkers(id);
 					
 					// TODO: Zoom Out on all of these markers ???
 					

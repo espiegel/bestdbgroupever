@@ -41,14 +41,14 @@
 							map.setCenter(marker.getPosition());
 							infoWindow.setContent(info);
 							infoWindow.open(map, this);
-							window.document.title="clicked,"+marker.getPosition().lat()+","+marker.getPosition().lng();
+							window.document.title="clicked,"+lat+","+lng;
 						});
 					map.setCenter(coordenadas);
 					var n=info.indexOf("<BR/>");
 					if(n >=0 )
 						tempinfo=info.substring(0,n);
 					marker.setTitle(tempinfo);
-					
+					setZoom(9);					
 				}
 				function setCenter(lat,lng){
 				var coordenadas = new google.maps.LatLng(lat,lng);

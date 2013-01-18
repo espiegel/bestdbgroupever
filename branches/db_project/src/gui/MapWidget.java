@@ -115,14 +115,14 @@ public class MapWidget {
 	public boolean setZoom(int zoom){
 		if (isLoaded()) {
 			String[] params = { Integer.toString(zoom)};
-			return browserExecute("setCenter", params);
+			return browserExecute("setZoom", params);
 		}
 		return false;
 	}
 	public boolean clearAllMarkers(){
 		if (isLoaded()) {
 		String[] temp={};
-		return browserExecute("clearOverlays",temp);
+		return browserExecute("clearOverlays",temp) ;
 		}
 		return false;
 	}
