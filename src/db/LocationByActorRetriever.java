@@ -3,7 +3,6 @@ package db;
 import java.sql.ResultSet;
 
 import objects.Location;
-import objects.TVShow;
 
 public class LocationByActorRetriever extends RetrieverBase<Location> {
 
