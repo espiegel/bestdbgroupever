@@ -1,0 +1,32 @@
+[{
+  "img:/common/topic/image": [{
+    "id":       null,
+    "limit":    1,
+    "optional": true
+  }],
+  "limit":         500,
+  "nam:name":      null,
+  "freebaseid:mid": null,
+  "rdate:initial_release_date": null,
+  "creators:directed_by": [{
+    "index":    null,
+    "limit":    5,
+    "name":     null,
+    "optional": true,
+    "sort":     "index",
+    "type":     "/film/director"
+  }],
+  "type":          "/film/film",
+  "cast:starring": [{
+    "actor": {
+      "name": null,
+      "mid":  null
+    },
+    "character": {
+      "name":     null,
+      "optional": true
+    },
+    "limit": 20,
+    "type":  "/film/performance"
+  }]
+}]
