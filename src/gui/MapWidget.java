@@ -80,13 +80,19 @@ public class MapWidget {
 	 */
 	public boolean addMarker(String lat, String lng, String info) {
 		if (isLoaded()) {
-			String[] params = { lat, lng, info };
+			String tempinfo="Location: "+info;
+			String[] params = { lat, lng, tempinfo };
 
 			return browserExecute("newMarker", params);
 		}
 		return false;
 	}
 
+	public boolean addMarker(String lat, String lng, String info,String scene) {
+		String tempinfo=info+"<BR/>Scene/Episode: "+scene;
+		return addMarker(lat, lng,tempinfo);
+	}
+	
 	/**
 	 * Should only be called after map loaded !
 	 * 

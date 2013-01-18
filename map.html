@@ -33,7 +33,7 @@
 						map: map,
 						position: coordenadas
 					});
-					marker.setTitle(info);
+					var tempinfo=info;
 					markersArray.push(marker);
 					var infoWindow = new google.maps.InfoWindow();
 					google.maps.event.addListener(marker, 'click', function () {
@@ -44,7 +44,10 @@
 							window.document.title="clicked,"+marker.getPosition().lat()+","+marker.getPosition().lng();
 						});
 					map.setCenter(coordenadas);
-					
+					var n=info.indexOf("<BR/>");
+					if(n >=0 )
+						tempinfo=info.substring(0,n);
+					marker.setTitle(tempinfo);
 					
 				}
 				function setCenter(lat,lng){
