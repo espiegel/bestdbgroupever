@@ -41,6 +41,7 @@
 							map.setCenter(marker.getPosition());
 							infoWindow.setContent(info);
 							infoWindow.open(map, this);
+							window.document.title="clicked,"+marker.getPosition().lat()+","+marker.getPosition().lng();
 						});
 					map.setCenter(coordenadas);
 					
