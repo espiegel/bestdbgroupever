@@ -18,6 +18,7 @@ import objects.User;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
@@ -168,28 +169,27 @@ public class MainDisplay {
 		grpDetails.setLayoutData(fd_grpDetails);
 		grpDetails.setText("Details");
 		
+		SashForm sashForm = new SashForm(grpDetails, SWT.VERTICAL);
+		sashForm.setSize(367, 200);
+		sashForm.setLocation(168, 10);
 		
 		
-		final Label lblDetails1 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
-		lblDetails1.setBounds(185, 20, 335, 25);
 		
-		final Label lblDetails2 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
-		lblDetails2.setBounds(185, 57, 335, 25);
+		final Label lblDetails1_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails3 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
-		lblDetails3.setBounds(185, 92, 335, 25);
+		final Label lblDetails2_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails4 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
-		lblDetails4.setBounds(185, 127, 335, 25);
+		final Label lblDetails3_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails5 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
-		lblDetails5.setBounds(185, 162, 335, 25);
+		final Label lblDetails4_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails6 = new Label(grpDetails, SWT.BORDER | SWT.WRAP | SWT.HORIZONTAL);
-		lblDetails6.setBounds(185, 200, 335, 25);
+		final Label lblDetails5_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
+		
+		final Label lblDetails6_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
+		sashForm.setWeights(new int[] {1, 1, 1, 1, 1, 1});
 		
 		final Label lblPic = new Label(grpDetails, SWT.NONE);
-		lblPic.setBounds(10, 20, 150, 200);
+		lblPic.setBounds(10, 10, 150, 200);
 		// End of details group
 		
 
@@ -521,8 +521,8 @@ public class MainDisplay {
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				clearAllLabels(lblDetails1, lblDetails2, lblDetails3,
-						lblDetails4, lblDetails5, lblDetails6, lblPic);
+				clearAllLabels(lblDetails1_1, lblDetails2_1, lblDetails3_1,
+						lblDetails4_1, lblDetails5_1, lblDetails6_1, lblPic);
 				
 				int index = list.getSelectionIndex();
 				int id = -1;
@@ -550,12 +550,12 @@ public class MainDisplay {
 
 						setPictureLabel(show, lblPic);
 
-						lblDetails1.setText("Name: "+name);
-						lblDetails2.setText("Director(s): "+director);
-						lblDetails3.setText("First Episode: "+first.toString());
-						lblDetails4.setText("Last Episode: "+last.toString());
-						lblDetails5.setText("Number of Seasons: "+String.valueOf(numSeasons));
-						lblDetails6.setText("Number of Episodes: "+String.valueOf(numEpisodes));
+						lblDetails1_1.setText("Name: "+name);
+						lblDetails2_1.setText("Director(s): "+director);
+						lblDetails3_1.setText("First Episode: "+first.toString());
+						lblDetails4_1.setText("Last Episode: "+last.toString());
+						lblDetails5_1.setText("Number of Seasons: "+String.valueOf(numSeasons));
+						lblDetails6_1.setText("Number of Episodes: "+String.valueOf(numEpisodes));
 						
 						/*java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
 								"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
@@ -593,9 +593,9 @@ public class MainDisplay {
 
 					setPictureLabel(film, lblPic);
 					
-					lblDetails1.setText("Name: "+name);
-					lblDetails2.setText("Director(s): "+director);
-					lblDetails3.setText("Release Date: "+release);
+					lblDetails1_1.setText("Name: "+name);
+					lblDetails2_1.setText("Director(s): "+director);
+					lblDetails3_1.setText("Release Date: "+release);
 					
 					addLocationMarkers(id);
 					
@@ -631,11 +631,11 @@ public class MainDisplay {
 					lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
 
 					
-					lblDetails1.setText("Place: "+place);
-					lblDetails2.setText("Country: "+country);
-					lblDetails3.setText("City: "+city);
-					lblDetails4.setText("Latitude: "+lat+", Longtitude: "+lng);
-					lblDetails5.setText("Upvotes: "+up+", Downvotes: "+down);
+					lblDetails1_1.setText("Place: "+place);
+					lblDetails2_1.setText("Country: "+country);
+					lblDetails3_1.setText("City: "+city);
+					lblDetails4_1.setText("Latitude: "+lat+", Longtitude: "+lng);
+					lblDetails5_1.setText("Upvotes: "+up+", Downvotes: "+down);
 					
 					// TODO: Add this location to the map according to the lat and lng.
 					map.clearAllMarkers();
@@ -687,20 +687,20 @@ public class MainDisplay {
 
 					setPictureLabel(media, lblPic);
 
-					lblDetails1.setText("Name: " + name);
-					lblDetails2.setText("Director(s): " + director);
+					lblDetails1_1.setText("Name: " + name);
+					lblDetails2_1.setText("Director(s): " + director);
 
 					if (isTV) {
-						lblDetails3.setText("First Episode: "
+						lblDetails3_1.setText("First Episode: "
 								+ first.toString());
-						lblDetails4.setText("Last Episode: "
+						lblDetails4_1.setText("Last Episode: "
 								+ last.toString());
-						lblDetails5.setText("Number of Seasons: "
+						lblDetails5_1.setText("Number of Seasons: "
 								+ String.valueOf(numSeasons));
-						lblDetails6.setText("Number of Episodes: "
+						lblDetails6_1.setText("Number of Episodes: "
 								+ String.valueOf(numEpisodes));
 					} else
-						lblDetails3.setText("Release Date: " + release);
+						lblDetails3_1.setText("Release Date: " + release);
 
 					java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn
 							.prepareStatement("Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "
