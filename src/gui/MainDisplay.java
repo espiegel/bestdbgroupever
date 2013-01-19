@@ -989,24 +989,26 @@ public class MainDisplay {
 	}
 	
 	private void setPictureLabel(final Media media, final Label lblPic) {
-		lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
-		
-		display.asyncExec(new Runnable() {
-			
-			@Override
-			public void run() {
-				try {
-					ImageData image = media.getImage();
-					
-					if (image==null) {
-						//lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
-					} else {
-						lblPic.setImage(new Image(display, image));
+		if (media.image==null || media.image.isEmpty()) {
+			lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+		} else {
+			display.asyncExec(new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						ImageData image = media.getImage();
+						
+						if (image==null) {
+							//lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+						} else {
+							lblPic.setImage(new Image(display, image));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
 				}
-			}
-		});
+			});
+		}
 	}
 }
