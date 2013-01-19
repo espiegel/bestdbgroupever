@@ -1,7 +1,6 @@
 package gui;
 
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
@@ -563,28 +562,8 @@ public class MainDisplay {
 						int numSeasons = show.num_seasons;
 						int numEpisodes = show.num_episodes;
 
-						if(address!=null && address.length()>1){
-							final URL url = getFullUrl(address);
-							
-							display.asyncExec(new Runnable() {
-								
-								@Override
-								public void run() {
-									Image img;
-									try {
-										img = new Image(display, url.openStream());
-										lblPic.setImage(img);
-										
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								}
-							});
-						}
-						else
-						{
-							lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
-						}
+						setPictureLabel(show, lblPic);
+
 						lblDetails1.setText("Name: "+name);
 						lblDetails2.setText("Director(s): "+director);
 						lblDetails3.setText("First Episode: "+first.toString());
@@ -628,29 +607,7 @@ public class MainDisplay {
 					String director =canonicalize(film.directors);
 					String release = canonicalize(film.release_date);
 
-					if(address!=null && address.length()>1)
-					{
-						final URL url = getFullUrl(address);
-						
-						display.asyncExec(new Runnable() {
-							
-							@Override
-							public void run() {
-								Image img;
-								try {
-									img = new Image(display, url.openStream());
-									lblPic.setImage(img);
-									
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						});
-					}
-					else
-					{
-						lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
-					}
+					setPictureLabel(film, lblPic);
 					
 					lblDetails1.setText("Name: "+name);
 					lblDetails2.setText("Director(s): "+director);
@@ -745,28 +702,7 @@ public class MainDisplay {
 					} else
 						release = canonicalize(filmMedia.release_date);
 
-					if (address != null && address.length() > 1) {
-						final URL url = getFullUrl(address);
-
-						display.asyncExec(new Runnable() {
-
-							@Override
-							public void run() {
-								Image img;
-								try {
-									img = new Image(display, url
-											.openStream());
-									lblPic.setImage(img);
-
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-							}
-						});
-					} else {
-						lblPic.setImage(SWTResourceManager.getImage(
-								MainDisplay.class, "/gui/noimage.jpg"));
-					}
+					setPictureLabel(media, lblPic);
 
 					lblDetails1.setText("Name: " + name);
 					lblDetails2.setText("Director(s): " + director);
@@ -1052,37 +988,25 @@ public class MainDisplay {
 		return commentOfUser.getVote();
 	}
 	
-	private void setPictureLabel(Media media, Label lblPic) {
+	private void setPictureLabel(final Media media, final Label lblPic) {
+		lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
 		
-		ImageData image = media.getImage();
-		
-		if (image==null) {
-			lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
-		} else {
-			lblPic.setImage(new Image(display, image));
-		}
-		
-//		if(address!=null && address.length()>1){
-//			final URL url = getFullUrl(address);
-//			
-//			display.asyncExec(new Runnable() {
-//				
-//				@Override
-//				public void run() {
-//					Image img;
-//					try {
-//						img = new Image(display, url.openStream());
-//						lblPic.setImage(img);
-//						
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			});
-//		}
-//		else
-//		{
-//			
-//		}
+		display.asyncExec(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					ImageData image = media.getImage();
+					
+					if (image==null) {
+						//lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+					} else {
+						lblPic.setImage(new Image(display, image));
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
 }
