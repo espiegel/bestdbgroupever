@@ -248,19 +248,22 @@ public class Uploader {
 		ReadService readService = new ReadService();
 		readService.setCursor(true);
 		String cursor;
-		cursor = insertMedia(readService, tv, insert2, mql_path);
+		ImageUploader iu = new ImageUploader(connect);
+		cursor = insertMedia(readService, tv, insert2, mql_path, iu);
 		batchNum++;
 		while (!cursor.equals("FALSE") && cursor != null
 				&& !cursor.equals("false") && batchNum <= limit) {
 			readService.setCursor(cursor);
-			cursor = insertMedia(readService, tv, insert2, mql_path);
+			cursor = insertMedia(readService, tv, insert2, mql_path, iu);
 			batchNum++;
 		}
+		
+		iu.perform();
 	}
 
 	@SuppressWarnings("unchecked")
 	private String insertMedia(ReadService readService, boolean tv,
-			String insert2, String mql_path) throws SQLException, IOException,
+			String insert2, String mql_path, ImageUploader iu) throws SQLException, IOException,
 			FreebaseServiceException {
 
 		String insert1 = "INSERT IGNORE INTO " + mediaTable + " ("
@@ -359,6 +362,9 @@ public class Uploader {
 						values = "('" + media_id + "','" + release_date + "'),";
 					insert2 += values;
 					tv_or_film = true;
+					
+					//Add id and image (if applicable) to the ImageUploader for later addition
+					if (image!="") iu.add(Integer.parseInt(media_id), image);
 				} else
 					media_id = rs1.getString("media_id");
 
