@@ -1,18 +1,17 @@
 package db;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
-import com.narphorium.freebase.services.exceptions.FreebaseServiceException;
-
 import FreeBase.Uploader;
 import IMDB_Filmaps.IMDBGeoCoding;
 import IMDB_Filmaps.XMLParser;
+
+import com.narphorium.freebase.services.exceptions.FreebaseServiceException;
 /**
  * GUI should call one of this class methods using one of the examples
  * in the comment in the constructor.
