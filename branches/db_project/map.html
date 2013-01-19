@@ -18,7 +18,9 @@
 				var image;
 				var shadow;
 				var shape;
-				
+				var globalMarker;
+				var globalInfoWindow;
+				var geocoder;
 				function initialize() {
 					var coordenadas = new google.maps.LatLng(32.112313,34.801512);
 					var myOptions = {
@@ -48,7 +50,10 @@
 					
 					map = new google.maps.Map(document.getElementById("map_canvas"),
 						myOptions);
-				}
+					geocoder = new google.maps.Geocoder();
+					globalInfoWindow = new google.maps.InfoWindow();
+					markersArray.push(globalMarker);
+					}
 				function newMarker(lat,lng,info){  
 					var coordenadas = new google.maps.LatLng(lat,lng);
 					var marker = new google.maps.Marker({
@@ -66,7 +71,7 @@
 							map.setCenter(marker.getPosition());
 							infoWindow.setContent(info);
 							infoWindow.open(map, this);
-							window.document.title="clicked,"+lat+","+lng;
+							window.document.title="clicked#"+lat+"#"+lng;
 						});
 					map.setCenter(coordenadas);
 					var n=info.indexOf("<BR/>");
@@ -88,7 +93,42 @@
 				function setZoom(zoom){
 				map.setZoom(zoom);
 				}
-				
+				function startListen(){
+					google.maps.event.addListener(map, 'click', function(event) {
+						placeMarker(event.latLng);
+					});
+				}
+				function placeMarker(location) {
+						globalInfoWindow.close();
+						geocoder.geocode({'latLng': location}, function(results, status) {
+						var address;
+						if (status == google.maps.GeocoderStatus.OK) {
+							if (results[0]) {
+								address=results[0].formatted_address;
+							}
+						} else {
+							address="undefined";
+						}
+						if ( globalMarker )
+							globalMarker.setPosition(location);
+						else {
+						globalMarker = new google.maps.Marker({
+							icon: image,
+							shadow: shadow,
+							shape: shape,
+							position: location,
+							map: map
+							});
+						}
+						google.maps.event.addListener(globalMarker, 'click', function () {
+							map.setZoom(16);
+							map.setCenter(globalMarker.getPosition());
+							globalInfoWindow.setContent(address);
+							globalInfoWindow.open(map, this);
+							});	
+						window.document.title="choose#"+location.lat()+"#"+location.lng()+"#"+address;	
+						});	  
+				}
 			</script>
 		</head>
 		<body onload="initialize()">
