@@ -28,6 +28,8 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
@@ -161,6 +163,9 @@ public class MainDisplay {
 		mntmLogout.setText("Logout");
 		
 		Group grpDetails = new Group(shlTvTraveler, SWT.NONE);
+		RowLayout rl_grpDetails = new RowLayout(SWT.HORIZONTAL);
+		rl_grpDetails.wrap = false;
+		grpDetails.setLayout(rl_grpDetails);
 		FormData fd_grpDetails = new FormData();
 		fd_grpDetails.bottom = new FormAttachment(0, 230);
 		fd_grpDetails.right = new FormAttachment(0, 1122);
@@ -169,9 +174,11 @@ public class MainDisplay {
 		grpDetails.setLayoutData(fd_grpDetails);
 		grpDetails.setText("Details");
 		
+		final Label lblPic_1 = new Label(grpDetails, SWT.NONE);
+		lblPic_1.setLayoutData(new RowData(150, 200));
+		
 		SashForm sashForm = new SashForm(grpDetails, SWT.VERTICAL);
-		sashForm.setSize(367, 200);
-		sashForm.setLocation(168, 10);
+		sashForm.setLayoutData(new RowData(370, 200));
 		
 		
 		
@@ -187,9 +194,6 @@ public class MainDisplay {
 		
 		final Label lblDetails6_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
 		sashForm.setWeights(new int[] {1, 1, 1, 1, 1, 1});
-		
-		final Label lblPic = new Label(grpDetails, SWT.NONE);
-		lblPic.setBounds(10, 10, 150, 200);
 		// End of details group
 		
 
@@ -522,7 +526,7 @@ public class MainDisplay {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				clearAllLabels(lblDetails1_1, lblDetails2_1, lblDetails3_1,
-						lblDetails4_1, lblDetails5_1, lblDetails6_1, lblPic);
+						lblDetails4_1, lblDetails5_1, lblDetails6_1, lblPic_1);
 				
 				int index = list.getSelectionIndex();
 				int id = -1;
@@ -548,7 +552,7 @@ public class MainDisplay {
 						int numSeasons = show.num_seasons;
 						int numEpisodes = show.num_episodes;
 
-						setPictureLabel(show, lblPic);
+						setPictureLabel(show, lblPic_1);
 
 						lblDetails1_1.setText("Name: "+name);
 						lblDetails2_1.setText("Director(s): "+director);
@@ -591,7 +595,7 @@ public class MainDisplay {
 					String director =canonicalize(film.directors);
 					String release = canonicalize(film.release_date);
 
-					setPictureLabel(film, lblPic);
+					setPictureLabel(film, lblPic_1);
 					
 					lblDetails1_1.setText("Name: "+name);
 					lblDetails2_1.setText("Director(s): "+director);
@@ -628,7 +632,7 @@ public class MainDisplay {
 					int down = location.downvotes;
 					
 					// locations dont have images
-					lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+					lblPic_1.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
 
 					
 					lblDetails1_1.setText("Place: "+place);
@@ -685,7 +689,7 @@ public class MainDisplay {
 					} else
 						release = canonicalize(filmMedia.release_date);
 
-					setPictureLabel(media, lblPic);
+					setPictureLabel(media, lblPic_1);
 
 					lblDetails1_1.setText("Name: " + name);
 					lblDetails2_1.setText("Director(s): " + director);
