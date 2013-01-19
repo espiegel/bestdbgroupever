@@ -15,6 +15,9 @@ import org.eclipse.swt.widgets.Composite;
 public class MapWidget {
 	private String lat;
 	private String lng;
+	private String userLat;
+	private String userLng;
+	private String userAddress;
 	private String filePath;
 	private Composite parent;
 	private Browser browser;
@@ -55,12 +58,22 @@ public class MapWidget {
 		});
 		browser.addTitleListener(new TitleListener() {
 			public void changed(TitleEvent arg0) {
-				String[] title = arg0.title.split(",");
+				String[] title = arg0.title.split("#");
 				if(title[0].equals("clicked"))
 				{
 					setLat(title[1]);
 					setLng(title[2]);
 					display.loadCommentsByLocationCoord(getLat(), getLng());
+				}
+				if(title[0].equals("choose"))
+				{
+					setUserLat(title[1]);
+					setUserLng(title[2]);
+					setUserAddress(title[3]);
+					System.out.println(getUserLat());
+					System.out.println(getUserLng());
+					System.out.println(getUserAddress());
+					// TODO : call a function in display with those params
 				}
 			}
 		});
@@ -119,6 +132,21 @@ public class MapWidget {
 		}
 		return false;
 	}
+	/**
+	 * starts listen to user clicking on map
+	 * add new marker to map on user click
+	 * to get info about the click see TitleListener
+	 * @return true if the operation was successful and false
+	 *         otherwise
+	 */
+	public boolean startListen(){
+		if (isLoaded()) {
+			String[] params = {};
+			return browserExecute("startListen", params);
+		}
+		return false;
+	}
+
 	public boolean clearAllMarkers(){
 		if (isLoaded()) {
 		String[] temp={};
@@ -127,6 +155,14 @@ public class MapWidget {
 		return false;
 	}
 	private boolean browserExecute(String funcName, String[] params) {
+		return browser.execute(buildCommand(funcName, params));
+	}
+
+	/*private Object browserEvaluate(String funcName, String[] params) {
+		return browser.evaluate("return "+buildCommand(funcName, params));
+	}*/
+	
+	private String buildCommand(String funcName, String[] params){
 		String paramsStr = "";
 		int length = params.length;
 		if (length >= 1)
@@ -134,9 +170,9 @@ public class MapWidget {
 		for (int i = 1; i < params.length; i++)
 			paramsStr += ",\"" + params[i] + "\"";
 		String command = funcName + "(" + paramsStr + ");";
-		return browser.execute(command);
+		return command;
 	}
-
+	
 	private static String getTextFile(String file) {
 		StringBuilder contentBuilder = new StringBuilder();
 		try {
@@ -195,5 +231,29 @@ public class MapWidget {
 
 	public boolean isLoaded() {
 		return loaded;
+	}
+
+	public void setUserLat(String userLat) {
+		this.userLat = userLat;
+	}
+
+	public String getUserLat() {
+		return userLat;
+	}
+
+	public void setUserLng(String userLng) {
+		this.userLng = userLng;
+	}
+
+	public String getUserLng() {
+		return userLng;
+	}
+
+	public void setUserAddress(String userAddress) {
+		this.userAddress = userAddress;
+	}
+
+	public String getUserAddress() {
+		return userAddress;
 	}
 }
