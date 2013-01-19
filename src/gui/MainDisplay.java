@@ -1,8 +1,6 @@
 package gui;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -116,16 +114,6 @@ public class MainDisplay {
 			if (!display.readAndDispatch()) {
 				display.sleep();
 			}
-		}
-	}
-
-	private URL getFullUrl(String address)
-	{
-		try {
-			return new URL("http://img.freebase.com/api/trans/image_thumb"+address+"?maxheight=200&mode=fit&maxwidth=150");
-		} catch (MalformedURLException e) {
-			System.err.println("Couldn't get the url");
-			return null;
 		}
 	}
 	
@@ -553,8 +541,6 @@ public class MainDisplay {
 							return;
 						}
 						
-						String address = show.image;
-						
 						String name = canonicalize(show.name);
 						String director =canonicalize(show.directors);
 						String first = canonicalize(show.first_episode);
@@ -600,8 +586,6 @@ public class MainDisplay {
 						System.out.println("Empty resultset");
 						return;
 					}
-					
-					String address = film.image;
 					
 					String name = canonicalize(film.name);
 					String director =canonicalize(film.directors);
@@ -684,7 +668,6 @@ public class MainDisplay {
 					else
 						filmMedia = new FilmRetriever().retrieve(id);
 					
-					String address = media.image;
 					String name = canonicalize(media.name);
 					String director = canonicalize(media.directors);
 
