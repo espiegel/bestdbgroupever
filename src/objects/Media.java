@@ -29,7 +29,7 @@ public class Media {
 			InputStream image_stream;
 			
 			if (new_image==null) {
-				if (image!="") {
+				if (image!=null && !image.isEmpty()) {
 					URL url = new URL("http://img.freebase.com/api/trans/image_thumb"+image+"?maxheight=200&mode=fit&maxwidth=150");
 					image_stream = url.openStream();
 				} else {
