@@ -967,6 +967,25 @@ public class MainDisplay {
 		CommentOfUser commentOfUser = new CommentOfUserRetriever().retrieveFirst("comment_id="+currentComment.getId()+
 				" AND user_id="+Main.getCurrentUser().getID());
 		
+		// Add a new entry to CommentOfUser Table
+		if(commentOfUser == null)
+		{
+			// TODO: remove this println later
+			System.out.println("Created new row in CommentOfUser table");
+			
+			try {
+			Statement stmt;
+			stmt = ConnectionManager.conn.createStatement();
+						
+			stmt.executeUpdate("INSERT INTO CommentOfUser (comment_id, user_id, vote) "+
+							   "VALUES ("+currentComment.getId()+", "+Main.getCurrentUser().getID()+", 0)");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+			return 0;
+		}
+		
 		// This means he has already upvoted
 		return commentOfUser.getVote();
 	}
