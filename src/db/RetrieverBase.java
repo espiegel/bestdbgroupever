@@ -137,20 +137,18 @@ public abstract class RetrieverBase<T> {
 		try {
 			result_set = statement.executeQuery();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		List<T> result_list = new LinkedList<T>();
 		
 		try {
-			while(result_set.next()) {
+			while(result_set!=null && result_set.next()) {
 				result_list.add(makeObject(result_set));
 			}
 			result_set.close();
 			statement.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
