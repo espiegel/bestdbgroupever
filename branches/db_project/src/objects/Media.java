@@ -6,4 +6,5 @@ public class Media {
 	public String freebase_id;
 	public String directors;
 	public String image;
+	public int isTV;
 }
