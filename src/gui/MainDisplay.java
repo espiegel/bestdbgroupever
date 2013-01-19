@@ -1050,4 +1050,38 @@ public class MainDisplay {
 		// This means he has already upvoted
 		return commentOfUser.getVote();
 	}
+	
+	private void setPictureLabel(Media media, Label lblPic) {
+		
+		ImageData image = media.getImage();
+		
+		if (image==null) {
+			lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+		} else {
+			lblPic.setImage(new Image(display, image));
+		}
+		
+//		if(address!=null && address.length()>1){
+//			final URL url = getFullUrl(address);
+//			
+//			display.asyncExec(new Runnable() {
+//				
+//				@Override
+//				public void run() {
+//					Image img;
+//					try {
+//						img = new Image(display, url.openStream());
+//						lblPic.setImage(img);
+//						
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			});
+//		}
+//		else
+//		{
+//			
+//		}
+	}
 }
