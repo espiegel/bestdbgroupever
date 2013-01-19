@@ -70,8 +70,10 @@ public class IMDBGeoCoding {
 		this.limit = limit;
 		this.startNum = startNum;
 		outputFile = new File(IMDBListAfterParsing);
+		if(outputFile.exists()) // delete information
+			saveToFile("",false);
 		String start = "<Document>\r\n";
-		saveToFile(start);
+		saveToFile(start,true);
 	}
 
 	/**
@@ -162,7 +164,7 @@ public class IMDBGeoCoding {
 		System.out.println("Geo Coding finished!");
 		System.out.println("Output XML :"+IMDBListAfterParsing);
 		String end = "</Document>";
-		saveToFile(end);
+		saveToFile(end,true);
 		shell.dispose();
 	}
 
@@ -257,7 +259,7 @@ public class IMDBGeoCoding {
 	private void saveLocations() {
 		browserText = browser.getText();
 		if (ParseString()) {
-			saveToFile(browserText);
+			saveToFile(browserText,true);
 		}
 		try {
 			Thread.sleep(500);
@@ -265,10 +267,10 @@ public class IMDBGeoCoding {
 		}
 	}
 
-	private void saveToFile(String s) {
+	private void saveToFile(String s,boolean append) {
 		FileWriter fileWriter = null;
 		try {
-			fileWriter = new FileWriter(outputFile, true);
+			fileWriter = new FileWriter(outputFile, append);
 			fileWriter.write(s);
 			fileWriter.close();
 		} catch (Exception ex) {
