@@ -1,10 +1,20 @@
 package IMDB_Filmaps;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Scanner;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -12,7 +22,6 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
 import org.xml.sax.helpers.DefaultHandler;
 
 import FreeBase.Uploader;
@@ -128,6 +137,8 @@ public class XMLParser extends DefaultHandler {
 
 		// Read an object
 		obj = obj_in.readObject();
+		
+		obj_in.close();
 
 		if (obj instanceof List) {
 			myMovies = (List<Movie>) obj;
@@ -253,6 +264,7 @@ public class XMLParser extends DefaultHandler {
 
 		// Write object out to disk
 		obj_out.writeObject(myMovies);
+		obj_out.close();
 
 	}
 
