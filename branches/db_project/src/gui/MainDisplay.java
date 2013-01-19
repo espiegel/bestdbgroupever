@@ -15,6 +15,7 @@ import objects.CommentOfUser;
 import objects.Film;
 import objects.Location;
 import objects.LocationOfMedia;
+import objects.Media;
 import objects.TVShow;
 import objects.User;
 
@@ -46,9 +47,9 @@ import db.CommentOfUserRetriever;
 import db.CommentRetriever;
 import db.ConnectionManager;
 import db.FilmRetriever;
-import db.LocationByActorRetriever;
 import db.LocationOfMediaRetriever;
 import db.LocationRetriever;
+import db.MediaByActorRetriever;
 import db.TVRetriever;
 import db.UserRetriever;
 
@@ -523,9 +524,9 @@ public class MainDisplay {
 		btnRadioUsername.setBounds(10, 95, 111, 20);
 		btnRadioUsername.setText("Username");
 		
-		final Button btnRadioLocByActor = new Button(group, SWT.RADIO);
-		btnRadioLocByActor.setBounds(10, 120, 120, 20);
-		btnRadioLocByActor.setText("Location By Actor");
+		final Button btnRadioMediaByActor = new Button(group, SWT.RADIO);
+		btnRadioMediaByActor.setBounds(10, 120, 120, 20);
+		btnRadioMediaByActor.setText("Media By Actor");
 
 		
 		final List list = new List(grpSearch, SWT.BORDER | SWT.V_SCROLL);
@@ -707,44 +708,96 @@ public class MainDisplay {
 
 			} // End of Location If
 			
-			if(currentSearch.equals("Location By Actor"))  //code replication..
-			{ 
-				Location location = new LocationRetriever().retrieve(id); 
-							
-				try
-				{
-					if(location == null)
-					{
+			if (currentSearch.equals("Media By Actor")) {
+				System.out.println("hi");
+				Media media = new MediaByActorRetriever().retrieve(id);
+
+				try {
+					if (media == null) {
 						System.out.println("Empty resultset");
 						return;
 					}
+					boolean isTV = media.isTV == 1;
+					TVShow tvMedia = null;
+					Film filmMedia = null;
 					
-					String country = location.country;
-					String city = location.city;
-					String place = location.place;
-					float lat = Float.parseFloat(location.lat);
-					float lng = Float.parseFloat(location.lng);
-					int up = location.upvotes;
-					int down = location.downvotes;
+					if (isTV)
+						tvMedia = new TVRetriever().retrieve(id);
+					else
+						filmMedia = new FilmRetriever().retrieve(id);
 					
-					// locations dont have images
-					lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
+					String address = media.image;
+					String name = canonicalize(media.name);
+					String director = canonicalize(media.directors);
 
-					
-					lblDetails1.setText("Place: "+place);
-					lblDetails2.setText("Country: "+country);
-					lblDetails3.setText("City: "+city);
-					lblDetails4.setText("Latitude: "+lat+", Longtitude: "+lng);
-					lblDetails5.setText("Upvotes: "+up+", Downvotes: "+down);
-					
-					// TODO: Add this location to the map according to the lat and lng.
+					String first = null;
+					String last = null;
+					int numSeasons = -1;
+					int numEpisodes = -1;
+					String release = null;
+
+					if (isTV) {
+						first = canonicalize(tvMedia.first_episode);
+						last = canonicalize(tvMedia.last_episode);
+						numSeasons = tvMedia.num_seasons;
+						numEpisodes = tvMedia.num_episodes;
+					} else
+						release = canonicalize(filmMedia.release_date);
+
+					if (address != null && address.length() > 1) {
+						final URL url = getFullUrl(address);
+
+						display.asyncExec(new Runnable() {
+
+							@Override
+							public void run() {
+								Image img;
+								try {
+									img = new Image(display, url
+											.openStream());
+									lblPic.setImage(img);
+
+								} catch (IOException e) {
+									e.printStackTrace();
+								}
+							}
+						});
+					} else {
+						lblPic.setImage(SWTResourceManager.getImage(
+								MainDisplay.class, "/gui/noimage.jpg"));
+					}
+
+					lblDetails1.setText("Name: " + name);
+					lblDetails2.setText("Director(s): " + director);
+
+					if (isTV) {
+						lblDetails3.setText("First Episode: "
+								+ first.toString());
+						lblDetails4.setText("Last Episode: "
+								+ last.toString());
+						lblDetails5.setText("Number of Seasons: "
+								+ String.valueOf(numSeasons));
+						lblDetails6.setText("Number of Episodes: "
+								+ String.valueOf(numEpisodes));
+					} else
+						lblDetails3.setText("Release Date: " + release);
+
+					java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn
+							.prepareStatement("Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "
+									+ "LocationOfMedia.media_id = " + id));
+					// Put all location markers on the map
 					map.clearAllMarkers();
-					map.addMarker(location.lat, location.lng, place);
-				} catch (Exception ex) {
-					ex.printStackTrace();
+
+					for (Location l : locations)
+						map.addMarker(l.lat, l.lng, l.place);
+
+					// TODO: Zoom Out on all of these markers ???
+
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-					
-			} // End of LocationByActor If
+
+			} // End of MediaByActor If
 			
 			if(currentSearch.equals("User"))
 			{
@@ -864,20 +917,20 @@ public class MainDisplay {
 					}
 				}
 				
-				if (btnRadioLocByActor.getSelection()) {
+				if (btnRadioMediaByActor.getSelection()) {
 
-					setCurrentSearch("Location By Actor");
-					LocationByActorRetriever ret = new LocationByActorRetriever();
-					java.util.List<Location> locs = ret.searchBySearchField(text);
+					setCurrentSearch("Media By Actor");
+					MediaByActorRetriever ret = new MediaByActorRetriever();
+					java.util.List<Media> medias = ret.searchBySearchField(text);
 
-					if (locs.isEmpty()) {
+					if (medias.isEmpty()) {
 						System.out.println("Empty resultset");
 						return;
 					}
 
-					for (Location location : locs) {
-						list.add(canonicalize(location.place));
-						listIds.add(location.location_id);
+					for (Media media : medias) {
+						list.add(canonicalize(media.name));
+						listIds.add(media.media_id);
 					}
 				}					
 							
