@@ -1069,7 +1069,9 @@ public class MainDisplay {
 				try {
 					java.util.List<ActorInMedia> actors = new ActorInMediaRetriever().retrieveByMediaID(media.media_id);
 					for (ActorInMedia actorDetails : actors) {
-						lstActors.add(actorDetails.name + " - " + actorDetails.char_name);
+						String char_name = actorDetails.char_name;
+						if (char_name.isEmpty()) char_name = "unknown";
+						lstActors.add(actorDetails.name + " - " + char_name);
 					}
 					lstActors.setData(actors);
 				} catch (Exception e) {
