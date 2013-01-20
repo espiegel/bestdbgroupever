@@ -40,4 +40,8 @@ public class TVRetriever extends RetrieverBase<TVShow> {
 		return search_fields;
 	}
 
+	@Override
+	protected String getOrderByField() {
+		return "name";
+	}
 }

@@ -40,4 +40,8 @@ public class MediaByActorRetriever extends
 		}
 	}
 
+	@Override
+	protected String getOrderByField() {
+		return "Media.name";
+	}
 }

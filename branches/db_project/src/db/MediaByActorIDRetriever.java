@@ -8,7 +8,7 @@ public class MediaByActorIDRetriever extends
 		RetrieverBase<Media> {
 
 	private final String[] default_fields = {"actor_id" };
-	private final String[] search_fields = { "name" };
+	private final String[] search_fields = { "Actors.name" };
 
 	@Override
 	protected String getTableNames() {
@@ -44,4 +44,8 @@ public class MediaByActorIDRetriever extends
 		return retrieve("actor_id = " + id);
 	}
 
+	@Override
+	protected String getOrderByField() {
+		return "Media.name";
+	}
 }

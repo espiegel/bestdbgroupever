@@ -43,5 +43,9 @@ public class LocationByActorRetriever extends RetrieverBase<Location> {
 			return null;
 		}
 	}
-
+	
+	@Override
+	protected String getOrderByField() {
+		return "place";
+	}
 }

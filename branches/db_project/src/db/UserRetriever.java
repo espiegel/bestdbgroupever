@@ -66,4 +66,9 @@ public class UserRetriever extends RetrieverBase<User> {
 	public User retrieveByName(String name) {
 		return retrieveFirst("name = '" + name+"'");
 	}
+	
+	@Override
+	protected String getOrderByField() {
+		return "name";
+	}
 }
