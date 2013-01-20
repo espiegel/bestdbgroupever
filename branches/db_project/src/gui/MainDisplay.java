@@ -173,7 +173,7 @@ public class MainDisplay {
 		grpDetails.setLayout(rl_grpDetails);
 		FormData fd_grpDetails = new FormData();
 		fd_grpDetails.bottom = new FormAttachment(0, 230);
-		fd_grpDetails.right = new FormAttachment(0, 1122);
+		fd_grpDetails.right = new FormAttachment(0, 1140);
 		fd_grpDetails.top = new FormAttachment(0);
 		fd_grpDetails.left = new FormAttachment(0, 576);
 		grpDetails.setLayoutData(fd_grpDetails);
@@ -187,12 +187,17 @@ public class MainDisplay {
 		
 		final Composite compExtra = new Composite(grpDetails, SWT.NONE);
 		compExtra.setOrientation(SWT.VERTICAL);
-		compExtra.setLayout(new GridLayout(1, false));
-		compExtra.setLayoutData(new RowData(170, 200));
+		GridLayout compExtraLayout = new GridLayout(1, false);
+		compExtraLayout.marginBottom=compExtraLayout.marginHeight=
+				compExtraLayout.marginRight=
+				compExtraLayout.marginTop=compExtraLayout.marginWidth=0;
+		compExtraLayout.marginLeft = 1;
+		compExtra.setLayout(compExtraLayout);
+		compExtra.setLayoutData(new RowData(190, 200));
 		compExtra.setVisible(false);
 		
 		Label lblNewLabel = new Label(compExtra, SWT.NONE);
-		lblNewLabel.setText("Actors");
+		lblNewLabel.setText("Actors (doubleclick to search)");
 		
 		final List lstActors = new List(compExtra, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		lstActors.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -232,11 +237,11 @@ public class MainDisplay {
 		Group grpComments = new Group(shlTvTraveler, SWT.NONE);
 		grpComments.setText("Comments");
 		FormData fd_grpComments = new FormData();
+		fd_grpComments.right = new FormAttachment(100, -10);
+		fd_grpComments.left = new FormAttachment(grpMap, 6);
 		fd_grpComments.top = new FormAttachment(grpMap, 0, SWT.TOP);
-		fd_grpComments.left = new FormAttachment(grpDetails, 0, SWT.LEFT);		
 		
 		fd_grpComments.bottom = new FormAttachment(grpMap, 0, SWT.BOTTOM);
-		fd_grpComments.right = new FormAttachment(100, -10);
 		grpComments.setLayoutData(fd_grpComments);
 		
 		lblCurrentLocation = new CLabel(grpComments, SWT.BORDER | SWT.WRAP);
