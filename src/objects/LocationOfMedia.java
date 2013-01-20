@@ -2,6 +2,6 @@ package objects;
 
 public class LocationOfMedia {
 		public int media_id;
-		public int location_id;
+		public Location location;
 		public String scene_episode;
 }

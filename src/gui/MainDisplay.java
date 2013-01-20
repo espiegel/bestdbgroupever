@@ -696,7 +696,6 @@ public class MainDisplay {
 			} // End of Location If
 			
 			if (currentSearch.equals("Media By Actor")) {
-				System.out.println("hi");
 				Media media = new MediaByActorRetriever().retrieve(id);
 
 				try {
@@ -747,14 +746,7 @@ public class MainDisplay {
 					} else
 						lblDetails3_1.setText("Release Date: " + release);
 
-					java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn
-							.prepareStatement("Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "
-									+ "LocationOfMedia.media_id = " + id));
-					// Put all location markers on the map
-					map.clearAllMarkers();
-
-					for (Location l : locations)
-						map.addMarker(l.lat, l.lng, l.place);
+					addLocationMarkers(id);
 					
 					//Make actors column visible:
 					compExtra.setVisible(true);
@@ -1018,7 +1010,7 @@ public class MainDisplay {
 		lblCurrentLocation.setText(locations.get(0).place);
 		loadCommentsByLocationId(location_id);
 	}
-	public String getScene(int location_id,int media_id,java.util.List<LocationOfMedia> locationsOfMedia){
+	/*public String getScene(int location_id,int media_id,java.util.List<LocationOfMedia> locationsOfMedia){
 		for(LocationOfMedia locationOfMedia : locationsOfMedia){
 			if(locationOfMedia.location_id == location_id &&
 					locationOfMedia.media_id == media_id){
@@ -1026,22 +1018,21 @@ public class MainDisplay {
 			}
 		}
 		return "no info";
-	}
+	}*/
 	public void addLocationMarkers(int media_id) throws SQLException{
-		java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
-				"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
-		        "LocationOfMedia.media_id = "+media_id));
 		
 		java.util.List<LocationOfMedia> locationsOfMedia = new LocationOfMediaRetriever().retrieve(ConnectionManager.conn.prepareStatement(
 				"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
 		        "LocationOfMedia.media_id = "+media_id));
+		
 		// Put all location markers on the map
 		map.clearAllMarkers();
 		
-		for(Location l : locations)
-			map.addMarker(l.lat, l.lng, l.place,getScene(l.location_id, media_id, locationsOfMedia));
+		for(LocationOfMedia lom : locationsOfMedia) {
+			Location l = lom.location;
+			map.addMarker(l.lat, l.lng, l.place,lom.scene_episode);
+		}
 	}
-
 	/**
 	 * 
 	 * @return -1 for downvote. 0 for no votes. +1 for upvote.
