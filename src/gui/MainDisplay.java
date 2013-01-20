@@ -573,9 +573,9 @@ public class MainDisplay {
 				
 				int index = list.getSelectionIndex();
 				int id = -1;
-			
+			//sometimes ArrayIndexOutOfBoundsException on index=-1
 				id = listIds.get(index);
-				
+				map.clearAllMarkers();
 				if(currentSearch.equals("TV"))
 				{
 					TVShow show = new TVRetriever().retrieve(id);
@@ -683,7 +683,7 @@ public class MainDisplay {
 					lblDetails5_1.setText("Upvotes: "+up+", Downvotes: "+down);
 					
 					// TODO: Add this location to the map according to the lat and lng.
-					map.clearAllMarkers();
+					
 					map.addMarker(location.lat, location.lng, place);
 					
 					loadCommentsByLocationId(id);				
@@ -804,7 +804,7 @@ public class MainDisplay {
 				
 				list.removeAll(); // Initialize the list
 				listIds.removeAll(listIds); // Initialize the id list
-				
+				map.clearAllMarkers();
 				if(btnRadioTv.getSelection())
 				{
 					setCurrentSearch("TV");
@@ -1005,10 +1005,12 @@ public class MainDisplay {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		int location_id=locations.get(0).location_id;
-		currentLocationId=location_id;
-		lblCurrentLocation.setText(locations.get(0).place);
-		loadCommentsByLocationId(location_id);
+		if(locations.size()>0){
+			int location_id=locations.get(0).location_id;
+			currentLocationId=location_id;
+			lblCurrentLocation.setText(locations.get(0).place);
+			loadCommentsByLocationId(location_id);
+		}
 	}
 	/*public String getScene(int location_id,int media_id,java.util.List<LocationOfMedia> locationsOfMedia){
 		for(LocationOfMedia locationOfMedia : locationsOfMedia){

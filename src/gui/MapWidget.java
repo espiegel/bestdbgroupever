@@ -70,9 +70,21 @@ public class MapWidget {
 					setUserLat(title[1]);
 					setUserLng(title[2]);
 					setUserAddress(title[3]);
-					System.out.println(getUserLat());
-					System.out.println(getUserLng());
-					System.out.println(getUserAddress());
+					// TODO : call a function in display with those params
+				}
+				if(title[0].equals("address"))
+				{
+					if(!title[1].equals("undefined")){
+						setUserLat(title[1]);
+						setUserLng(title[2]);
+						setUserAddress(title[3]);
+						addMarker(getUserLat(), getUserLng(), getUserAddress());
+					}
+					else
+					{
+						setUserLat("undefined");
+						setUserLng("undefined");
+					}
 					// TODO : call a function in display with those params
 				}
 			}
@@ -147,6 +159,14 @@ public class MapWidget {
 		return false;
 	}
 
+	public boolean codeAddress(String address){
+		if (isLoaded()) {
+			String[] params = {address};
+			return browserExecute("codeAddress", params);
+		}
+		return false;
+	}
+	
 	public boolean clearAllMarkers(){
 		if (isLoaded()) {
 		String[] temp={};
