@@ -177,23 +177,23 @@ public class MainDisplay {
 		final Label lblPic_1 = new Label(grpDetails, SWT.NONE);
 		lblPic_1.setLayoutData(new RowData(150, 200));
 		
-		SashForm sashForm = new SashForm(grpDetails, SWT.VERTICAL);
-		sashForm.setLayoutData(new RowData(370, 200));
+		SashForm sfDetails = new SashForm(grpDetails, SWT.VERTICAL);
+		sfDetails.setLayoutData(new RowData(370, 200));
 		
 		
 		
-		final Label lblDetails1_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
+		final Label lblDetails1_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails2_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
+		final Label lblDetails2_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails3_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
+		final Label lblDetails3_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails4_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
+		final Label lblDetails4_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails5_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
+		final Label lblDetails5_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
 		
-		final Label lblDetails6_1 = new Label(sashForm, SWT.WRAP | SWT.HORIZONTAL);
-		sashForm.setWeights(new int[] {1, 1, 1, 1, 1, 1});
+		final Label lblDetails6_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
+		sfDetails.setWeights(new int[] {1, 1, 1, 1, 1, 1});
 		// End of details group
 		
 
