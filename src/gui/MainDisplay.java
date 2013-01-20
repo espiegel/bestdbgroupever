@@ -500,6 +500,7 @@ public class MainDisplay {
 		
 		
 		Group grpSearch = new Group(shlTvTraveler, SWT.NONE);
+		grpSearch.setLayout(new FormLayout());
 		FormData fd_grpSearch = new FormData();
 		fd_grpSearch.bottom = new FormAttachment(0, 230);
 		fd_grpSearch.right = new FormAttachment(0, 570);
@@ -509,8 +510,20 @@ public class MainDisplay {
 		grpSearch.setText("Search");
 		
 		final Button btnSearch = new Button(grpSearch, SWT.NONE);
+		FormData fd_btnSearch = new FormData();
+		fd_btnSearch.bottom = new FormAttachment(0, 51);
+		fd_btnSearch.right = new FormAttachment(0, 545);
+		fd_btnSearch.top = new FormAttachment(0, 21);
+		fd_btnSearch.left = new FormAttachment(0, 436);
+		btnSearch.setLayoutData(fd_btnSearch);
 		
 		txtSearch = new Text(grpSearch, SWT.BORDER);
+		FormData fd_txtSearch = new FormData();
+		fd_txtSearch.bottom = new FormAttachment(0, 49);
+		fd_txtSearch.right = new FormAttachment(0, 426);
+		fd_txtSearch.top = new FormAttachment(0, 23);
+		fd_txtSearch.left = new FormAttachment(0, 5);
+		txtSearch.setLayoutData(fd_txtSearch);
 		txtSearch.addTraverseListener(new TraverseListener() {
 			public void keyTraversed(TraverseEvent arg0) {
 				if (arg0.detail==SWT.TRAVERSE_RETURN) {
@@ -518,34 +531,40 @@ public class MainDisplay {
 				}
 			}
 		});
-		txtSearch.setBounds(10, 28, 421, 26);		
 		
 		Group group = new Group(grpSearch, SWT.NONE);
-		group.setBounds(10, 60, 153, 160);
+		FormData fd_group = new FormData();
+		fd_group.bottom = new FormAttachment(0, 177);
+		fd_group.right = new FormAttachment(0, 158);
+		fd_group.top = new FormAttachment(0, 55);
+		fd_group.left = new FormAttachment(0, 5);
+		group.setLayoutData(fd_group);
+		group.setLayout(new RowLayout(SWT.VERTICAL));
 		
 		final Button btnRadioTv = new Button(group, SWT.RADIO);
 		btnRadioTv.setSelection(true);
-		btnRadioTv.setBounds(10, 20, 111, 20);
 		btnRadioTv.setText("Television");
 		
 		final Button btnRadioFilm = new Button(group, SWT.RADIO);
-		btnRadioFilm.setBounds(10, 45, 111, 20);
 		btnRadioFilm.setText("Film");
 		
 		final Button btnRadioLocation = new Button(group, SWT.RADIO);
-		btnRadioLocation.setBounds(10, 70, 111, 20);
 		btnRadioLocation.setText("Location");
 		
 		final Button btnRadioUsername = new Button(group, SWT.RADIO);
-		btnRadioUsername.setBounds(10, 95, 111, 20);
 		btnRadioUsername.setText("Username");
 		
 		final Button btnRadioMediaByActor = new Button(group, SWT.RADIO);
-		btnRadioMediaByActor.setBounds(10, 120, 120, 20);
 		btnRadioMediaByActor.setText("Media By Actor");
 
 		
 		final List list = new List(grpSearch, SWT.BORDER | SWT.V_SCROLL);
+		FormData fd_list = new FormData();
+		fd_list.bottom = new FormAttachment(0, 205);
+		fd_list.right = new FormAttachment(0, 545);
+		fd_list.top = new FormAttachment(0, 57);
+		fd_list.left = new FormAttachment(0, 164);
+		list.setLayoutData(fd_list);
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
@@ -784,7 +803,6 @@ public class MainDisplay {
 				lstActors.removeAll();
 			}
 		});
-		list.setBounds(185, 72, 365, 148);
 		
 
 		btnSearch.addSelectionListener(new SelectionAdapter() {
@@ -874,7 +892,6 @@ public class MainDisplay {
 				}
 			}
 		});
-		btnSearch.setBounds(441, 26, 109, 30);
 		btnSearch.setText("Search");
 		
 		lstActors.addMouseListener(new MouseListener() {
