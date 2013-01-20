@@ -998,13 +998,9 @@ public class MainDisplay {
 
 	public void loadCommentsByLocationCoord(String lat,String lng){
 		java.util.List<Location> locations=null ;
-		try {
-			 locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
-					 "Select * FROM Locations WHERE Locations.lat = \""+lat+"\" AND "+
-						"Locations.lng = \""+lng+"\""));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		locations = new LocationRetriever().retrieve("Locations.lat ="+lat+" AND "+
+						"Locations.lng ="+lng);
+
 		if(locations.size()>0){
 			int location_id=locations.get(0).location_id;
 			currentLocationId=location_id;
@@ -1023,9 +1019,8 @@ public class MainDisplay {
 	}*/
 	public void addLocationMarkers(int media_id) throws SQLException{
 		
-		java.util.List<LocationOfMedia> locationsOfMedia = new LocationOfMediaRetriever().retrieve(ConnectionManager.conn.prepareStatement(
-				"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
-		        "LocationOfMedia.media_id = "+media_id));
+		java.util.List<LocationOfMedia> locationsOfMedia = new LocationOfMediaRetriever().retrieve("Locations.location_id = LocationOfMedia.location_id AND "+
+		        "LocationOfMedia.media_id = "+media_id);
 		
 		// Put all location markers on the map
 		map.clearAllMarkers();

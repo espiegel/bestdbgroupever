@@ -59,20 +59,20 @@ public class MapWidget {
 		browser.addTitleListener(new TitleListener() {
 			public void changed(TitleEvent arg0) {
 				String[] title = arg0.title.split("#");
-				if(title[0].equals("clicked"))
+				if(title[0].equals("clicked")) // user clicked a marker
 				{
 					setLat(title[1]);
 					setLng(title[2]);
 					display.loadCommentsByLocationCoord(getLat(), getLng());
 				}
-				if(title[0].equals("choose"))
+				if(title[0].equals("choose")) //user made a new marker
 				{
 					setUserLat(title[1]);
 					setUserLng(title[2]);
 					setUserAddress(title[3]);
 					// TODO : call a function in display with those params
 				}
-				if(title[0].equals("address"))
+				if(title[0].equals("address")) //geo code of address completed
 				{
 					if(!title[1].equals("undefined")){
 						setUserLat(title[1]);
