@@ -1,12 +1,8 @@
 package db;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
-import objects.Film;
-import objects.Location;
 import objects.Media;
-import objects.TVShow;
 
 public class MediaByActorRetriever extends
 		RetrieverBase<Media> {
