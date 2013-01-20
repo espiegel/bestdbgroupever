@@ -56,4 +56,14 @@ public class CommentRetriever extends RetrieverBase<Comment> {
 			return null;
 		}
 	}
+	
+	@Override
+	protected String getOrderByField() {
+		return "date";
+	}
+	
+	@Override
+	protected boolean getOrderByAsc() {
+		return false;
+	}
 }

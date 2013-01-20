@@ -43,5 +43,9 @@ public class ActorInMediaRetriever extends RetrieverBase<ActorInMedia> {
 	public List<ActorInMedia> retrieveByMediaID(int media_id) {
 		return retrieve("media_id = " + media_id);
 	}
-
+	
+	@Override
+	protected String getOrderByField() {
+		return "name";
+	}
 }

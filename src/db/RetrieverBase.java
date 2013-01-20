@@ -43,6 +43,20 @@ public abstract class RetrieverBase<T> {
 	protected abstract T makeObject(ResultSet result_set);
 	
 	/**
+	 * @return null or empty string if not to order by anything, the field name to order by otherwise
+	 */
+	protected String getOrderByField() {
+		return null;
+	}
+	
+	/**
+	 * @return Returns if OrderBy should be ASC (versus DESC)
+	 */
+	protected boolean getOrderByAsc() {
+		return true;
+	}
+	
+	/**
 	 * Tries to fill automatically using reflection the fields of an 'objects' object from the result set.
 	 * Works only on items objects with public fields whose name corresponds to the fieldnames in the db.
 	 * To be called by the inheritor where appropriate.
@@ -82,6 +96,13 @@ public abstract class RetrieverBase<T> {
 		if (added_where_conditions!=null && !added_where_conditions.isEmpty()) {
 			sb.append(flgAddedJoin?" AND ":" WHERE ");
 			sb.append(added_where_conditions);
+		}
+		
+		final String orderbyfield = getOrderByField();
+		if (orderbyfield!=null && !orderbyfield.isEmpty()) {
+			sb.append(" ORDER BY ");
+			sb.append(orderbyfield);
+			sb.append(getOrderByAsc()?" ASC":" DESC");
 		}
 		
 		return sb.toString();

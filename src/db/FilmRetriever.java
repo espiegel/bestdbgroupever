@@ -40,4 +40,8 @@ public class FilmRetriever extends RetrieverBase<Film> {
 		return search_fields;
 	}
 
+	@Override
+	protected String getOrderByField() {
+		return "name";
+	}
 }
