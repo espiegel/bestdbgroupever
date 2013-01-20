@@ -281,6 +281,7 @@ public class Uploader {
 		String isTv = "";
 		Long nume = null, nums = null;
 		boolean flag = true, tv_or_film = false, hasResults = false;
+		boolean hasCharName=false,characters=false;
 		ResultSet rs;
 		QueryParser queryParser = new QueryParser();
 		Query query;
@@ -386,8 +387,16 @@ public class Uploader {
 					if (Object != null) {
 						character = Object.get("name");
 						if (character != null)
+						{
 							character = character.replaceAll("'", "&#039");
+							hasCharName=true;
+							characters=true;
+						}
+						else
+							hasCharName=false;
 					}
+					else
+						hasCharName=false;
 
 					// insert into Actors table
 					rs = connect.createStatement().executeQuery(
@@ -406,9 +415,11 @@ public class Uploader {
 						actor_id = rs.getString("actor_id");
 
 					// insert into ActorsInMedia table
+					if(hasCharName){
 					values = "('" + actor_id + "','" + media_id + "','"
 							+ character + "'),";
 					insert4 += values;
+					}
 				}
 			} catch (Exception ex) {
 				flag = false;
@@ -416,18 +427,20 @@ public class Uploader {
 		}// end while
 		if (flag && hasResults) {
 
-			String stam;
+			String temp1;
 			// TV/Films table insert
 			if (tv_or_film) {
-				stam = insert2.substring(0, insert2.length() - 1);
-				stmt.addBatch(stam);
+				temp1 = insert2.substring(0, insert2.length() - 1);
+				stmt.addBatch(temp1);
 			}
 
 			// Actors in Media insert
-			stam = insert4.substring(0, insert4.length() - 1);
-			stmt.addBatch(stam);
-
-			stmt.executeBatch();
+			if(characters){
+				temp1 = insert4.substring(0, insert4.length() - 1);
+			stmt.addBatch(temp1);
+			}
+			if(tv_or_film || characters)
+				stmt.executeBatch();
 
 			if (readService.getCursor() instanceof Boolean)
 				return "false";
