@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import main.Main;
+import objects.ActorInMedia;
 import objects.Comment;
 import objects.CommentOfUser;
 import objects.Film;
@@ -47,6 +48,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import db.ActorInMediaRetriever;
 import db.CommentOfUserRetriever;
 import db.CommentRetriever;
 import db.ConnectionManager;
@@ -181,21 +183,19 @@ public class MainDisplay {
 		lblPic_1.setLayoutData(new RowData(150, 200));
 		
 		SashForm sfDetails = new SashForm(grpDetails, SWT.VERTICAL);
-		sfDetails.setLayoutData(new RowData(220, 200));
+		sfDetails.setLayoutData(new RowData(200, 200));
 		
 		final Composite compExtra = new Composite(grpDetails, SWT.NONE);
 		compExtra.setOrientation(SWT.VERTICAL);
 		compExtra.setLayout(new GridLayout(1, false));
-		compExtra.setLayoutData(new RowData(150, 200));
+		compExtra.setLayoutData(new RowData(170, 200));
 		compExtra.setVisible(false);
 		
 		Label lblNewLabel = new Label(compExtra, SWT.NONE);
 		lblNewLabel.setText("Actors");
 		
-		final List lstActors = new List(compExtra, SWT.BORDER | SWT.V_SCROLL);
+		final List lstActors = new List(compExtra, SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 		lstActors.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		//lstActors.setLayoutData(new RowData(150, 200-lblNewLabel.getBounds().height));
-		
 		
 		
 		final Label lblDetails1_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
@@ -568,7 +568,7 @@ public class MainDisplay {
 						int numSeasons = show.num_seasons;
 						int numEpisodes = show.num_episodes;
 
-						setPictureLabel(show, lblPic_1);
+						setExtras(show, lblPic_1, lstActors);
 
 						lblDetails1_1.setText("Name: "+name);
 						lblDetails2_1.setText("Director(s): "+director);
@@ -606,7 +606,7 @@ public class MainDisplay {
 					String director =canonicalize(film.directors);
 					String release = canonicalize(film.release_date);
 
-					setPictureLabel(film, lblPic_1);
+					setExtras(film, lblPic_1, lstActors);
 					
 					lblDetails1_1.setText("Name: "+name);
 					lblDetails2_1.setText("Director(s): "+director);
@@ -703,7 +703,7 @@ public class MainDisplay {
 					} else
 						release = canonicalize(filmMedia.release_date);
 
-					setPictureLabel(media, lblPic_1);
+					setExtras(media, lblPic_1, lstActors);
 
 					lblDetails1_1.setText("Name: " + name);
 					lblDetails2_1.setText("Director(s): " + director);
@@ -1013,6 +1013,28 @@ public class MainDisplay {
 		return commentOfUser.getVote();
 	}
 	
+	private void setExtras(final Media media, final Label lblPic, final List lstActors) {
+		setPictureLabel(media, lblPic);
+		setActors(media, lstActors);
+	}
+	
+	private void setActors(final Media media, final List lstActors) {
+		display.asyncExec(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					java.util.List<ActorInMedia> actors = new ActorInMediaRetriever().retrieveByMediaID(media.media_id);
+					for (ActorInMedia actorDetails : actors) {
+						lstActors.add(actorDetails.name + " - " + actorDetails.char_name);
+					}
+					lstActors.setData(actors);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
 	private void setPictureLabel(final Media media, final Label lblPic) {
 		if (media.image==null || media.image.isEmpty()) {
 			lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class, "/gui/noimage.jpg"));
