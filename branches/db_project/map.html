@@ -86,7 +86,8 @@
 				}
 				function clearOverlays() {
   					for (var i = 0; i < markersArray.length; i++ ) {
-    				markersArray[i].setMap(null);
+  						if(markersArray[i]!=null)
+    						markersArray[i].setMap(null);
   					}
   					markersArray=[];
 				}
@@ -105,6 +106,11 @@
 						if (status == google.maps.GeocoderStatus.OK) {
 							if (results[0]) {
 								address=results[0].formatted_address;
+							}
+							else {
+								if (results[1]) {
+									address=results[1].formatted_address;
+								}
 							}
 						} else {
 							address="undefined";
@@ -129,6 +135,19 @@
 						window.document.title="choose#"+location.lat()+"#"+location.lng()+"#"+address;	
 						});	  
 				}
+				
+				function codeAddress(address) {
+					var coords;
+					geocoder.geocode( { 'address': address}, function(results, status) {
+					if (status == google.maps.GeocoderStatus.OK && results[0]) {
+						coords=results[0].geometry.location;
+						window.document.title="address#"+coords.lat()+"#"+coords.lng()+"#"+address;
+					} else {
+					window.document.title="address#undefined";
+					}
+					}); 
+				}
+				
 			</script>
 		</head>
 		<body onload="initialize()">
