@@ -28,9 +28,12 @@ import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
@@ -178,7 +181,20 @@ public class MainDisplay {
 		lblPic_1.setLayoutData(new RowData(150, 200));
 		
 		SashForm sfDetails = new SashForm(grpDetails, SWT.VERTICAL);
-		sfDetails.setLayoutData(new RowData(370, 200));
+		sfDetails.setLayoutData(new RowData(220, 200));
+		
+		final Composite compExtra = new Composite(grpDetails, SWT.NONE);
+		compExtra.setOrientation(SWT.VERTICAL);
+		compExtra.setLayout(new GridLayout(1, false));
+		compExtra.setLayoutData(new RowData(150, 200));
+		compExtra.setVisible(false);
+		
+		Label lblNewLabel = new Label(compExtra, SWT.NONE);
+		lblNewLabel.setText("Actors");
+		
+		final List lstActors = new List(compExtra, SWT.BORDER | SWT.V_SCROLL);
+		lstActors.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		//lstActors.setLayoutData(new RowData(150, 200-lblNewLabel.getBounds().height));
 		
 		
 		
@@ -561,14 +577,9 @@ public class MainDisplay {
 						lblDetails5_1.setText("Number of Seasons: "+String.valueOf(numSeasons));
 						lblDetails6_1.setText("Number of Episodes: "+String.valueOf(numEpisodes));
 						
-						/*java.util.List<Location> locations = new LocationRetriever().retrieve(ConnectionManager.conn.prepareStatement(
-								"Select * FROM Locations, LocationOfMedia WHERE Locations.location_id = LocationOfMedia.location_id AND "+
-						        "LocationOfMedia.media_id = "+id));
-						// Put all location markers on the map
-						map.clearAllMarkers();
+						//Make actors column visible:
+						compExtra.setVisible(true);
 						
-						for(Location l : locations)
-							map.addMarker(l.lat, l.lng, l.place);*/
 						addLocationMarkers(id);
 						
 						// TODO: Zoom Out on all of these markers ???
@@ -600,6 +611,9 @@ public class MainDisplay {
 					lblDetails1_1.setText("Name: "+name);
 					lblDetails2_1.setText("Director(s): "+director);
 					lblDetails3_1.setText("Release Date: "+release);
+					
+					//Make actors column visible:
+					compExtra.setVisible(true);
 					
 					addLocationMarkers(id);
 					
@@ -714,6 +728,9 @@ public class MainDisplay {
 
 					for (Location l : locations)
 						map.addMarker(l.lat, l.lng, l.place);
+					
+					//Make actors column visible:
+					compExtra.setVisible(true);
 
 					// TODO: Zoom Out on all of these markers ???
 
@@ -755,6 +772,8 @@ public class MainDisplay {
 				lblDetails5.setText("");
 				lblDetails6.setText("");
 				lblPic.setImage(null);
+				compExtra.setVisible(false);
+				lstActors.removeAll();
 			}
 		});
 		list.setBounds(185, 72, 365, 148);
