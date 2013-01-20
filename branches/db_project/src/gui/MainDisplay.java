@@ -20,6 +20,8 @@ import objects.User;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
@@ -55,6 +57,7 @@ import db.ConnectionManager;
 import db.FilmRetriever;
 import db.LocationOfMediaRetriever;
 import db.LocationRetriever;
+import db.MediaByActorIDRetriever;
 import db.MediaByActorRetriever;
 import db.TVRetriever;
 import db.UserRetriever;
@@ -867,25 +870,40 @@ public class MainDisplay {
 				
 				if (btnRadioMediaByActor.getSelection()) {
 
-					setCurrentSearch("Media By Actor");
-					MediaByActorRetriever ret = new MediaByActorRetriever();
-					java.util.List<Media> medias = ret.searchBySearchField(text);
-
-					if (medias.isEmpty()) {
-						System.out.println("Empty resultset");
-						return;
-					}
-
-					for (Media media : medias) {
-						list.add(canonicalize(media.name));
-						listIds.add(media.media_id);
-					}
-				}					
-							
+					searchMediaByActor(list,text,-1,true);
+				}
 			}
 		});
 		btnSearch.setBounds(441, 26, 109, 30);
 		btnSearch.setText("Search");
+		
+		lstActors.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseUp(MouseEvent e) {}
+			
+			@Override
+			public void mouseDown(MouseEvent e) {}
+			
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				int sel = lstActors.getSelectionIndex();
+				if (sel<0) return;
+				@SuppressWarnings("unchecked")
+				java.util.List<ActorInMedia> actors = (java.util.List<ActorInMedia>) lstActors.getData();
+				
+				final ActorInMedia actor = actors.get(sel);
+				txtSearch.setText(actor.name);
+				btnRadioFilm.setSelection(false);
+				btnRadioTv.setSelection(false);
+				btnRadioLocation.setSelection(false);
+				btnRadioUsername.setSelection(false);
+				btnRadioMediaByActor.setSelection(true);
+				list.removeAll(); // Initialize the list
+				listIds.removeAll(listIds); // Initialize the id list
+				searchMediaByActor(list,"",actor.actor_id,false);
+			}
+		});
 		
 		// All listeners should either be at the end or in a different file...
 		commentTable.addSelectionListener(new SelectionAdapter() {
@@ -903,6 +921,27 @@ public class MainDisplay {
 
 			}
 		});
+	}
+
+	private void searchMediaByActor(List list, String text, int id, boolean searchByText) {
+		setCurrentSearch("Media By Actor");
+		java.util.List<Media> medias;
+		
+		if (searchByText) {
+			medias = new MediaByActorRetriever().searchBySearchField(text);
+		} else {
+			medias = new MediaByActorIDRetriever().searchByID(id);
+		}
+
+		if (medias.isEmpty()) {
+			System.out.println("Empty resultset");
+			return;
+		}
+
+		for (Media media : medias) {
+			list.add(canonicalize(media.name));
+			listIds.add(media.media_id);
+		}
 	}
 
 	public String canonicalize(String str){
