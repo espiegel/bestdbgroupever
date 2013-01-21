@@ -143,7 +143,7 @@ public class FileUploader {
 				// insert into ActorsInMedia table
 					rs1 = connect.createStatement().executeQuery(
 							"SELECT * FROM ActorsInMedia WHERE actor_id='"
-									+ actor_id + "' AND media_id='"+ media_id + "' AND char_name='"+ character + "'");	
+									+ actor_id + "' AND media_id='"+ media_id + "'");	
 					
 				if (!rs1.next()){	
 				values = "('" + actor_id + "','" + media_id + "','"
