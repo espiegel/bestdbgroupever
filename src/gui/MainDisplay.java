@@ -1,6 +1,7 @@
 package gui;
 
 
+import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -14,6 +15,8 @@ import objects.Film;
 import objects.Location;
 import objects.LocationOfMedia;
 import objects.Media;
+import objects.ObjectDisplayField;
+import objects.ObjectID;
 import objects.TVShow;
 import objects.User;
 
@@ -55,6 +58,7 @@ import db.CommentOfUserRetriever;
 import db.CommentRetriever;
 import db.ConnectionManager;
 import db.FilmRetriever;
+import db.LimitsToken;
 import db.LocationOfMediaRetriever;
 import db.LocationRetriever;
 import db.MediaByActorIDRetriever;
@@ -75,6 +79,10 @@ public class MainDisplay {
 	private int currentLocationId;
 	private CLabel lblCurrentLocation=null;
 	private Comment currentComment = null;
+	private Button btnForward;
+	private Button btnBack;
+	private LimitsToken<?> lastSetToken = null;
+	List list;
 	
 	public Comment getCurrentComment() {
 		return currentComment;
@@ -569,14 +577,33 @@ public class MainDisplay {
 		fd_cmpFB.top = new FormAttachment(group, 0, SWT.BOTTOM);
 		cmpFB.setLayoutData(fd_cmpFB);
 		
-		Button btnForward = new Button(cmpFB, SWT.NONE);
+		btnForward = new Button(cmpFB, SWT.NONE);
+		btnForward.setEnabled(false);
 		btnForward.setText("<\u05E7\u05D3\u05D9\u05DE\u05D4");
+		btnForward.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				super.widgetSelected(e);
+				lastSetToken.next();
+				refreshList(lastSetToken.curr());
+				setTraversalButtons(lastSetToken);
+			}
+		});
 		
-		Button btnBack = new Button(cmpFB, SWT.NONE);
+		btnBack = new Button(cmpFB, SWT.NONE);
+		btnBack.setEnabled(false);
 		btnBack.setText("\u05D0\u05D7\u05D5\u05E8\u05D4>");
-
+		btnBack.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				super.widgetSelected(e);
+				lastSetToken.prev();
+				refreshList(lastSetToken.curr());
+				setTraversalButtons(lastSetToken);
+			}
+		});
 		
-		final List list = new List(grpSearch, SWT.BORDER | SWT.V_SCROLL);
+		list  = new List(grpSearch, SWT.BORDER | SWT.V_SCROLL);
 		FormData fd_list = new FormData();
 		fd_list.bottom = new FormAttachment(0, 205);
 		fd_list.right = new FormAttachment(0, 545);
@@ -827,36 +854,34 @@ public class MainDisplay {
 				{
 					setCurrentSearch("TV");
 					TVRetriever ret = new TVRetriever();
-					java.util.List<TVShow> shows = ret.searchBySearchField(text);
+					LimitsToken<TVShow> token = ret.searchBySearchField(text);
+					java.util.List<TVShow> shows = token.curr();
+					setTraversalButtons(token);
 					
-					if(shows.isEmpty())
+					if(token.isEmpty())
 					{
 						System.out.println("Empty resultset");
 						return;
 					}	
 					
-					for (TVShow show : shows) {
-						list.add(canonicalize(show.name));
-						listIds.add(show.media_id);
-					}
+					refreshList(shows);
 				}
 				
 				if(btnRadioFilm.getSelection())
 				{
 					setCurrentSearch("Film");
 					FilmRetriever ret = new FilmRetriever();
-					java.util.List<Film> films = ret.searchBySearchField(text);
+					LimitsToken<Film> token = ret.searchBySearchField(text);
+					java.util.List<Film> films = token.curr();
+					setTraversalButtons(token);
 					
-					if(films.isEmpty())
+					if(token.isEmpty())
 					{
 						System.out.println("Empty resultset");
 						return;
 					}	
 					
-					for (Film film : films) {
-						list.add(canonicalize(film.name));
-						listIds.add(film.media_id);
-					}
+					refreshList(films);
 				}
 				
 				if(btnRadioUsername.getSelection())
@@ -864,25 +889,26 @@ public class MainDisplay {
 					setCurrentSearch("User");
 					
 					UserRetriever ret = new UserRetriever();
-					java.util.List<User> users_with_name = ret.searchBySearchField(text);
+					LimitsToken<User> token = ret.searchBySearchField(text);
+					java.util.List<User> users_with_name = token.curr();
+					setTraversalButtons(token);
 					
-					if(users_with_name == null)
+					if(users_with_name == null | token.isEmpty())
 					{
 						System.out.println("Empty resultset");
 						return;
 					}	
 					
-					for (User user : users_with_name) {
-						list.add(canonicalize(user.getUsername()));
-						listIds.add(user.getID());
-					}
+					refreshList(users_with_name);
 				}
 				if(btnRadioLocation.getSelection())
 				{
 					setCurrentSearch("Location");
 					
 					LocationRetriever ret = new LocationRetriever();
-					java.util.List<Location> locs = ret.searchBySearchField(text, text, text);
+					LimitsToken<Location> token = ret.searchBySearchField(text, text, text);
+					java.util.List<Location> locs = token.curr();
+					setTraversalButtons(token);
 					
 					if(locs.isEmpty())
 					{
@@ -890,10 +916,7 @@ public class MainDisplay {
 						return;
 					}	
 					
-					for (Location location : locs) {
-						list.add(canonicalize(location.place));
-						listIds.add(location.location_id);
-					}
+					refreshList(locs);
 				}
 				
 				if (btnRadioMediaByActor.getSelection()) {
@@ -955,7 +978,9 @@ public class MainDisplay {
 		java.util.List<Media> medias;
 		
 		if (searchByText) {
-			medias = new MediaByActorRetriever().searchBySearchField(text);
+			LimitsToken<Media> token = new MediaByActorRetriever().searchBySearchField(text);
+			medias = token.curr();
+			setTraversalButtons(token);
 		} else {
 			medias = new MediaByActorIDRetriever().searchByID(id);
 		}
@@ -965,10 +990,7 @@ public class MainDisplay {
 			return;
 		}
 
-		for (Media media : medias) {
-			list.add(canonicalize(media.name));
-			listIds.add(media.media_id);
-		}
+		refreshList(medias);
 	}
 
 	public String canonicalize(String str){
@@ -991,7 +1013,7 @@ public class MainDisplay {
 	
 	public void loadCommentsByLocationId(int id) {
 		// Now loading all the comments
-		java.util.List<Comment> commentList = new CommentRetriever().searchBySearchField(String.valueOf(id));
+		java.util.List<Comment> commentList = new CommentRetriever().retrieveByID(id);
 		
 		// Clear the comment table
 		clearCommentTable();
@@ -1125,6 +1147,45 @@ public class MainDisplay {
 					}
 				}
 			});
+		}
+	}
+	
+	private void setTraversalButtons(LimitsToken<?> token) {
+		btnForward.setEnabled(token.getForwardable());
+		btnBack.setEnabled(token.getBackable());
+		lastSetToken=token;
+	}
+	
+	private void refreshList(java.util.List<?> curr) {
+		list.removeAll();
+		list.redraw();
+		listIds.clear();
+		for (Object object : curr) {
+			final Field[] fields = object.getClass().getFields();
+			Field fieldID = null;
+			Field fieldName = null;
+			for (Field field : fields) {
+				if (field.isAnnotationPresent(ObjectID.class)) fieldID = field;
+				if (field.isAnnotationPresent(ObjectDisplayField.class)) fieldName = field;
+			}
+			if (fieldID==null || fieldName==null) {
+				System.err.println("Trying to add to search results list objects of type " + object.getClass().getName() + " without proper annotations.");
+				System.err.println("ID: " + fieldID + " NAME: " + fieldName);
+				return;
+			}
+			try {
+				Integer id = fieldID.getInt(object);
+				String name = canonicalize(String.valueOf(fieldName.get(object)));
+				list.add(name);
+				listIds.add(id);
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+				return;
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+				return;
+			}
+			
 		}
 	}
 }

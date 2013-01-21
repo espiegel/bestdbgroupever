@@ -66,4 +66,8 @@ public class CommentRetriever extends RetrieverBase<Comment> {
 	protected boolean getOrderByAsc() {
 		return false;
 	}
+
+	public java.util.List<Comment> retrieveByID(int id) {
+		return retrieve("location_id = " + id);
+	}
 }

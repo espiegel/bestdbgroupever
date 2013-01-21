@@ -1,12 +1,15 @@
 package objects;
 
+
 public class User {
 
+	@ObjectDisplayField
 	private String username;
 	private String password;
 	private int upvotes;
 	private int downvotes;
 	private int badges;
+	@ObjectID("user_id")
 	private int id;
 	private boolean isAdmin;
 	
