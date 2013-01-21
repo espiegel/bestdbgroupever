@@ -63,7 +63,7 @@ public class MapWidget {
 				{
 					setLat(title[1]);
 					setLng(title[2]);
-					display.loadCommentsByLocationCoord(getLat(), getLng());
+					if (display!=null) display.loadCommentsByLocationCoord(getLat(), getLng());
 				}
 				if(title[0].equals("choose")) //user made a new marker
 				{
