@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import objects.ObjectID;
+import objects.ObjectDisplayField;
 
 /**
  * @author maayan
@@ -19,7 +19,7 @@ import objects.ObjectID;
  */
 public abstract class RetrieverBase<T> {
 	
-	public final static int MAX_ROWS_PER_QUERY = 200000; //<=0 to disable
+	public final static int MAX_ROWS_PER_QUERY = 50; //<=0 to disable
 	
 	/**
 	 * @return The table names that are used to retrieve from. For example, the string "foo, bar"
@@ -154,10 +154,14 @@ public abstract class RetrieverBase<T> {
 	}
 	
 	/**
-	 * @param statement
+	 * @param statement Will be closed at end
 	 * @return A list of all the returned objects, empty list if non.
 	 */
 	public List<T> retrieve(PreparedStatement statement) {
+		return retrieve(statement, true);
+	}
+	
+	public List<T> retrieve(PreparedStatement statement, boolean closeStatement) {
 		ResultSet result_set = null;
 		
 		try {
@@ -173,7 +177,7 @@ public abstract class RetrieverBase<T> {
 				result_list.add(makeObject(result_set));
 			}
 			result_set.close();
-			statement.close();
+			if (closeStatement) statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -199,7 +203,7 @@ public abstract class RetrieverBase<T> {
 	
 	PreparedStatement general_search_statement = null;
 	
-	private String makeGeneralSearchQuery(boolean above_values) throws SQLException {
+	private String makeGeneralSearchQuery1(boolean above_values) throws SQLException { //TODO NAME
 		String[] search_fields = getFieldForGeneralSearch();
 		StringBuilder full_sql = new StringBuilder();
 		for (int i = 0; i < search_fields.length; i++) {
@@ -212,7 +216,9 @@ public abstract class RetrieverBase<T> {
 		}
 		
 		if (above_values) {
-			full_sql.append(" AND ? > ?");
+			full_sql.append(" AND ");
+			full_sql.append(getOrderByField());
+			full_sql.append(" > ?");
 		}
 		
 		String sql_statement = makeSelect(full_sql.toString());
@@ -224,8 +230,8 @@ public abstract class RetrieverBase<T> {
 		return sql_statement;
 	}
 	
-	private PreparedStatement makeGeneralSearchStatement() throws SQLException {
-		return ConnectionManager.conn.prepareStatement(makeGeneralSearchQuery(false));
+	private PreparedStatement makeGeneralSearchStatement(boolean above_values) throws SQLException {
+		return ConnectionManager.conn.prepareStatement(makeGeneralSearchQuery1(above_values));
 	}
 	
 	/**
@@ -238,7 +244,7 @@ public abstract class RetrieverBase<T> {
 	 */
 	public LimitsToken<T> searchBySearchField(String... field_values) {
 		try {
-			if (general_search_statement==null) general_search_statement=makeGeneralSearchStatement();
+			if (general_search_statement==null) general_search_statement=makeGeneralSearchStatement(false);
 			if (field_values.length!=general_search_statement.getParameterMetaData().getParameterCount()) {
 				System.err.println("Unable to search on " + getTableNames() + ", wrong number of parameters given.");
 				return null;
@@ -250,45 +256,38 @@ public abstract class RetrieverBase<T> {
 				general_search_statement.setString(i+1, "%"+field_value+"%");
 			}
 			
-			return new LimitsToken<T>(retrieve(general_search_statement), this, field_values);
+			return new LimitsToken<T>(retrieve(general_search_statement, false), this, field_values);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new LimitsToken<T>(new LinkedList<T>(), this, field_values);
 		}
 	}
 	
+	private PreparedStatement next_statement = null; 
+	
 	List<T> searchNextForToken(String[] field_values, T last_item) {
 		try {
-			String next_statement = makeGeneralSearchQuery(true);
-			String TOKEN = "\r#TOKEN#\r";
-			next_statement = next_statement.replace("?", TOKEN);
+			if (next_statement==null) next_statement = makeGeneralSearchStatement(true);
+			next_statement.clearParameters();
 			
 			int i = 0;
 			for (; i < field_values.length; i++) {
 				final String field_value = field_values[i];
-				next_statement = next_statement.replaceFirst(TOKEN, "'%" + field_value.replace("'", "\\'") + "%'");
+				next_statement.setString(i+1, "%"+field_value+"%");
 			}
-//			for (int j=0; j < ; i++,j++) {
-//				final String field_value = field_values[i];
-//				next_statement.setString(i+1, "%"+field_value+"%");
-//			}
-			ObjectID index_field = null;
+
 			Field field_with_anno = null;
 			for (Field field : last_item.getClass().getFields()) {
-				index_field = (field_with_anno=field).getAnnotation(ObjectID.class);
-				if (index_field!=null) break;
+				if (field.isAnnotationPresent(ObjectDisplayField.class)) {
+					field_with_anno=field;
+					break;
+				}
 			}
-			if (index_field==null) throw new Exception("No annotation of type LimitIndex in " + last_item.getClass().getName());
-			String index_field_name = index_field.value().isEmpty()?field_with_anno.getName():index_field.value();
-			next_statement = next_statement.replaceFirst(TOKEN, index_field_name);
+			if (field_with_anno==null) throw new Exception("No annotation for signifying ordering field in " + last_item.getClass().getName());
+			
 			Object val = field_with_anno.get(last_item);
-			if (val instanceof String) {
-				next_statement = next_statement.replaceFirst(TOKEN, "'" + val.toString().replace("'", "\\'") + "'");
-			} else {
-				next_statement = next_statement.replaceFirst(TOKEN, val.toString());
-			}
-			System.out.println("Generated next statement: " + next_statement);
-			return retrieve(ConnectionManager.conn.prepareStatement(next_statement));
+			next_statement.setObject(i+1, val);
+			return retrieve(next_statement, false);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Collections.emptyList();
