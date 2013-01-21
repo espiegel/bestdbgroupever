@@ -165,6 +165,17 @@ public class MainDisplay {
 		});
 		mntmProfile.setText("Profile");
 		
+		MenuItem mntmLoctest = new MenuItem(menu_1, SWT.NONE);
+		mntmLoctest.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				NewLocationWindow locwin = new NewLocationWindow(shlTvTraveler);
+				locwin.open();
+				System.out.println("Reached");
+			}
+		});
+		mntmLoctest.setText("LocTest");
+		
 		MenuItem mntmLogout = new MenuItem(menu_1, SWT.NONE);
 		mntmLogout.addSelectionListener(new SelectionAdapter() {
 			@Override
