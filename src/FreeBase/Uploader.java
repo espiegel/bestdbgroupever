@@ -116,7 +116,7 @@ public class Uploader {
 		ReadService readService = new ReadService();
 		readService.setCursor(true);
 		int i = 0;
-		boolean error = false;
+		boolean error = false,locationOfMedia=false;
 		String media_id;
 		String locTable = "Locations", medialocTable = "LocationOfMedia";
 		String insert5 = "INSERT IGNORE INTO " + locTable + " ("
@@ -175,16 +175,24 @@ public class Uploader {
 					rs.next();
 					location_id = rs.getString("id");
 				}
+				rs1 = connect.createStatement().executeQuery(
+						"SELECT * FROM LocationOfMedia WHERE media_id='" + media_id
+								+ "' AND location_id='" + location_id + "' AND scene_episode='" + scene + "'");
 				// insert into LocationsOfMedia table
+				if(!rs1.next()){
 				values = "('" + media_id + "','" + location_id + "','" + scene
 						+ "'),";
 				insert6 += values;
+				locationOfMedia=true;
+				}
 			}
 
 		}
 		if (!error) {
+			if(locationOfMedia){
 			insert6 = insert6.substring(0, insert6.length() - 1);
 			connect.createStatement().execute(insert6);
+			}
 			return numLoc;
 		}
 		return 0;
@@ -288,13 +296,7 @@ public class Uploader {
 		query = queryParser.parse(new File(mql_path));
 		Statement stmt = null;
 		Result result = null;
-		try {
-			stmt = connect.createStatement();
-		} catch (SQLException e1) {
-			System.out.println("SQL Exception ! :");
-			e1.printStackTrace();
-		}
-
+		stmt = connect.createStatement();
 		com.narphorium.freebase.results.ResultSet results = readService.read(
 				query, "");
 		while (results.hasNext()) {
@@ -399,10 +401,10 @@ public class Uploader {
 						hasCharName=false;
 
 					// insert into Actors table
-					rs = connect.createStatement().executeQuery(
+					rs1 = connect.createStatement().executeQuery(
 							"SELECT actor_id FROM Actors WHERE freebase_id='"
 									+ actorfreebaseid + "'");
-					if (!rs.next()) {
+					if (!rs1.next()) {
 						temp = insert3;
 						values = "('" + actorfreebaseid + "','" + actor + "')";
 						insert3 += values;
@@ -412,13 +414,19 @@ public class Uploader {
 						rs.next();
 						actor_id = rs.getString("id");
 					} else
-						actor_id = rs.getString("actor_id");
+						actor_id = rs1.getString("actor_id");
 
 					// insert into ActorsInMedia table
 					if(hasCharName){
+					rs1 = connect.createStatement().executeQuery(
+								"SELECT * FROM ActorsInMedia WHERE actor_id='"
+										+ actor_id + "' AND media_id='"+ media_id + "' AND char_name='"+ character + "'");	
+						
+					if (!rs1.next()){	
 					values = "('" + actor_id + "','" + media_id + "','"
 							+ character + "'),";
 					insert4 += values;
+					}
 					}
 				}
 			} catch (Exception ex) {
