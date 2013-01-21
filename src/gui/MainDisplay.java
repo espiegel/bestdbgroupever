@@ -183,7 +183,7 @@ public class MainDisplay {
 		rl_grpDetails.wrap = false;
 		grpDetails.setLayout(rl_grpDetails);
 		FormData fd_grpDetails = new FormData();
-		fd_grpDetails.bottom = new FormAttachment(0, 230);
+		fd_grpDetails.bottom = new FormAttachment(0, 250);
 		fd_grpDetails.right = new FormAttachment(0, 1140);
 		fd_grpDetails.top = new FormAttachment(0);
 		fd_grpDetails.left = new FormAttachment(0, 576);
@@ -194,17 +194,17 @@ public class MainDisplay {
 		lblPic_1.setLayoutData(new RowData(150, 200));
 		
 		SashForm sfDetails = new SashForm(grpDetails, SWT.VERTICAL);
-		sfDetails.setLayoutData(new RowData(200, 200));
+		sfDetails.setLayoutData(new RowData(200, 220));
 		
 		final Composite compExtra = new Composite(grpDetails, SWT.NONE);
 		compExtra.setOrientation(SWT.VERTICAL);
 		GridLayout compExtraLayout = new GridLayout(1, false);
-		compExtraLayout.marginBottom=compExtraLayout.marginHeight=
-				compExtraLayout.marginRight=
-				compExtraLayout.marginTop=compExtraLayout.marginWidth=0;
-		compExtraLayout.marginLeft = 1;
+//		compExtraLayout.marginBottom=compExtraLayout.marginHeight=
+//				compExtraLayout.marginRight=
+//				compExtraLayout.marginTop=compExtraLayout.marginWidth=0;
+//		compExtraLayout.marginLeft = 1;
 		compExtra.setLayout(compExtraLayout);
-		compExtra.setLayoutData(new RowData(190, 200));
+		compExtra.setLayoutData(new RowData(190, 220));
 		compExtra.setVisible(false);
 		
 		Label lblNewLabel = new Label(compExtra, SWT.NONE);
@@ -225,15 +225,15 @@ public class MainDisplay {
 		final Label lblDetails5_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
 		
 		final Label lblDetails6_1 = new Label(sfDetails, SWT.WRAP | SWT.HORIZONTAL);
-		sfDetails.setWeights(new int[] {1, 1, 1, 1, 1, 1});
+		sfDetails.setWeights(new int[] {2, 2, 1, 1, 1, 1});
 		// End of details group
 		
 
 		Group grpMap = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpMap = new FormData();
-		fd_grpMap.bottom = new FormAttachment(0, 555);
+		fd_grpMap.bottom = new FormAttachment(0, 575);
 		fd_grpMap.right = new FormAttachment(0, 570);
-		fd_grpMap.top = new FormAttachment(0, 230);
+		fd_grpMap.top = new FormAttachment(0, 250);
 		fd_grpMap.left = new FormAttachment(0, 10);
 		grpMap.setLayoutData(fd_grpMap);
 		grpMap.setText("Map");
@@ -510,7 +510,7 @@ public class MainDisplay {
 		Group grpSearch = new Group(shlTvTraveler, SWT.NONE);
 		grpSearch.setLayout(new FormLayout());
 		FormData fd_grpSearch = new FormData();
-		fd_grpSearch.bottom = new FormAttachment(0, 230);
+		fd_grpSearch.bottom = new FormAttachment(0, 250);
 		fd_grpSearch.right = new FormAttachment(0, 570);
 		fd_grpSearch.top = new FormAttachment(0);
 		fd_grpSearch.left = new FormAttachment(0, 10);
@@ -542,7 +542,7 @@ public class MainDisplay {
 		
 		Group group = new Group(grpSearch, SWT.NONE);
 		FormData fd_group = new FormData();
-		fd_group.bottom = new FormAttachment(0, 177);
+		fd_group.bottom = new FormAttachment(0, 197);
 		fd_group.right = new FormAttachment(0, 158);
 		fd_group.top = new FormAttachment(0, 55);
 		fd_group.left = new FormAttachment(0, 5);
@@ -605,7 +605,7 @@ public class MainDisplay {
 		
 		list  = new List(grpSearch, SWT.BORDER | SWT.V_SCROLL);
 		FormData fd_list = new FormData();
-		fd_list.bottom = new FormAttachment(0, 205);
+		fd_list.bottom = new FormAttachment(0, 225);
 		fd_list.right = new FormAttachment(0, 545);
 		fd_list.top = new FormAttachment(0, 57);
 		fd_list.left = new FormAttachment(0, 164);
