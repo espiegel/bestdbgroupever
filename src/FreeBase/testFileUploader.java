@@ -38,6 +38,7 @@ public class testFileUploader {
 		*/
 		
 		//Film Upload example
+		/*
 		media =new File("Film\\film.tsv");
 		cast =new File("Film\\performance.tsv");
 		try {
@@ -48,6 +49,7 @@ public class testFileUploader {
 			e.printStackTrace();
 		}
 		System.out.println("Upload Completed !");
+		*/
 	}
 
 }
