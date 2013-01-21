@@ -9,7 +9,9 @@ import org.eclipse.swt.graphics.ImageData;
 import db.ImageRetriever;
 
 public class Media {
+	@ObjectID("Media.media_id")
 	public int media_id;
+	@ObjectDisplayField
 	public String name;
 	public String freebase_id;
 	public String directors;

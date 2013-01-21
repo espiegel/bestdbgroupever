@@ -1,11 +1,14 @@
 package db;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import objects.ObjectID;
 
 /**
  * @author maayan
@@ -15,6 +18,8 @@ import java.util.List;
  * @param <T>
  */
 public abstract class RetrieverBase<T> {
+	
+	public final static int MAX_ROWS_PER_QUERY = 200000; //<=0 to disable
 	
 	/**
 	 * @return The table names that are used to retrieve from. For example, the string "foo, bar"
@@ -194,7 +199,7 @@ public abstract class RetrieverBase<T> {
 	
 	PreparedStatement general_search_statement = null;
 	
-	private PreparedStatement makeGeneralSearchStatement() throws SQLException {
+	private String makeGeneralSearchQuery(boolean above_values) throws SQLException {
 		String[] search_fields = getFieldForGeneralSearch();
 		StringBuilder full_sql = new StringBuilder();
 		for (int i = 0; i < search_fields.length; i++) {
@@ -206,7 +211,21 @@ public abstract class RetrieverBase<T> {
 			}
 		}
 		
-		return ConnectionManager.conn.prepareStatement(makeSelect(full_sql.toString()));
+		if (above_values) {
+			full_sql.append(" AND ? > ?");
+		}
+		
+		String sql_statement = makeSelect(full_sql.toString());
+		
+		if (MAX_ROWS_PER_QUERY>0) {
+			sql_statement = sql_statement + " LIMIT " + MAX_ROWS_PER_QUERY;
+		}
+		
+		return sql_statement;
+	}
+	
+	private PreparedStatement makeGeneralSearchStatement() throws SQLException {
+		return ConnectionManager.conn.prepareStatement(makeGeneralSearchQuery(false));
 	}
 	
 	/**
@@ -217,7 +236,7 @@ public abstract class RetrieverBase<T> {
 	 * @param field_values
 	 * @return A list of all the found objects, empty list if non. 
 	 */
-	public List<T> searchBySearchField(String... field_values) {
+	public LimitsToken<T> searchBySearchField(String... field_values) {
 		try {
 			if (general_search_statement==null) general_search_statement=makeGeneralSearchStatement();
 			if (field_values.length!=general_search_statement.getParameterMetaData().getParameterCount()) {
@@ -231,7 +250,45 @@ public abstract class RetrieverBase<T> {
 				general_search_statement.setString(i+1, "%"+field_value+"%");
 			}
 			
-			return retrieve(general_search_statement);
+			return new LimitsToken<T>(retrieve(general_search_statement), this, field_values);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new LimitsToken<T>(new LinkedList<T>(), this, field_values);
+		}
+	}
+	
+	List<T> searchNextForToken(String[] field_values, T last_item) {
+		try {
+			String next_statement = makeGeneralSearchQuery(true);
+			String TOKEN = "\r#TOKEN#\r";
+			next_statement = next_statement.replace("?", TOKEN);
+			
+			int i = 0;
+			for (; i < field_values.length; i++) {
+				final String field_value = field_values[i];
+				next_statement = next_statement.replaceFirst(TOKEN, "'%" + field_value.replace("'", "\\'") + "%'");
+			}
+//			for (int j=0; j < ; i++,j++) {
+//				final String field_value = field_values[i];
+//				next_statement.setString(i+1, "%"+field_value+"%");
+//			}
+			ObjectID index_field = null;
+			Field field_with_anno = null;
+			for (Field field : last_item.getClass().getFields()) {
+				index_field = (field_with_anno=field).getAnnotation(ObjectID.class);
+				if (index_field!=null) break;
+			}
+			if (index_field==null) throw new Exception("No annotation of type LimitIndex in " + last_item.getClass().getName());
+			String index_field_name = index_field.value().isEmpty()?field_with_anno.getName():index_field.value();
+			next_statement = next_statement.replaceFirst(TOKEN, index_field_name);
+			Object val = field_with_anno.get(last_item);
+			if (val instanceof String) {
+				next_statement = next_statement.replaceFirst(TOKEN, "'" + val.toString().replace("'", "\\'") + "'");
+			} else {
+				next_statement = next_statement.replaceFirst(TOKEN, val.toString());
+			}
+			System.out.println("Generated next statement: " + next_statement);
+			return retrieve(ConnectionManager.conn.prepareStatement(next_statement));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Collections.emptyList();
