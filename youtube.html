@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+			 <script type="text/javascript" src="http://www.bobbyvandersluis.com/swfobject/testsuite_2_2/swfobject.js"></script>    			 
+			  <div id="ytapiplayer">
+			    You need Flash player 8+ and JavaScript enabled to view this video.
+			  </div>
+			  <script type="text/javascript">
+			  var title;
+				var ytplayer ;
+			    var params = { allowScriptAccess: "always" };
+			    var atts = { id: "myytplayer" };
+			    	swfobject.embedSWF("http://www.youtube.com/v/72kQIIDBIUU?enablejsapi=1&playerapiid=ytplayer&version=3",
+			                       "ytapiplayer", "425", "356", "8", null, null, params, atts);
+				function onYouTubePlayerReady(playerId) {
+      				ytplayer = document.getElementById("myytplayer");
+      				setVideo(title);
+    			}
+    			function setVideo(url){
+    			   ytplayer.loadVideoByUrl(url)
+    			}
+    			function showMyVideos(data) {
+				  var feed = data.feed;
+				  var entries = feed.entry || [];
+				  title = entries[0].id.$t;	  
+				} 
+				function startVideo(name){
+				var head= document.getElementsByTagName('head')[0];
+   				var script= document.createElement('script');
+   				script.type= 'text/javascript';
+   					script.src= 'http://gdata.youtube.com/feeds/api/videos?max-results=1&q='+name+'&alt=json-in-script&format=5&callback=showMyVideos';
+  				head.appendChild(script);
+  				}
+  			</script>
+		</head>
+		<body>		
+		</body>
+	</html>
