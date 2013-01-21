@@ -20,6 +20,19 @@ public class Media {
 	
 	private ImageData _concImage = null; 
 	
+	public Media(){}
+	
+	public Media(int media_id, String name, String freebase_id,
+			String directors, String image, int isTV) {
+		super();
+		this.media_id = media_id;
+		this.name = name;
+		this.freebase_id = freebase_id;
+		this.directors = directors;
+		this.image = image;
+		this.isTV = isTV;
+	}
+
 	public ImageData getImage() {
 		if (_concImage!=null)
 			return _concImage;
