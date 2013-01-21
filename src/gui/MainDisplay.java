@@ -556,6 +556,24 @@ public class MainDisplay {
 		
 		final Button btnRadioMediaByActor = new Button(group, SWT.RADIO);
 		btnRadioMediaByActor.setText("Media By Actor");
+		
+		Composite cmpFB = new Composite(grpSearch, SWT.NONE);
+		RowLayout layoutFB = new RowLayout(SWT.HORIZONTAL);
+		layoutFB.center = true;
+		layoutFB.fill = true;
+		layoutFB.wrap = false;
+		layoutFB.marginTop=0;
+		layoutFB.spacing=1;
+		cmpFB.setLayout(layoutFB);
+		FormData fd_cmpFB = new FormData();
+		fd_cmpFB.top = new FormAttachment(group, 0, SWT.BOTTOM);
+		cmpFB.setLayoutData(fd_cmpFB);
+		
+		Button btnForward = new Button(cmpFB, SWT.NONE);
+		btnForward.setText("<\u05E7\u05D3\u05D9\u05DE\u05D4");
+		
+		Button btnBack = new Button(cmpFB, SWT.NONE);
+		btnBack.setText("\u05D0\u05D7\u05D5\u05E8\u05D4>");
 
 		
 		final List list = new List(grpSearch, SWT.BORDER | SWT.V_SCROLL);
