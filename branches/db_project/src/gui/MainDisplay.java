@@ -82,6 +82,7 @@ public class MainDisplay {
 	private Button btnForward;
 	private Button btnBack;
 	private LimitsToken<?> lastSetToken = null;
+	private String currentMediaName="";
 	List list;
 	
 	public Comment getCurrentComment() {
@@ -188,6 +189,23 @@ public class MainDisplay {
 			}
 		});
 		mntmLogout.setText("Logout");
+		
+		MenuItem mntmPlayer = new MenuItem(menu, SWT.NONE);
+		mntmPlayer.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if(!currentMediaName.equals("")){
+					if(currentSearch.equals("TV"))
+						currentMediaName+=" opening intro";
+					else
+						currentMediaName+=" trailer";
+					YouTube player = new YouTube(currentMediaName);
+					player.open();
+				}
+			}
+		});
+		mntmPlayer.setText("Player");
+		
 		
 		Group grpDetails = new Group(shlTvTraveler, SWT.NONE);
 		RowLayout rl_grpDetails = new RowLayout(SWT.HORIZONTAL);
@@ -652,7 +670,8 @@ public class MainDisplay {
 						int numEpisodes = show.num_episodes;
 
 						setExtras(show, lblPic_1, lstActors);
-
+						currentMediaName=name;
+						
 						lblDetails1_1.setText("Name: "+name);
 						lblDetails2_1.setText("Director(s): "+director);
 						lblDetails3_1.setText("First Episode: "+first.toString());
@@ -690,6 +709,7 @@ public class MainDisplay {
 					String release = canonicalize(film.release_date);
 
 					setExtras(film, lblPic_1, lstActors);
+					currentMediaName=name;
 					
 					lblDetails1_1.setText("Name: "+name);
 					lblDetails2_1.setText("Director(s): "+director);
@@ -770,7 +790,9 @@ public class MainDisplay {
 					
 					String name = canonicalize(media.name);
 					String director = canonicalize(media.directors);
-
+					
+					currentMediaName=name;
+					
 					String first = null;
 					String last = null;
 					int numSeasons = -1;
