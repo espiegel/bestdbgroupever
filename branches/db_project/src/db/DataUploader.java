@@ -113,10 +113,11 @@ public class DataUploader {
 				IMDBListBeforeParsing, IMDBListAfterParsing, geoCodeHTML,
 				startNum, limit);
 		geoCoder.initAndStart();
-		XMLParser parser = new XMLParser(connect, true, IMDBListAfterParsing, 0);
+		XMLParser parser = new XMLParser(true, IMDBListAfterParsing, 0);
 		boolean ok = parser.run();
 		if (ok) {
-			int numUploaded = parser.uploadMovieLocations();
+			Uploader uploader = new Uploader(connect);
+			int numUploaded = uploader.uploadLocations(parser.getMyMovies());
 			System.out.println("Upload Completed !");
 			System.out.println("Locations Of Media Uploaded: " + numUploaded);
 			return true;
@@ -128,11 +129,12 @@ public class DataUploader {
 			String FilmapsLocationsPath, int limit)
 			throws ParserConfigurationException, SAXException, IOException,
 			SQLException {
-		XMLParser parser = new XMLParser(connect, false, FilmapsLocationsPath,
+		XMLParser parser = new XMLParser(false, FilmapsLocationsPath,
 				limit);
 		boolean ok = parser.run();
 		if (ok) {
-			int numUploaded = parser.uploadMovieLocations();
+			Uploader uploader = new Uploader(connect);
+			int numUploaded = uploader.uploadLocations(parser.getMyMovies());
 			System.out.println("Upload Completed !");
 			System.out.println("Locations Of Media Uploaded: " + numUploaded);
 			return true;

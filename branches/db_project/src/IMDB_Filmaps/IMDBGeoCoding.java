@@ -297,5 +297,8 @@ public class IMDBGeoCoding {
 		locationsSize = LocationsList.keySet().size();
 		locIT = LocationsList.keySet().iterator();
 	}
+	public int getStatus(){
+		return i;
+	}
 
 }

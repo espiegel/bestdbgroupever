@@ -115,7 +115,6 @@ public class Uploader {
 		ResultSet rs, rs1;
 		ReadService readService = new ReadService();
 		readService.setCursor(true);
-		int i = 0;
 		boolean error = false,locationOfMedia=false;
 		String media_id;
 		String locTable = "Locations", medialocTable = "LocationOfMedia";
@@ -125,8 +124,8 @@ public class Uploader {
 				+ "media_id,location_id,scene_episode" + ") VALUES ";
 		String lastid = "SELECT LAST_INSERT_ID() AS id";
 		for (Movie m : myMovies) {
-			i++;
-			System.out.println("Uploading Media:" + i);
+			num++;
+			System.out.println("Uploading Media:" + num);
 			String name = m.getTitle();
 			if (name != null)
 				name = name.replaceAll("'", "&#039");
@@ -198,7 +197,9 @@ public class Uploader {
 		return 0;
 
 	}
-
+	public int getMediaStatus(){
+		return num;
+	}
 	/**
 	 * 
 	 * @param table
