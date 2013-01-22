@@ -230,7 +230,7 @@ public class MainDisplay {
 		grpDetails.setText("Details");
 
 		final Label lblPic_1 = new Label(grpDetails, SWT.NONE);
-		lblPic_1.setLayoutData(new RowData(150, 200));
+		lblPic_1.setLayoutData(new RowData(150, 220));
 
 		SashForm sfDetails = new SashForm(grpDetails, SWT.VERTICAL);
 		sfDetails.setLayoutData(new RowData(200, 220));
@@ -811,7 +811,7 @@ public class MainDisplay {
 
 						// locations dont have images
 						lblPic_1.setImage(SWTResourceManager.getImage(
-								MainDisplay.class, "/gui/noimage.jpg"));
+								MainDisplay.class, "/gui/noimage.png"));
 
 						lblDetails1_1.setText("Place: " + place);
 						lblDetails2_1.setText("Country: " + country);
@@ -1241,7 +1241,7 @@ public class MainDisplay {
 	private void setPictureLabel(final Media media, final Label lblPic) {
 		if (media.image == null || media.image.isEmpty()) {
 			lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class,
-					"/gui/noimage.jpg"));
+					"/gui/noimage.png"));
 		} else {
 			display.asyncExec(new Runnable() {
 
@@ -1252,7 +1252,7 @@ public class MainDisplay {
 
 						if (image == null) {
 							// lblPic.setImage(SWTResourceManager.getImage(MainDisplay.class,
-							// "/gui/noimage.jpg"));
+							// "/gui/noimage.png"));
 						} else {
 							lblPic.setImage(new Image(display, image));
 						}
