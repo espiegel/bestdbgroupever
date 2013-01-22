@@ -269,7 +269,7 @@ public class MainDisplay {
 		
 		//new google map
 		/*look at the documentation in the MapWidget class*/
-		map = new MapWidget(grpMap, "map.html",this);
+		map = new MapWidget(grpMap, "map.html",this,null);
 		map.init();
 		map.getBrowser().setBounds(10, 24, 540, 291);
 		
