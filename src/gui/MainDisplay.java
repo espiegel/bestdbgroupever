@@ -652,30 +652,36 @@ public class MainDisplay {
 		layoutFB.spacing = 1;
 		cmpFB.setLayout(layoutFB);
 		FormData fd_cmpFB = new FormData();
+		fd_cmpFB.left = new FormAttachment(txtSearch, 0, SWT.LEFT);
+		fd_cmpFB.right = new FormAttachment(0, 155);
 		fd_cmpFB.top = new FormAttachment(group, 0, SWT.BOTTOM);
 		cmpFB.setLayoutData(fd_cmpFB);
 
 		btnForward = new Button(cmpFB, SWT.NONE);
+		btnForward.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+		btnForward.setLayoutData(new RowData(73, SWT.DEFAULT));
 		btnForward.setEnabled(false);
-		btnForward.setText("<\u05E7\u05D3\u05D9\u05DE\u05D4");
+		btnForward.setText("Next");
+		
+				btnBack = new Button(cmpFB, SWT.NONE);
+				btnBack.setLayoutData(new RowData(70, SWT.DEFAULT));
+				btnBack.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
+				btnBack.setEnabled(false);
+				btnBack.setText("Previous");
+				btnBack.addSelectionListener(new SelectionAdapter() {
+					@Override
+					public void widgetSelected(SelectionEvent e) {
+						super.widgetSelected(e);
+						lastSetToken.prev();
+						refreshList(lastSetToken.curr());
+						setTraversalButtons(lastSetToken);
+					}
+				});
 		btnForward.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				super.widgetSelected(e);
 				lastSetToken.next();
-				refreshList(lastSetToken.curr());
-				setTraversalButtons(lastSetToken);
-			}
-		});
-
-		btnBack = new Button(cmpFB, SWT.NONE);
-		btnBack.setEnabled(false);
-		btnBack.setText("\u05D0\u05D7\u05D5\u05E8\u05D4>");
-		btnBack.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				super.widgetSelected(e);
-				lastSetToken.prev();
 				refreshList(lastSetToken.curr());
 				setTraversalButtons(lastSetToken);
 			}
