@@ -2,6 +2,7 @@ package gui;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTError;
@@ -72,7 +73,12 @@ public class MapWidget {
 					setUserLat(title[1]);
 					setUserLng(title[2]);
 					setUserAddress(title[3]);
-					locWindow.addLocation(getUserLat(), getUserLng(), getUserAddress());
+					try {
+						locWindow.addLocation(getUserLat(), getUserLng(), getUserAddress());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				if(title[0].equals("address")) //geo code of address completed
 				{
@@ -86,8 +92,14 @@ public class MapWidget {
 					{
 						setUserLat("undefined");
 						setUserLng("undefined");
+						setUserAddress("undefined");
 					}
-					locWindow.addLocation(getUserLat(), getUserLng(), "");
+					try {
+						locWindow.addLocation(getUserLat(), getUserLng(), getUserAddress());
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -154,6 +166,7 @@ public class MapWidget {
 	 *         otherwise
 	 */
 	public boolean startListen(){
+		System.out.println("lol");
 		if (isLoaded()) {
 			String[] params = {};
 			return browserExecute("startListen", params);

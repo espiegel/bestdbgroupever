@@ -96,6 +96,7 @@
 				}
 				function startListen(){
 					google.maps.event.addListener(map, 'click', function(event) {
+						clearOverlays();
 						placeMarker(event.latLng);
 					});
 				}
@@ -126,6 +127,7 @@
 							map: map
 							});
 						}
+						
 						google.maps.event.addListener(globalMarker, 'click', function () {
 							map.setZoom(16);
 							map.setCenter(globalMarker.getPosition());
@@ -137,11 +139,14 @@
 				}
 				
 				function codeAddress(address) {
+					clearOverlays();
 					var coords;
+					var add;
 					geocoder.geocode( { 'address': address}, function(results, status) {
 					if (status == google.maps.GeocoderStatus.OK && results[0]) {
 						coords=results[0].geometry.location;
-						window.document.title="address#"+coords.lat()+"#"+coords.lng()+"#"+address;
+						add=results[0].formatted_address;
+						window.document.title="address#"+coords.lat()+"#"+coords.lng()+"#"+add;
 					} else {
 					window.document.title="address#undefined";
 					}
