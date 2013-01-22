@@ -170,7 +170,7 @@ public class Updater {
 	/**
 	 * Insert a single tvshow, without touching the media. Use responsibly!
 	 * - Eidan
-	 * @param med
+	 * @param show
 	 * @return true if insertion succeeded , false if TVShow already exists
 	 * @throws SQLException
 	 */
@@ -202,6 +202,21 @@ public class Updater {
 		return true;
 	}
 
+	/**
+	 * Insert a single film. Use responsibly. -Eidan
+	 * @param film
+	 * @return true if insertion succeeded , false if Media already exists
+	 * @throws SQLException
+	 */
+	public boolean addFilm(Film film) throws SQLException {
+		int media_id = film.media_id;
+		if (media_id == -1)
+			return false;
+		values = "('" + media_id + "','" + film.release_date + "')";
+		connect.createStatement().execute(insertFilm + values);
+		return true;
+	}
+	
 	public void addMedia(Media med, String isTv) throws SQLException {
 		String freebaseid = med.freebase_id;
 		String media_id;
