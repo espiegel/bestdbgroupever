@@ -14,4 +14,8 @@ public class Actor {
 		this.name = name;
 	}
 
+	public void setActor_id(int actor_id) {
+		this.actor_id = actor_id;
+	}
+
 }
