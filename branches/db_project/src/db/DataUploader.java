@@ -40,7 +40,7 @@ public class DataUploader {
 		String geoCodeHTML = "IMDB\\geocode.html";
 		String IMDBListAfterParsing = "IMDB\\IMDBLocations.xml";
 		int startNum = 8;
-		int IMDBLimit = 2;
+		int IMDBLimit = 2; // how much media to parse
 		boolean IMDB_OK = false;
 		try {
 			IMDB_OK = IMDBUpload(connect, IMDBListBeforeParsing,
@@ -113,11 +113,23 @@ public class DataUploader {
 				IMDBListBeforeParsing, IMDBListAfterParsing, geoCodeHTML,
 				startNum, limit);
 		geoCoder.initAndStart();
+		
+		//int geoCodingStatus = geoCoder.getStatus();
+		//System.out.println("geocoded "+geoCodingStatus+" from "+limit);
+		
 		XMLParser parser = new XMLParser(true, IMDBListAfterParsing, 0);
 		boolean ok = parser.run();
+		
+		//int parsingStatus = parser.getStatus();
+		//System.out.println("parsed "+parsingStatus+" from "+limit);
+		
 		if (ok) {
 			Uploader uploader = new Uploader(connect);
 			int numUploaded = uploader.uploadLocations(parser.getMyMovies());
+			
+			//int uploadStatus = uploader.getStatus();
+			//System.out.println("uploaded "+uploadStatus+" from "+parser.getMyMovies().size());
+			
 			System.out.println("Upload Completed !");
 			System.out.println("Locations Of Media Uploaded: " + numUploaded);
 			return true;
@@ -132,9 +144,17 @@ public class DataUploader {
 		XMLParser parser = new XMLParser(false, FilmapsLocationsPath,
 				limit);
 		boolean ok = parser.run();
+		
+		//int parsingStatus = parser.getStatus();
+		//System.out.println("parsed "+parsingStatus+" from "+limit);
+		
 		if (ok) {
 			Uploader uploader = new Uploader(connect);
 			int numUploaded = uploader.uploadLocations(parser.getMyMovies());
+			
+			//int uploadStatus = uploader.getStatus();
+			//System.out.println("uploaded "+uploadStatus+" from "+parser.getMyMovies().size());
+			
 			System.out.println("Upload Completed !");
 			System.out.println("Locations Of Media Uploaded: " + numUploaded);
 			return true;
@@ -149,6 +169,10 @@ public class DataUploader {
 			uploader.uploadFreeBaseTVShows(limit);
 		else
 			uploader.uploadFreeBaseFilms(limit);
+		
+		//int uploadStatus = uploader.getStatus();
+		//System.out.println("uploaded "+uploadStatus+" from "+limit*500);
+		
 		System.out.println("Upload Completed !");
 	}
 
