@@ -27,5 +27,9 @@ public class Location {
 		this.upvotes = upvotes;
 		this.downvotes = downvotes;
 	}
+
+	public void setLocation_id(int location_id) {
+		this.location_id = location_id;
+	}
 	
 }

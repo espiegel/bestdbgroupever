@@ -22,6 +22,10 @@ public class Media {
 	
 	public Media(){}
 	
+	public void setMedia_id(int media_id) {
+		this.media_id = media_id;
+	}
+
 	public Media(int media_id, String name, String freebase_id,
 			String directors, String image, int isTV) {
 		super();

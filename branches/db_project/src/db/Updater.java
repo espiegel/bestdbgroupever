@@ -74,27 +74,29 @@ public class Updater {
 	}
 
 	/**
-	 * 
+	 * add Location to DB
+	 * sets the location_id of the new Location. if Location already exists
+	 *         sets his location_id
 	 * @param loc
-	 * @return the location_id of the new Location. if Location already exists
-	 *         returns his location_id
 	 * @throws SQLException
 	 */
-	public String addLocation(Location loc) throws SQLException {
+	public void addLocation(Location loc) throws SQLException {
 		String lat = loc.lat, lng = loc.lng;
+		String location_id;
 		rs = connect.createStatement().executeQuery(
 				"SELECT location_id FROM Locations WHERE lat='" + lat
 						+ "' AND lng='" + lng + "'");
 		if (rs.next())
-			return rs.getString("location_id");
+			location_id=rs.getString("location_id");
 		else {
 			values = "('" + lat + "','" + lng + "','" + loc.country + "','"
 					+ loc.city + "','" + loc.place + "',0,0)";
 			connect.createStatement().execute(insertLocation + values);
 			rs = connect.createStatement().executeQuery(lastid);
 			rs.next();
-			return rs.getString("id");
+			location_id= rs.getString("id");
 		}
+		loc.setLocation_id(Integer.parseInt(location_id));
 	}
 
 	/**
@@ -122,27 +124,28 @@ public class Updater {
 	}
 
 	/**
-	 * 
-	 * @param act
-	 * @return the actor_id of the new Actor. if Actor already exists returns
+	 * add actor to DB
+	 * sets the actor_id of the new Actor. if Actor already exists sets
 	 *         his actor_id
+	 * @param act
 	 * @throws SQLException
 	 */
-	public String addActor(Actor act) throws SQLException {
+	public void addActor(Actor act) throws SQLException {
 		int actorfreebaseid = act.freebase_id;
+		String actor_id;
 		rs = connect.createStatement().executeQuery(
 				"SELECT actor_id FROM Actors WHERE freebase_id='"
 						+ actorfreebaseid + "'");
 		if (rs.next())
-			return rs.getString("actor_id");
+			actor_id=rs.getString("actor_id");
 		else {
 			values = "('" + actorfreebaseid + "','" + act.name + "')";
 			connect.createStatement().execute(insertActor + values);
 			rs = connect.createStatement().executeQuery(lastid);
 			rs.next();
-			return rs.getString("id");
+			actor_id=rs.getString("id");
 		}
-
+		act.setActor_id(Integer.parseInt(actor_id));
 	}
 
 	/**
@@ -153,8 +156,9 @@ public class Updater {
 	 * @throws SQLException
 	 */
 	public boolean addTV(Media med, TVShow show) throws SQLException {
-		String media_id = addMedia(med, "1");
-		if (media_id == null)
+		addMedia(med, "1");
+		int media_id = med.media_id;
+		if (media_id == -1)
 			return false;
 		values = "('" + media_id + "','" + show.first_episode + "','"
 				+ show.last_episode + "','" + show.num_seasons + "','"
@@ -171,16 +175,18 @@ public class Updater {
 	 * @throws SQLException
 	 */
 	public boolean addFilm(Media med, Film film) throws SQLException {
-		String media_id = addMedia(med, "1");
-		if (media_id == null)
+		addMedia(med, "0");
+		int media_id = med.media_id;
+		if (media_id == -1)
 			return false;
 		values = "('" + media_id + "','" + film.release_date + "')";
 		connect.createStatement().execute(insertFilm + values);
 		return true;
 	}
 
-	private String addMedia(Media med, String isTv) throws SQLException {
+	private void addMedia(Media med, String isTv) throws SQLException {
 		String freebaseid = med.freebase_id;
+		String media_id;
 		rs = connect.createStatement().executeQuery(
 				"SELECT media_id FROM Media WHERE freebase_id='" + freebaseid
 						+ "'");
@@ -190,9 +196,11 @@ public class Updater {
 			connect.createStatement().execute(insertMedia + values);
 			rs = connect.createStatement().executeQuery(lastid);
 			rs.next();
-			return rs.getString("id");
+			media_id= rs.getString("id");
 		}
-		return null;
+		else
+			media_id="-1";
+		med.setMedia_id(Integer.parseInt(media_id));
 	}
 
 	/* Update */
