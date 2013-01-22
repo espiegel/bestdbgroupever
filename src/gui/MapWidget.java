@@ -181,6 +181,13 @@ public class MapWidget {
 		return false;
 	}
 	
+	public boolean fitMap(){
+		if (isLoaded()) {
+			String[] params = {};
+			return browserExecute("fitMap", params);
+		}
+		return false;
+	}
 	public boolean clearAllMarkers(){
 		if (isLoaded()) {
 		String[] temp={};
