@@ -82,7 +82,7 @@ public class MainDisplay {
 	private Button btnBack;
 	private LimitsToken<?> lastSetToken = null;
 	private String currentMediaName = "";
-	private int selectedMediaId = -1;
+	private Media selectedMedia = null;
 	List list;
 
 	public Comment getCurrentComment() {
@@ -172,9 +172,9 @@ public class MainDisplay {
 		mntmLoctest.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (selectedMediaId != -1) {
+				if (selectedMedia != null) {
 					NewLocationWindow locwin = new NewLocationWindow(
-							shlTvTraveler, selectedMediaId);
+							shlTvTraveler, selectedMedia.media_id, selectedMedia.name);
 					locwin.open();
 					System.out.println("Reached");
 				}
@@ -709,9 +709,8 @@ public class MainDisplay {
 				
 				map.clearAllMarkers();
 				if (currentSearch.equals("TV")) {
-					selectedMediaId = id;
-					
 					TVShow show = new TVRetriever().retrieve(id);
+					selectedMedia = show;
 
 					try {
 						if (show == null) {
@@ -754,9 +753,8 @@ public class MainDisplay {
 				} // End of TV if
 
 				if (currentSearch.equals("Film")) {
-					selectedMediaId = id;
-					
 					Film film = new FilmRetriever().retrieve(id);
+					selectedMedia = film;
 
 					try {
 						if (film == null) {
@@ -832,9 +830,8 @@ public class MainDisplay {
 				} // End of Location If
 
 				if (currentSearch.equals("Media By Actor")) {
-					selectedMediaId = id;
-					
 					Media media = new MediaByActorRetriever().retrieve(id);
+					selectedMedia = media;
 
 					try {
 						if (media == null) {
