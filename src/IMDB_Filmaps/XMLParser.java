@@ -46,6 +46,8 @@ public class XMLParser extends DefaultHandler {
 	private File f;
 	private Scanner in = null;
 	private int numLocations = 0;
+	private int numMovies = 0;
+	private int numFilmMapsParsed=0;
 	private static CharsetEncoder encoder = Charset.forName("US-ASCII")
 			.newEncoder();
 	private boolean isIMDB;
@@ -111,7 +113,9 @@ public class XMLParser extends DefaultHandler {
 	}
 
 	public int getStatus(){
-		return numLocations;
+		if(isIMDB)
+			return numMovies;
+		return numFilmMapsParsed;
 	}
 
 	/**
@@ -187,6 +191,7 @@ public class XMLParser extends DefaultHandler {
 		if (qName.equalsIgnoreCase("movie")) {
 			// create a new instance of movie
 			tempMov = new Movie();
+			numMovies++;
 		} else if (qName.equalsIgnoreCase("location")) {
 			// create a new instance of movie
 			tempLoc = new Location();
@@ -214,7 +219,6 @@ public class XMLParser extends DefaultHandler {
 
 	private void parseFilmMaps() throws ParserConfigurationException,
 			SAXException {
-		int numParsed=0;
 		// get a factory
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 
@@ -224,14 +228,14 @@ public class XMLParser extends DefaultHandler {
 		// parse the file and also register this class for call backs
 		String location = getNextLocation();
 		
-		while (location != null && numParsed <=limit) {			
+		while (location != null && numFilmMapsParsed <=limit) {			
 			if (!location.equals("error") && encoder.canEncode(location)) {
 				try {
 					sp.parse("http://www.filmaps.com/xml/?loc=" + location,
 							this);
 				} catch (Exception e) {
 				}
-				numParsed++;
+				numFilmMapsParsed++;
 			}
 			location = getNextLocation();
 		}

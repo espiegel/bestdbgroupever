@@ -105,6 +105,7 @@ public class Uploader {
 	 * @throws Exception
 	 */
 	public int uploadLocations(List<Movie> myMovies) throws SQLException {
+		num=0;
 		int numLoc = 0;
 		if (myMovies.size() == 0) {
 			System.out
@@ -197,7 +198,7 @@ public class Uploader {
 		return 0;
 
 	}
-	public int getMediaStatus(){
+	public int getStatus(){
 		return num;
 	}
 	/**
@@ -274,7 +275,7 @@ public class Uploader {
 	private String insertMedia(ReadService readService, boolean tv,
 			String insert2, String mql_path, ImageUploader iu) throws SQLException, IOException,
 			FreebaseServiceException {
-
+		num = 0 ;
 		String insert1 = "INSERT IGNORE INTO " + mediaTable + " ("
 				+ "freebase_id,name,directors,image,isTv" + ") VALUES ";
 		String insert3 = "INSERT IGNORE INTO " + actorsTable + " ("
