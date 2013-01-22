@@ -23,6 +23,7 @@
 				var globalMarker;
 				var globalInfoWindow;
 				var geocoder;
+				var cluster;
 				function initialize() {
 					var coordenadas = new google.maps.LatLng(32.112313,34.801512);
 					var myOptions = {
@@ -92,6 +93,7 @@
   						if(markersArray[i]!=null)
     						markersArray[i].setMap(null);
   					}
+  					cluster.clearMarkers();
   					markersArray=[];
   					LatLngArray=[];
 				}
@@ -169,7 +171,7 @@
 				}
 				map.fitBounds (bounds);
 				var clusterOptions = {maxZoom: 10};
-				var cluster = new MarkerClusterer(map, markersArray,clusterOptions);
+				cluster = new MarkerClusterer(map, markersArray,clusterOptions);
 				}
 			</script>
 		</head>
