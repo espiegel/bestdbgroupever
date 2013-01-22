@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -84,6 +85,7 @@ public class MainDisplay {
 	private String currentMediaName = "";
 	private Media selectedMedia = null;
 	List list;
+	private MessageBox messageBox;
 
 	public Comment getCurrentComment() {
 		return currentComment;
@@ -149,6 +151,8 @@ public class MainDisplay {
 		shlTvTraveler.setText("TV Traveler");
 		shlTvTraveler.setLayout(new FormLayout());
 
+		messageBox = new MessageBox(shlTvTraveler, SWT.ICON_INFORMATION | SWT.OK);
+		
 		Menu menu = new Menu(shlTvTraveler, SWT.BAR);
 		shlTvTraveler.setMenuBar(menu);
 
@@ -207,6 +211,8 @@ public class MainDisplay {
 					YouTube player = new YouTube(currentMediaName);
 					player.open();
 				}
+				else
+					showMessage("Please search a TV show / Film");
 			}
 		});
 		mntmPlayer.setText("Player");
@@ -947,7 +953,7 @@ public class MainDisplay {
 					setTraversalButtons(token);
 
 					if (token.isEmpty()) {
-						System.out.println("Empty resultset");
+						showMessage("No Results .");
 						return;
 					}
 
@@ -962,7 +968,7 @@ public class MainDisplay {
 					setTraversalButtons(token);
 
 					if (token.isEmpty()) {
-						System.out.println("Empty resultset");
+						showMessage("No Results .");
 						return;
 					}
 
@@ -978,7 +984,7 @@ public class MainDisplay {
 					setTraversalButtons(token);
 
 					if (users_with_name == null | token.isEmpty()) {
-						System.out.println("Empty resultset");
+						showMessage("No Results .");
 						return;
 					}
 
@@ -994,7 +1000,7 @@ public class MainDisplay {
 					setTraversalButtons(token);
 
 					if (locs.isEmpty()) {
-						System.out.println("Empty resultset");
+						showMessage("No Results .");
 						return;
 					}
 
@@ -1301,5 +1307,9 @@ public class MainDisplay {
 			}
 
 		}
+	}
+	private void showMessage(String message){
+		messageBox.setMessage(message);
+		messageBox.open();
 	}
 }
