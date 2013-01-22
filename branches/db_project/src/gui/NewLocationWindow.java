@@ -52,7 +52,7 @@ public class NewLocationWindow extends Dialog {
 		shell.setSize(640, 640);
 		shell.setText(getText());
 		
-		map = new MapWidget(shell, "map.html",null);
+		map = new MapWidget(shell, "map.html",null,this);
 		
 		adress = new Text(shell, SWT.BORDER);
 		adress.setBounds(70, 30, 163, 19);
@@ -73,7 +73,7 @@ public class NewLocationWindow extends Dialog {
 		map.getBrowser().setBounds(0, 240, 640, 400);
 	}
 	
-	private void addLocation(String lat, String lng, String address) {
+	public void addLocation(String lat, String lng, String address) {
 		
 	}
 	

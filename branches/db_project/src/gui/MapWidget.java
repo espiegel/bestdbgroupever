@@ -24,6 +24,7 @@ public class MapWidget {
 	private String map;
 	private boolean loaded;
 	private final gui.MainDisplay display;
+	private final gui.NewLocationWindow locWindow;
 
 	/**
 	 * 
@@ -32,10 +33,11 @@ public class MapWidget {
 	 * @param fileName
 	 *            map html file path
 	 */
-	public MapWidget(Composite parent, String filePath,gui.MainDisplay display) {
+	public MapWidget(Composite parent, String filePath,gui.MainDisplay display,gui.NewLocationWindow locWindow) {
 		this.parent = parent;
 		this.filePath = filePath;
 		this.display=display;
+		this.locWindow=locWindow;
 	}
 
 	public void init() {
@@ -70,7 +72,7 @@ public class MapWidget {
 					setUserLat(title[1]);
 					setUserLng(title[2]);
 					setUserAddress(title[3]);
-					// TODO : call a function in display with those params
+					locWindow.addLocation(getUserLat(), getUserLng(), getUserAddress());
 				}
 				if(title[0].equals("address")) //geo code of address completed
 				{
@@ -85,7 +87,7 @@ public class MapWidget {
 						setUserLat("undefined");
 						setUserLng("undefined");
 					}
-					// TODO : call a function in display with those params
+					locWindow.addLocation(getUserLat(), getUserLng(), "");
 				}
 			}
 		});
