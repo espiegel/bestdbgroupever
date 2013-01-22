@@ -238,84 +238,84 @@ public class Updater {
 
 	/* Update */
 	public void updateTV(TVShow tv) throws SQLException {
-		query = "UPDATE " + tvTable + " SET first_episode=" + tv.first_episode
-				+ " , last_episode=" + tv.last_episode + " , num_seasons="
-				+ tv.num_seasons + " , num_episodes=" + tv.num_episodes
-				+ " WHERE media_id=" + tv.media_id;
+		query = "UPDATE " + tvTable + " SET first_episode='" + tv.first_episode
+				+ "' , last_episode='" + tv.last_episode + "' , num_seasons='"
+				+ tv.num_seasons + "' , num_episodes='" + tv.num_episodes
+				+ "' WHERE media_id='" + tv.media_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void updateFilm(Film film) throws SQLException {
-		query = "UPDATE " + filmTable + " SET release_date="
-				+ film.release_date + " WHERE media_id=" + film.media_id;
+		query = "UPDATE " + filmTable + " SET release_date='"
+				+ film.release_date + "' WHERE media_id='" + film.media_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void updateMedia(Media med) throws SQLException {
-		query = "UPDATE " + mediaTable + " SET name=" + med.name
-				+ " , freebase_id=" + med.freebase_id + " , directors="
-				+ med.directors + " , image=" + med.image + " , isTv="
-				+ med.isTV + " WHERE media_id=" + med.media_id;
+		query = "UPDATE " + mediaTable + " SET name='" + med.name
+				+ "' , freebase_id='" + med.freebase_id + "' , directors='"
+				+ med.directors + "' , image='" + med.image + "' , isTv='"
+				+ med.isTV + "' WHERE media_id='" + med.media_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void updateLocation(Location loc) throws SQLException {
-		query = "UPDATE " + locTable + " SET country=" + loc.country
-				+ " , city=" + loc.city + " , place=" + loc.place
-				+ " , upvotes=" + loc.upvotes + " , downvotes=" + loc.downvotes
-				+ " WHERE location_id=" + loc.location_id + " AND lat="
-				+ loc.lat + " AND lng=" + loc.lng;
+		query = "UPDATE " + locTable + " SET country='" + loc.country
+				+ "' , city='" + loc.city + "' , place='" + loc.place
+				+ "' , upvotes='" + loc.upvotes + "' , downvotes='" + loc.downvotes
+				+ "' WHERE location_id='" + loc.location_id + "' AND lat='"
+				+ loc.lat + "' AND lng='" + loc.lng+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void updateActor(Actor act) throws SQLException {
-		query = "UPDATE " + actorsTable + " SET name=" + act.name
-				+ " , freebase_id=" + act.freebase_id + " WHERE actor_id="
-				+ act.actor_id;
+		query = "UPDATE " + actorsTable + " SET name='" + act.name
+				+ "' , freebase_id='" + act.freebase_id + "' WHERE actor_id='"
+				+ act.actor_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void updateLocationOfMedia(LocationOfMedia lom) throws SQLException {
-		query = "UPDATE " + medialocTable + " SET scene_episode="
-				+ lom.scene_episode + " WHERE media_id=" + lom.media_id
-				+ " AND location_id=" + lom.location.location_id;
+		query = "UPDATE " + medialocTable + " SET scene_episode='"
+				+ lom.scene_episode + "' WHERE media_id='" + lom.media_id
+				+ "' AND location_id='" + lom.location.location_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void updateActorInMedia(ActorInMedia aim) throws SQLException {
-		query = "UPDATE " + actinmediaTable + " SET char_name=" + aim.char_name
-				+ " WHERE media_id=" + aim.media_id + " AND actor_id="
-				+ aim.actor_id;
+		query = "UPDATE " + actinmediaTable + " SET char_name='" + aim.char_name
+				+ "' WHERE media_id='" + aim.media_id + "' AND actor_id='"
+				+ aim.actor_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	/* Delete */
 	public void deleteMedia(Media med) throws SQLException {
-		query = "DELETE FROM " + mediaTable + " WHERE media_id=" + med.media_id;
+		query = "DELETE FROM " + mediaTable + " WHERE media_id='" + med.media_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void deleteLocation(Location loc) throws SQLException {
-		query = "DELETE FROM " + locTable + " WHERE location_id="
-				+ loc.location_id;
+		query = "DELETE FROM " + locTable + " WHERE location_id='"
+				+ loc.location_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void deleteActor(Actor act) throws SQLException {
-		query = "DELETE FROM " + actorsTable + " WHERE actor_id="
-				+ act.actor_id;
+		query = "DELETE FROM " + actorsTable + " WHERE actor_id='"
+				+ act.actor_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void deleteLocationOfMedia(LocationOfMedia lom) throws SQLException {
-		query = "DELETE FROM " + medialocTable + " WHERE media_id="
-				+ lom.media_id + " AND location_id=" + lom.location.location_id;
+		query = "DELETE FROM " + medialocTable + " WHERE media_id='"
+				+ lom.media_id + "' AND location_id='" + lom.location.location_id+"'";
 		connect.createStatement().execute(query);
 	}
 
 	public void deleteActorInMedia(ActorInMedia aim) throws SQLException {
-		query = "DELETE FROM " + actinmediaTable + " WHERE media_id="
-				+ aim.media_id + " AND actor_id=" + aim.actor_id;
+		query = "DELETE FROM " + actinmediaTable + " WHERE media_id='"
+				+ aim.media_id + "' AND actor_id='" + aim.actor_id+"'";
 		connect.createStatement().execute(query);
 	}
 
