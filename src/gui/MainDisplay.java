@@ -1,5 +1,6 @@
 package gui;
 
+import java.awt.event.MouseAdapter;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -40,6 +41,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
@@ -52,6 +54,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
+
+import FreeBase.ImageUploader;
 
 import db.ActorInMediaRetriever;
 import db.CommentOfUserRetriever;
@@ -251,7 +255,29 @@ public class MainDisplay {
 
 		final Label lblPic_1 = new Label(grpDetails, SWT.NONE);
 		lblPic_1.setLayoutData(new RowData(150, 220));
-
+		
+		if(Main.getCurrentUser().isAdmin()) {
+			final ImageUploader iu = new ImageUploader(ConnectionManager.conn);
+			final FileDialog fd=new FileDialog(shlTvTraveler,SWT.OPEN);
+			 fd.setText("Open");
+			 String[] filterExt = {"*.jpg", "*.jpeg", "*.png"};
+			 fd.setFilterExtensions(filterExt);  
+			 lblPic_1.addMouseListener(new MouseListener() {
+				public void mouseUp(MouseEvent arg0) {}
+				public void mouseDown(MouseEvent arg0) {
+					if(selectedMedia!=null){
+					String filePath = fd.open();
+					System.out.println(filePath);
+					//if(selected!=null)
+					//		iu.addFile(selectedMedia.media_id,filePath)
+					}
+				}
+				public void mouseDoubleClick(MouseEvent arg0) {}
+			});
+		}
+		
+		
+		
 		SashForm sfDetails = new SashForm(grpDetails, SWT.VERTICAL);
 		sfDetails.setLayoutData(new RowData(200, 220));
 

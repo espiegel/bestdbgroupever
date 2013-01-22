@@ -37,7 +37,10 @@ public class ImageUploader {
 	public ImageUploader(Connection db_connection) {
 		_connection = db_connection;
 	}
-	
+	//TODO
+	public void addFile(int media_id,String filePath){
+		
+	}
 	public void add(int media_id, String image_url) {
 		_list.put(media_id, image_url);
 	}
