@@ -12,17 +12,20 @@ public class NewLocationWindow extends Dialog {
 	protected Object result;
 	protected Shell shell;
 	private MapWidget map;
-	private Text text;
+	private Text adress;
+	private Text scene;
+	private int media_id;
 
 	/**
 	 * Create the dialog.
 	 * @param parent
 	 * @param style
 	 */
-	public NewLocationWindow(Shell parent) {
+	public NewLocationWindow(Shell parent/*, int media_id*/) {
 		super(parent, SWT.CLOSE | SWT.TITLE | SWT.APPLICATION_MODAL);
-		setText("הוסף מיקום חדש");
-	}
+		setText("window");
+		//this.media_id = media_id;
+		}
 
 	/**
 	 * Open the dialog.
@@ -51,14 +54,27 @@ public class NewLocationWindow extends Dialog {
 		
 		map = new MapWidget(shell, "map.html",null);
 		
-		text = new Text(shell, SWT.BORDER);
-		text.setBounds(70, 30, 163, 19);
+		adress = new Text(shell, SWT.BORDER);
+		adress.setBounds(70, 30, 163, 19);
+		
+		scene = new Text(shell, SWT.BORDER);
+		scene.setBounds(70, 110, 180, 19);
+		scene.setMessage("Add scene...");
+		
+		Button searchBtn = new Button(shell, SWT.NONE);
+		searchBtn.setBounds(98, 60, 135, 28);
+		searchBtn.setText("Add New Location");
 		
 		Button btnNewButton = new Button(shell, SWT.NONE);
-		btnNewButton.setBounds(98, 60, 135, 28);
-		btnNewButton.setText("Add new location");
+		btnNewButton.setBounds(200, 60, 135, 28);
+		btnNewButton.setText("Search");
+		
 		map.init();
 		map.getBrowser().setBounds(0, 240, 640, 400);
 	}
-
+	
+	private void addLocation(String lat, String lng, String address) {
+		
+	}
+	
 }
