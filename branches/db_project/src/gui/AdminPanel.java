@@ -220,6 +220,7 @@ public class AdminPanel {
 				catch(Exception ex)
 				{
 					lblStatus.setText("Error adding entry");
+					ex.printStackTrace();
 					return;
 				}
 				
@@ -276,6 +277,7 @@ public class AdminPanel {
 				catch(Exception ex)
 				{
 					lblStatus.setText("Error adding entry");
+					ex.printStackTrace();
 					return;
 				}
 				
@@ -350,37 +352,37 @@ public class AdminPanel {
 			switch(currentSelection)
 			{
 				case MEDIA:
-					Media media = new Media(Integer.parseInt(lbl1.getText()), lbl3.getText(), lbl2.getText(),
-							lbl4.getText(), lbl5.getText(), Integer.parseInt(lbl6.getText()));
+					Media media = new Media(Integer.parseInt(txt1.getText()), txt3.getText(), txt2.getText(),
+							txt4.getText(), txt5.getText(), Integer.parseInt(txt6.getText()));
 					return media;
 				
 				case TV:
-					TVShow tv = new TVShow(Integer.parseInt(lbl1.getText()), lbl2.getText(), lbl3.getText(),
-							Integer.parseInt(lbl4.getText()), Integer.parseInt(lbl5.getText()));
+					TVShow tv = new TVShow(Integer.parseInt(txt1.getText()), txt2.getText(), txt3.getText(),
+							Integer.parseInt(txt4.getText()), Integer.parseInt(txt5.getText()));
 					return tv;
 				
 				case FILM:
-					Film film = new Film(Integer.parseInt(lbl1.getText()), lbl2.getText());
+					Film film = new Film(Integer.parseInt(txt1.getText()), txt2.getText());
 					return film;
 				
 				case ACTOR:
-					Actor actor = new Actor(Integer.parseInt(lbl1.getText()), Integer.parseInt(lbl2.getText()), lbl3.getText());
+					Actor actor = new Actor(Integer.parseInt(txt1.getText()),txt2.getText(), txt3.getText());
 					return actor;
 				
 				case ACTORINMEDIA:
-					ActorInMedia AIM = new ActorInMedia(Integer.parseInt(lbl1.getText()), Integer.parseInt(lbl2.getText()), lbl3.getText());
+					ActorInMedia AIM = new ActorInMedia(Integer.parseInt(txt1.getText()), Integer.parseInt(txt2.getText()), txt3.getText());
 					return AIM;
 				
 				case LOCATION:
-					Location loc = new Location(Integer.parseInt(lbl1.getText()), lbl2.getText(), lbl3.getText(),
-							lbl4.getText(), lbl5.getText(), lbl6.getText(), Integer.parseInt(lbl7.getText()), Integer.parseInt(lbl8.getText()));
+					Location loc = new Location(Integer.parseInt(txt1.getText()), txt2.getText(), txt3.getText(),
+							txt4.getText(), txt5.getText(), txt6.getText(), Integer.parseInt(txt7.getText()), Integer.parseInt(txt8.getText()));
 					return loc;
 				
 				case LOCATIONOFMEDIA:
 					Location loc2 = new Location();
-					loc2.setLocation_id(Integer.parseInt(lbl2.getText()));
+					loc2.setLocation_id(Integer.parseInt(txt2.getText()));
 					
-					LocationOfMedia LOM = new LocationOfMedia(Integer.parseInt(lbl1.getText()), loc2, lbl3.getText());
+					LocationOfMedia LOM = new LocationOfMedia(Integer.parseInt(txt1.getText()), loc2, txt3.getText());
 					return LOM;
 				
 				default:
@@ -390,6 +392,7 @@ public class AdminPanel {
 		catch(Exception ex)
 		{
 			lblStatus.setText("Error Adding Entry");
+			ex.printStackTrace();
 			return null;
 		}
 	}
@@ -458,6 +461,16 @@ public class AdminPanel {
 				lbl6.setText("");
 				lbl7.setText("");
 				lbl8.setText("");
+				
+				txt1.setText("");
+				txt2.setText("");
+				txt3.setText("");
+				txt4.setText("");
+				txt5.setText("");
+				txt6.setText("");
+				txt7.setText("");
+				txt8.setText("");
+				
 			break;
 		}
 	}

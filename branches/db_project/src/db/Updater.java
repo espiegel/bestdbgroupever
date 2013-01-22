@@ -131,7 +131,7 @@ public class Updater {
 	 * @throws SQLException
 	 */
 	public void addActor(Actor act) throws SQLException {
-		int actorfreebaseid = act.freebase_id;
+		String actorfreebaseid = act.freebase_id;
 		String actor_id;
 		rs = connect.createStatement().executeQuery(
 				"SELECT actor_id FROM Actors WHERE freebase_id='"
