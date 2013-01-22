@@ -17,6 +17,9 @@ import db.Updater;
 
 public class AdminPanel {
 
+	private Media currentMedia = null;
+	private Location currentLocation = null;
+	
 	protected Shell shellAdminPanel;
 	private Text txt1;
 	private Text txt2;
@@ -47,7 +50,24 @@ public class AdminPanel {
 	final private int LOCATIONOFMEDIA = 7;
 	
 	private int currentSelection = 0;
+	private Button btnExit;
 	
+	public Media getCurrentMedia() {
+		return currentMedia;
+	}
+
+	public void setCurrentMedia(Media currentMedia) {
+		this.currentMedia = currentMedia;
+	}
+
+	public Location getCurrentLocation() {
+		return currentLocation;
+	}
+
+	public void setCurrentLocation(Location currentLocation) {
+		this.currentLocation = currentLocation;
+	}
+
 	/**
 	 * Launch the application.
 	 * @param args
@@ -171,7 +191,7 @@ public class AdminPanel {
 		grpStatus.setBounds(10, 329, 611, 87);
 		
 		lblStatus = new Label(grpStatus, SWT.BORDER);
-		lblStatus.setBounds(10, 29, 224, 48);
+		lblStatus.setBounds(10, 29, 162, 48);
 		
 		Button btnAdd = new Button(grpStatus, SWT.NONE);
 		btnAdd.addSelectionListener(new SelectionAdapter() {
@@ -227,8 +247,8 @@ public class AdminPanel {
 				lblStatus.setText("Added entry successfully");
 			}
 		});
-		btnAdd.setText("Add");
-		btnAdd.setBounds(259, 29, 174, 48);
+		btnAdd.setText("Add New Entry");
+		btnAdd.setBounds(178, 29, 137, 48);
 		
 		Button btnUpdate = new Button(grpStatus, SWT.NONE);
 		btnUpdate.addSelectionListener(new SelectionAdapter() {
@@ -281,11 +301,22 @@ public class AdminPanel {
 					return;
 				}
 				
-				lblStatus.setText("Added entry successfully");
+				lblStatus.setText("Updated entry successfully");
 			}
 		});
-		btnUpdate.setText("Update");
-		btnUpdate.setBounds(439, 29, 162, 48);
+		btnUpdate.setText("Update Existing");
+		btnUpdate.setBounds(321, 29, 137, 48);
+		
+		btnExit = new Button(grpStatus, SWT.NONE);
+		btnExit.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				shellAdminPanel.close();
+				shellAdminPanel.dispose();
+			}
+		});
+		btnExit.setBounds(464, 29, 137, 48);
+		btnExit.setText("Exit");
 		
 		btnMedia.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -408,6 +439,16 @@ public class AdminPanel {
 				lbl4.setText("directors");
 				lbl5.setText("image");
 				lbl6.setText("isTv");
+				
+				if(currentMedia != null)
+				{
+					txt1.setText(String.valueOf(currentMedia.media_id));
+					txt2.setText(currentMedia.freebase_id);
+					txt3.setText(currentMedia.name);
+					txt4.setText(currentMedia.directors);
+					txt5.setText(currentMedia.image);
+					txt6.setText(String.valueOf(currentMedia.isTV));
+				}
 			break;
 			
 			case TV:
@@ -416,11 +457,26 @@ public class AdminPanel {
 				lbl3.setText("last_episode");
 				lbl4.setText("num_seasons");
 				lbl5.setText("num_episodes");
+				
+				if(currentMedia != null && currentMedia instanceof TVShow)
+				{
+					txt1.setText(String.valueOf(currentMedia.media_id));
+					txt2.setText(((TVShow)currentMedia).first_episode);
+					txt3.setText(((TVShow)currentMedia).last_episode);
+					txt4.setText(String.valueOf(((TVShow)currentMedia).num_seasons));
+					txt5.setText(String.valueOf(((TVShow)currentMedia).num_episodes));
+				}
 			break;
 			
 			case FILM:
 				lbl1.setText("media_id");
 				lbl2.setText("release_date");
+				
+				if(currentMedia != null && currentMedia instanceof Film)
+				{
+					txt1.setText(String.valueOf(currentMedia.media_id));
+					txt2.setText(((Film)currentMedia).release_date);
+				}
 			break;
 			
 			case ACTOR:
@@ -444,6 +500,18 @@ public class AdminPanel {
 				lbl6.setText("place");
 				lbl7.setText("upvotes");
 				lbl8.setText("downvotes");
+				
+				if(currentLocation != null)
+				{
+					txt1.setText(String.valueOf(currentLocation.location_id));
+					txt2.setText(currentLocation.lat);
+					txt3.setText(currentLocation.lng);
+					txt4.setText(currentLocation.country);
+					txt5.setText(currentLocation.city);
+					txt6.setText(currentLocation.place);
+					txt7.setText(String.valueOf(currentLocation.upvotes));
+					txt8.setText(String.valueOf(currentLocation.downvotes));
+				}
 			break;
 			
 			case LOCATIONOFMEDIA:

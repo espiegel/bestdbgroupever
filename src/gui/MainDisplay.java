@@ -226,7 +226,12 @@ public class MainDisplay {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					AdminPanel AP = new AdminPanel();
+					if(currentLocationId != 0)
+						AP.setCurrentLocation(new LocationRetriever().retrieveFirst("location_id="+currentLocationId));
+					if(selectedMedia != null)
+						AP.setCurrentMedia(selectedMedia);
 					AP.open();
+					
 				}
 			});
 			mntmAdmin.setText("Admin");
