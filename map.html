@@ -10,6 +10,7 @@
 			<script type="text/javascript"
 				src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDNTwCNSCSK-y65jS8nmaA7qV_PsQeYIJM&sensor=false&&language=en">
 			</script>
+			<script type="text/javascript" src="https://dl.dropbox.com/s/fxqqaldi5cy45a1/markerclusterer.js"></script>
 			<script type="text/javascript">
 			
 				var map;
@@ -167,6 +168,8 @@
 				  bounds.extend (LatLngArray[i]);
 				}
 				map.fitBounds (bounds);
+				var clusterOptions = {maxZoom: 10};
+				var cluster = new MarkerClusterer(map, markersArray,clusterOptions);
 				}
 			</script>
 		</head>
