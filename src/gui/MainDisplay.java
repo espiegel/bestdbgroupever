@@ -182,6 +182,8 @@ public class MainDisplay {
 					locwin.open();
 					System.out.println("Reached");
 				}
+				else
+					showMessage("Please search and select a TV show / Film");
 			}
 		});
 		mntmLoctest.setText("LocTest");
@@ -212,7 +214,7 @@ public class MainDisplay {
 					player.open();
 				}
 				else
-					showMessage("Please search a TV show / Film");
+					showMessage("Please search and select a TV show / Film");
 			}
 		});
 		mntmPlayer.setText("Player");

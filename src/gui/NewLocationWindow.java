@@ -16,6 +16,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -149,6 +150,9 @@ public class NewLocationWindow extends Dialog {
 					Updater updater = new Updater();
 					updater.addLocation(location);
 					updater.addLocationOfMedia(lom);
+					MessageBox messageBox= new MessageBox(shell, SWT.ICON_INFORMATION | SWT.OK);
+					messageBox.setMessage("Location added :)");
+					messageBox.open();
 					shell.close();
 
 				} catch (SQLException e) {
