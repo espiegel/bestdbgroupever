@@ -241,12 +241,17 @@ public class MainDisplay {
 		compExtra.setVisible(false);
 
 		Label lblNewLabel = new Label(compExtra, SWT.NONE);
+		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_lblNewLabel.widthHint = 181;
+		lblNewLabel.setLayoutData(gd_lblNewLabel);
 		lblNewLabel.setText("Actors (doubleclick to search)");
 
 		final List lstActors = new List(compExtra, SWT.BORDER | SWT.V_SCROLL
 				| SWT.H_SCROLL);
-		lstActors.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1,
-				1));
+		GridData gd_lstActors = new GridData(SWT.FILL, SWT.FILL, true, true, 1,
+				1);
+		gd_lstActors.widthHint = 178;
+		lstActors.setLayoutData(gd_lstActors);
 
 		final Label lblDetails1_1 = new Label(sfDetails, SWT.WRAP
 				| SWT.HORIZONTAL);
