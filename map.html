@@ -95,6 +95,7 @@
 				map.setZoom(zoom);
 				}
 				function startListen(){
+				clearOverlays();
 					google.maps.event.addListener(map, 'click', function(event) {
 						clearOverlays();
 						placeMarker(event.latLng);
@@ -116,8 +117,10 @@
 						} else {
 							address="undefined";
 						}
-						if ( globalMarker )
+						if ( globalMarker ){
 							globalMarker.setPosition(location);
+							globalMarker.setMap(map);
+							}
 						else {
 						globalMarker = new google.maps.Marker({
 							icon: image,
@@ -127,11 +130,12 @@
 							map: map
 							});
 						}
+						globalMarker.setTitle("Location: "+address);
 						
 						google.maps.event.addListener(globalMarker, 'click', function () {
 							map.setZoom(16);
 							map.setCenter(globalMarker.getPosition());
-							globalInfoWindow.setContent(address);
+							globalInfoWindow.setContent("Location: "+address);
 							globalInfoWindow.open(map, this);
 							});	
 						window.document.title="choose#"+location.lat()+"#"+location.lng()+"#"+address;	
@@ -139,6 +143,8 @@
 				}
 				
 				function codeAddress(address) {
+					if(globalMarker!=null)
+						globalMarker.setMap(null);
 					clearOverlays();
 					var coords;
 					var add;

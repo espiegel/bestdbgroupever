@@ -166,7 +166,6 @@ public class MapWidget {
 	 *         otherwise
 	 */
 	public boolean startListen(){
-		System.out.println("lol");
 		if (isLoaded()) {
 			String[] params = {};
 			return browserExecute("startListen", params);
