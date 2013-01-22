@@ -215,13 +215,15 @@ public class AdminPanel {
 					switch(currentSelection)
 					{
 						case MEDIA:
-							update.addMedia( (Media)ob, "0"); // This will probably cause an error. Need to change 0 to an integer later.
+							update.addMedia( (Media)ob, "0"); // This will probably cause an error in the future. Need to change "0" to an integer later.
 							break;
 						case TV:
-							update.addTV((TVShow)ob);
+							Media m = new Media(((TVShow)ob).media_id, "<TBD>", "", "<TBD>", "", 1);
+							update.addTV(m, (TVShow)ob);
 							break;
 						case FILM:
-							update.addFilm((Film)ob);
+							Media med = new Media(((Film)ob).media_id, "<TBD>", "", "<TBD>", "", 0);
+							update.addFilm(med, (Film)ob);
 							break;
 						case ACTOR:
 							update.addActor((Actor)ob);
