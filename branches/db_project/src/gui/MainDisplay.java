@@ -291,7 +291,7 @@ public class MainDisplay {
 		Group grpComments = new Group(shlTvTraveler, SWT.NONE);
 		grpComments.setText("Comments");
 		FormData fd_grpComments = new FormData();
-		fd_grpComments.right = new FormAttachment(100, -10);
+		fd_grpComments.right = new FormAttachment(grpDetails, 0, SWT.RIGHT);
 		fd_grpComments.left = new FormAttachment(grpMap, 6);
 		fd_grpComments.top = new FormAttachment(grpMap, 0, SWT.TOP);
 
@@ -304,7 +304,7 @@ public class MainDisplay {
 		lblCurrentLocation.setFont(SWTResourceManager.getFont("Segoe UI", 9,
 				SWT.BOLD));
 		lblCurrentLocation.setAlignment(SWT.CENTER);
-		lblCurrentLocation.setBounds(17, 24, 261, 29);
+		lblCurrentLocation.setBounds(10, 24, 297, 29);
 		lblCurrentLocation.setText("");
 
 		commentTable = new Table(grpComments, SWT.BORDER | SWT.FULL_SELECTION);
@@ -344,18 +344,18 @@ public class MainDisplay {
 				wc.open();
 			}
 		});
-		btnAddComment.setBounds(284, 20, 141, 37);
+		btnAddComment.setBounds(313, 20, 141, 37);
 		btnAddComment.setText("Add Comment");
 
 		final Button btnUpvote = new Button(grpComments, SWT.NONE);
 		btnUpvote.setImage(SWTResourceManager.getImage(MainDisplay.class,
 				"/gui/thumbs_up_black.png"));
-		btnUpvote.setBounds(442, 20, 41, 37);
+		btnUpvote.setBounds(460, 20, 41, 37);
 
 		final Button btnDownvote = new Button(grpComments, SWT.NONE);
 		btnDownvote.setImage(SWTResourceManager.getImage(MainDisplay.class,
 				"/gui/thumbs_down_black.png"));
-		btnDownvote.setBounds(489, 20, 41, 37);
+		btnDownvote.setBounds(507, 20, 41, 37);
 
 		// Take care of upvotes
 		btnUpvote.addSelectionListener(new SelectionAdapter() {
