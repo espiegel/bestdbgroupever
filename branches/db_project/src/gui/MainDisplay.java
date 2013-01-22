@@ -1158,6 +1158,8 @@ public class MainDisplay {
 			Location l = lom.location;
 			map.addMarker(l.lat, l.lng, l.place, lom.scene_episode);
 		}
+		if(locationsOfMedia.size() >0)
+			map.fitMap();
 	}
 
 	/**
