@@ -642,13 +642,13 @@ public class MainDisplay {
 		list.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				int index = list.getSelectionIndex();
+				
+				if (index<0) return; //user just clicked on a white space
+				
 				clearAllLabels(lblDetails1_1, lblDetails2_1, lblDetails3_1,
 						lblDetails4_1, lblDetails5_1, lblDetails6_1, lblPic_1);
-				
-				int index = list.getSelectionIndex();
-				int id = -1;
-			//sometimes ArrayIndexOutOfBoundsException on index=-1
-				id = listIds.get(index);
+				int id = listIds.get(index);
 				map.clearAllMarkers();
 				if(currentSearch.equals("TV"))
 				{
