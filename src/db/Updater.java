@@ -168,6 +168,24 @@ public class Updater {
 	}
 
 	/**
+	 * Insert a single tvshow, without touching the media. Use responsibly!
+	 * - Eidan
+	 * @param med
+	 * @return true if insertion succeeded , false if TVShow already exists
+	 * @throws SQLException
+	 */
+	public boolean addTV(TVShow show) throws SQLException {
+		int media_id = show.media_id;
+		if (media_id == -1)
+			return false;
+		values = "('" + media_id + "','" + show.first_episode + "','"
+				+ show.last_episode + "','" + show.num_seasons + "','"
+				+ show.num_episodes + "')";
+		connect.createStatement().execute(insertTV + values);
+		return true;
+	}
+	
+	/**
 	 * 
 	 * @param med
 	 * @param film
