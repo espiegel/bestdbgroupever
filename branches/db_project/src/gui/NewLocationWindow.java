@@ -1,20 +1,24 @@
 package gui;
 
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
 import java.sql.SQLException;
 
 import objects.Location;
 import objects.LocationOfMedia;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import db.Updater;
 
@@ -26,11 +30,10 @@ public class NewLocationWindow extends Dialog {
 	private Text address;
 	private Text scene;
 	private int media_id;
-	private static CharsetEncoder encoder = Charset.forName("US-ASCII")
-			.newEncoder();
 	private String place, country, city;
 	private LocationOfMedia lom = null;
 	private Location location = null;
+	private Display display;
 
 	/**
 	 * Create the dialog.
@@ -38,9 +41,9 @@ public class NewLocationWindow extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public NewLocationWindow(Shell parent, int media_id) {
+	public NewLocationWindow(Shell parent, int media_id, String name) {
 		super(parent, SWT.CLOSE | SWT.TITLE | SWT.APPLICATION_MODAL);
-		setText("window");
+		setText("Add a location for " + name);
 		this.media_id = media_id;
 	}
 
@@ -53,7 +56,7 @@ public class NewLocationWindow extends Dialog {
 		createContents();
 		shell.open();
 		shell.layout();
-		Display display = getParent().getDisplay();
+		display = getParent().getDisplay();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -61,35 +64,83 @@ public class NewLocationWindow extends Dialog {
 		}
 		return result;
 	}
-
+	
+	private final static Color EMPTY_MESSAGE_COLOR = SWTResourceManager.getColor(SWT.COLOR_GRAY);
+	private final static Color TEXT_COLOR = SWTResourceManager.getColor(SWT.COLOR_BLACK);
+	
+	private boolean flgEmptySearchText = true;
+	private final static String EMPTY_TEXT_SEARCH = "-search for a place by address/name-";
+	
+	private boolean flgEmptySceneText = true;
+	private final static String EMPTY_TEXT_SCENE = "-what scene is it in? what's special about it?-";
+	
+	private Label lblNewLabel;
+	
 	/**
 	 * Create contents of the dialog.
 	 */
 	private void createContents() {
 		shell = new Shell(getParent(), getStyle());
-		shell.setSize(640, 640);
+		shell.setSize(520, 520);
 		shell.setText(getText());
 
 		map = new MapWidget(shell, "map.html", null, this);
 		map.init();
-		map.getBrowser().setBounds(0, 240, 640, 400);
+		map.getBrowser().setBounds(0, 170, 520, 350);
 
-		address = new Text(shell, SWT.BORDER);
-		address.setBounds(70, 30, 163, 19);
+		address = new Text(shell, SWT.BORDER | SWT.CENTER);
+		address.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (flgEmptySearchText) {
+					address.setText("");
+					address.setForeground(TEXT_COLOR);
+				}
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				flgEmptySearchText = address.getText().isEmpty();
+				if (flgEmptySearchText) {
+					address.setText(EMPTY_TEXT_SEARCH);
+					address.setForeground(EMPTY_MESSAGE_COLOR);
+				}
+			}
+		});
+		address.setText(EMPTY_TEXT_SEARCH);
+		address.setForeground(EMPTY_MESSAGE_COLOR);
+		address.setBounds(10, 10, 365, 19);
 
 		scene = new Text(shell, SWT.BORDER);
-		scene.setBounds(70, 110, 180, 19);
-		//scene.setMessage("Add scene...");
+		scene.setBounds(10, 129, 365, 19);
+		scene.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				if (flgEmptySceneText) {
+					scene.setText("");
+					scene.setForeground(TEXT_COLOR);
+				}
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				flgEmptySceneText = scene.getText().isEmpty();
+				if (flgEmptySceneText) {
+					scene.setText(EMPTY_TEXT_SCENE);
+					scene.setForeground(EMPTY_MESSAGE_COLOR);
+				}
+			}
+		});
+		scene.setText(EMPTY_TEXT_SCENE);
+		scene.setForeground(EMPTY_MESSAGE_COLOR);
 
 		Button okBtn = new Button(shell, SWT.NONE);
-		okBtn.setBounds(98, 60, 135, 28);
-		okBtn.setText("Add New Location");
+		okBtn.setBounds(381, 125, 135, 28);
+		okBtn.setText("Add");
 
 		okBtn.addSelectionListener(new SelectionAdapter() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				String scene_episode = (scene.getText().equals("") ? "Unknown"
+				String scene_episode = (flgEmptySceneText ? "Unknown"
 						: canonicalize(scene.getText()));
 				lom = new LocationOfMedia(media_id, location, scene_episode);
 				try {
@@ -107,23 +158,30 @@ public class NewLocationWindow extends Dialog {
 		});
 
 		Button searchBtn = new Button(shell, SWT.NONE);
-		searchBtn.setBounds(200, 60, 135, 28);
+		searchBtn.setBounds(378, 6, 135, 28);
 		searchBtn.setText("Search");
 		searchBtn.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
 				String text = address.getText();
-				if (!text.equals("")) {
+				if (!flgEmptySearchText) {
 					map.codeAddress(text);
 				}
 			}
 		});
 		Button btnPlaceMarker = new Button(shell, SWT.NONE);
-		btnPlaceMarker.setBounds(400, 60, 135, 28);
+		btnPlaceMarker.setBounds(133, 60, 135, 28);
 		btnPlaceMarker.setText("Choose From Map");
+		
+		lblNewLabel = new Label(shell, SWT.NONE);
+		lblNewLabel.setFont(SWTResourceManager.getFont("Lucida Grande", 14, SWT.BOLD));
+		lblNewLabel.setBounds(177, 35, 44, 19);
+		lblNewLabel.setText("-OR-");
 		btnPlaceMarker.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				Cursor c = new Cursor(display, SWT.CURSOR_CROSS);
+				shell.setCursor(c);
 				map.startListen();
 			}
 		});
