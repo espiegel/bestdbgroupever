@@ -184,7 +184,7 @@ public class Updater {
 		return true;
 	}
 
-	private void addMedia(Media med, String isTv) throws SQLException {
+	public void addMedia(Media med, String isTv) throws SQLException {
 		String freebaseid = med.freebase_id;
 		String media_id;
 		rs = connect.createStatement().executeQuery(
