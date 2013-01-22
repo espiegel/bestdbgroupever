@@ -10,4 +10,10 @@ public class Film extends Media {
 		this.release_date = release_date;
 	}
 	
+	public Film(int media_id, String release_date) {
+		super();
+		this.release_date = release_date;
+		
+		this.setMedia_id(media_id);
+	}
 }

@@ -16,4 +16,12 @@ public class ActorInMedia {
 		this.media_id = media_id;
 		this.char_name = char_name;
 	}
+	
+	public ActorInMedia(int actor_id, int media_id,
+			String char_name) {
+		super();
+		this.actor_id = actor_id;
+		this.media_id = media_id;
+		this.char_name = char_name;
+	}
 }

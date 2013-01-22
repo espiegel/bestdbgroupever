@@ -218,7 +218,20 @@ public class MainDisplay {
 			}
 		});
 		mntmPlayer.setText("Player");
-
+		
+		// Admin menu item
+		if(Main.getCurrentUser().isAdmin()) {
+			MenuItem mntmAdmin = new MenuItem(menu, SWT.NONE);
+			mntmAdmin.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					AdminPanel AP = new AdminPanel();
+					AP.open();
+				}
+			});
+			mntmAdmin.setText("Admin");
+		}
+		
 		Group grpDetails = new Group(shlTvTraveler, SWT.NONE);
 		RowLayout rl_grpDetails = new RowLayout(SWT.HORIZONTAL);
 		rl_grpDetails.wrap = false;
