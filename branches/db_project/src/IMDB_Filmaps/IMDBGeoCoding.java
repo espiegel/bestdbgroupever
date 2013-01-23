@@ -51,6 +51,7 @@ public class IMDBGeoCoding {
 	private String IMDBListAfterParsing;
 	private File outputFile;
 	private Shell shell;
+	private boolean flgNewDisplay = false;
 
 	/**
 	 * 
@@ -89,6 +90,7 @@ public class IMDBGeoCoding {
 	
 	public void initAndStart() throws  SQLException,
 	IOException {
+		flgNewDisplay  = true;
 		initAndStart(new Display());
 	}
 
@@ -152,7 +154,7 @@ public class IMDBGeoCoding {
 			if (!display.readAndDispatch())
 				display.sleep();
 		}
-		display.dispose();
+		if (flgNewDisplay) display.dispose();
 	}
 
 	/**
