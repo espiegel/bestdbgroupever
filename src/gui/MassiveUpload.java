@@ -10,14 +10,17 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 import org.xml.sax.SAXException;
 
 import FreeBase.FileUploader;
@@ -39,14 +42,17 @@ public class MassiveUpload extends Dialog {
 	private Text txtTsvCastPath;
 	private Label lblInfo;
 	private ProgressBar progressBar;
+	private Display display;
+	private Button btnUpload;
+	private volatile Connection conn = null;
 
 	/**
 	 * Create the dialog.
 	 * @param parent
 	 * @param style
 	 */
-	public MassiveUpload(Shell parent, int style) {
-		super(parent, style);
+	public MassiveUpload(Shell parent) {
+		super(parent, SWT.TITLE);
 		setText("SWT Dialog");
 	}
 
@@ -58,7 +64,7 @@ public class MassiveUpload extends Dialog {
 		createContents();
 		shlBatchUploadScreen.open();
 		shlBatchUploadScreen.layout();
-		Display display = getParent().getDisplay();
+		display = getParent().getDisplay();
 		while (!shlBatchUploadScreen.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -76,6 +82,7 @@ public class MassiveUpload extends Dialog {
 		shlBatchUploadScreen.setText("Batch upload screen");
 		
 		final Button rdbIMDB = new Button(shlBatchUploadScreen, SWT.RADIO);
+		rdbIMDB.setSelection(true);
 		rdbIMDB.setBounds(10, 37, 91, 18);
 		rdbIMDB.setText("IMDB:");
 		
@@ -124,7 +131,7 @@ public class MassiveUpload extends Dialog {
 		final Combo cmbFreebaseType = new Combo(shlBatchUploadScreen, SWT.NONE);
 		cmbFreebaseType.setItems(new String[] {"TV Shows", "Films"});
 		cmbFreebaseType.select(0);
-		cmbFreebaseType.setBounds(167, 129, 78, 22);
+		cmbFreebaseType.setBounds(167, 129, 97, 22);
 		
 		final Button rdbTsv = new Button(shlBatchUploadScreen, SWT.RADIO);
 		rdbTsv.setText("Freebase (TSV files):");
@@ -132,7 +139,7 @@ public class MassiveUpload extends Dialog {
 		
 		final Combo cmbTsvType = new Combo(shlBatchUploadScreen, SWT.NONE);
 		cmbTsvType.setItems(new String[] {"TV Shows", "Films"});
-		cmbTsvType.setBounds(167, 172, 78, 22);
+		cmbTsvType.setBounds(167, 172, 97, 22);
 		cmbTsvType.select(0);
 		
 		Label label_3 = new Label(shlBatchUploadScreen, SWT.NONE);
@@ -158,42 +165,65 @@ public class MassiveUpload extends Dialog {
 		txtTsvCastPath.setText("TV\\regular_tv_appearance.tsv");
 		txtTsvCastPath.setBounds(265, 238, 150, 19);
 		
-		Button btnNewButton = new Button(shlBatchUploadScreen, SWT.NONE);
-		btnNewButton.addSelectionListener(new SelectionAdapter() {
+		btnUpload = new Button(shlBatchUploadScreen, SWT.NONE);
+		btnUpload.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Connection conn = db.ConnectionManager.conn;
-				try {
-					if (rdbIMDB.getSelection()) {
-						DataUploader.IMDBUpload(conn, txtIMDBPath.getText(), "IMDB\\IMDBLocations.xml", "IMDB\\geocode.html", 0, Integer.MAX_VALUE);
-					} else if (rdbFilmaps.getSelection()) {
-						DataUploader.FilmapsUpload(conn, txtFilmapsPath.getText(), parseText(txtFilmapsLimit, Integer.MAX_VALUE));
-					} else if (rdbFreebase.getSelection()) {
-						DataUploader.FreebaseUpload(conn, parseText(txtFreebaseLimit, Integer.MAX_VALUE), cmbFreebaseType.getSelectionIndex()==0);
-					} else if (rdbTsv.getSelection()) {
-						FileUploader fu = new FileUploader(conn, new File(txtTsvMediaPath.getText()), new File(txtTsvCastPath.getText()), cmbTsvType.getSelectionIndex()==0);
-						fu.upload(parseText(txtTsvLimit, Integer.MAX_VALUE));
+				btnUpload.setEnabled(false);
+				Cursor c = new Cursor(display, SWT.CURSOR_WAIT);
+				shlBatchUploadScreen.setCursor(c);
+				display.asyncExec(new Runnable() {
+					
+					@Override
+					public void run() {
+						try {
+							conn = db.ConnectionManager.makeConnection();
+							if (rdbIMDB.getSelection()) {
+								DataUploader.IMDBUpload(conn, txtIMDBPath.getText(), "IMDB\\IMDBLocations.xml", "IMDB\\geocode.html", 0, Integer.MAX_VALUE);
+							} else if (rdbFilmaps.getSelection()) {
+								DataUploader.FilmapsUpload(conn, txtFilmapsPath.getText(), parseText(txtFilmapsLimit, Integer.MAX_VALUE));
+							} else if (rdbFreebase.getSelection()) {
+								DataUploader.FreebaseUpload(conn, parseText(txtFreebaseLimit, Integer.MAX_VALUE), cmbFreebaseType.getSelectionIndex()==0);
+							} else if (rdbTsv.getSelection()) {
+								FileUploader fu = new FileUploader(conn, new File(txtTsvMediaPath.getText()), new File(txtTsvCastPath.getText()), cmbTsvType.getSelectionIndex()==0);
+								fu.upload(parseText(txtTsvLimit, Integer.MAX_VALUE));
+							}
+							conn.commit();
+							conn.close();
+						} catch (SQLException ex) {
+							showInfo("Error in dealing with the DB", true);
+							ex.printStackTrace();
+							finish();
+							return;
+						} catch (IOException ex) {
+							showInfo("Error reading files", true);
+							ex.printStackTrace();
+							finish();
+							return;
+						} catch (FreebaseServiceException ex) {
+							showInfo("Error connecting to freebase", true);
+							ex.printStackTrace();
+							finish();
+							return;
+						} catch (SAXException ex) {
+							showInfo("Error parsing XML", true);
+							ex.printStackTrace();
+							finish();
+							return;
+						} catch (ParserConfigurationException ex) {
+							showInfo("Error in XML parser configuration", true);
+							ex.printStackTrace();
+							finish();
+							return;
+						}
+						finish();
+						showInfo("Finished", false);
 					}
-				} catch (SQLException ex) {
-					showInfo("Error in dealing with the DB", true);
-					ex.printStackTrace();
-				} catch (IOException ex) {
-					showInfo("Error reading files", true);
-					ex.printStackTrace();
-				} catch (FreebaseServiceException ex) {
-					showInfo("Error connecting to freebase", true);
-					ex.printStackTrace();
-				} catch (SAXException ex) {
-					showInfo("Error parsing XML", true);
-					ex.printStackTrace();
-				} catch (ParserConfigurationException ex) {
-					showInfo("Error in XML parser configuration", true);
-					ex.printStackTrace();					
-				}
+				});
 			}
 		});
-		btnNewButton.setBounds(323, 269, 94, 28);
-		btnNewButton.setText("Start upload");
+		btnUpload.setBounds(298, 263, 117, 28);
+		btnUpload.setText("Start upload");
 		
 		progressBar = new ProgressBar(shlBatchUploadScreen, SWT.NONE);
 		progressBar.setBounds(10, 302, 405, 14);
@@ -203,6 +233,32 @@ public class MassiveUpload extends Dialog {
 		lblInfo.setBounds(10, 322, 405, 14);
 		lblInfo.setText("Error Text");
 		lblInfo.setVisible(false);
+		
+		Button btnCancel = new Button(shlBatchUploadScreen, SWT.NONE);
+		btnCancel.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (conn!=null) {
+					MessageBox mb = new MessageBox(shlBatchUploadScreen, SWT.YES | SWT.NO | SWT.ICON_WARNING);
+					mb.setMessage("Are you sure you want to exit in the middle of an operation? This might have unintended consequances.");
+					int res = mb.open();
+					if (res==SWT.NO) return;
+					try {
+						conn.close();
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}
+				shlBatchUploadScreen.close();
+			}
+		});
+		btnCancel.setBounds(201, 263, 94, 28);
+		btnCancel.setText("Cancel");
+		
+		Label lblNoticeBatchUpload = new Label(shlBatchUploadScreen, SWT.WRAP);
+		lblNoticeBatchUpload.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
+		lblNoticeBatchUpload.setBounds(10, 200, 134, 83);
+		lblNoticeBatchUpload.setText("Notice batch upload can take several hours for hundreds of items, depending on DB load");
 	}
 
 	private static int parseText(Text txt, int default_val) {
@@ -216,6 +272,13 @@ public class MassiveUpload extends Dialog {
 				return default_val;
 			}
 		}
+	}
+	
+	private synchronized void finish() {
+		conn = null;
+		btnUpload.setEnabled(true);
+		Cursor c = new Cursor(display, SWT.CURSOR_ARROW);
+		shlBatchUploadScreen.setCursor(c);
 	}
 	
 	private void showInfo(String text, boolean error) {

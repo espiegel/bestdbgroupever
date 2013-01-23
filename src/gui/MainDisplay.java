@@ -1,6 +1,5 @@
 package gui;
 
-import java.awt.event.MouseAdapter;
 import java.lang.reflect.Field;
 import java.sql.Date;
 import java.sql.SQLException;
@@ -56,7 +55,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import FreeBase.ImageUploader;
-
 import db.ActorInMediaRetriever;
 import db.CommentOfUserRetriever;
 import db.CommentRetriever;
@@ -225,8 +223,11 @@ public class MainDisplay {
 		
 		// Admin menu item
 		if(Main.getCurrentUser().isAdmin()) {
-			MenuItem mntmAdmin = new MenuItem(menu, SWT.NONE);
-			mntmAdmin.addSelectionListener(new SelectionAdapter() {
+			MenuItem mntmAdmin = new MenuItem(menu, SWT.CASCADE);
+			Menu menu2 = new Menu(mntmAdmin);
+			mntmAdmin.setMenu(menu2);
+			MenuItem mntmAdmin2 = new MenuItem(menu2, SWT.NONE);
+			mntmAdmin2.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent arg0) {
 					AdminPanel AP = new AdminPanel();
@@ -238,6 +239,16 @@ public class MainDisplay {
 					
 				}
 			});
+			MenuItem mntmUpload = new MenuItem(menu2, SWT.NONE);
+			mntmUpload.setText("Massive upload window");
+			mntmUpload.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent arg0) {
+					MassiveUpload w = new MassiveUpload(shlTvTraveler);
+					w.open();
+				}
+			});
+			mntmAdmin2.setText("Admin window");
 			mntmAdmin.setText("Admin");
 		}
 		
