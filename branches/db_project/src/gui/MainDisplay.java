@@ -30,6 +30,7 @@ import org.eclipse.swt.events.TraverseEvent;
 import org.eclipse.swt.events.TraverseListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -175,22 +176,6 @@ public class MainDisplay {
 			}
 		});
 		mntmProfile.setText("Profile");
-
-		MenuItem mntmLoctest = new MenuItem(menu_1, SWT.NONE);
-		mntmLoctest.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (selectedMedia != null) {
-					NewLocationWindow locwin = new NewLocationWindow(
-							shlTvTraveler, selectedMedia.media_id, canonicalize(selectedMedia.name));
-					locwin.open();
-					System.out.println("Reached");
-				}
-				else
-					showMessage("Please search and select a TV show / Film");
-			}
-		});
-		mntmLoctest.setText("Add Location");
 
 		MenuItem mntmLogout = new MenuItem(menu_1, SWT.NONE);
 		mntmLogout.addSelectionListener(new SelectionAdapter() {
@@ -339,9 +324,12 @@ public class MainDisplay {
 				| SWT.HORIZONTAL);
 		sfDetails.setWeights(new int[] { 2, 2, 1, 1, 1, 1 });
 		// End of details group
+		
+		Composite compot = new Composite(compExtra, SWT.NONE);
+		compot.setLayout(new FillLayout());
 
 ////////////////////////////////////////////////////////////////////////////////
-		final Link playLink = new Link(compExtra, SWT.NONE);
+		final Link playLink = new Link(compot, SWT.NONE);
 		playLink.setVisible(false);
 		playLink.setText("<a>Player</a>");
 		playLink.addListener(SWT.Selection, new Listener() {
@@ -355,6 +343,19 @@ public class MainDisplay {
 					player.open();
 				} else
 					showMessage("Please search a TV show / Film");
+			}
+
+		});
+		
+		final Link newlocLink = new Link(compot, SWT.NONE);
+		newlocLink.setVisible(false);
+		newlocLink.setText("<a>Add location</a>");
+		newlocLink.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(org.eclipse.swt.widgets.Event arg0) {
+				NewLocationWindow locwin = new NewLocationWindow(
+						shlTvTraveler, selectedMedia.media_id, canonicalize(selectedMedia.name));
+				locwin.open();
+				System.out.println("Reached");
 			}
 
 		});
@@ -796,7 +797,7 @@ public class MainDisplay {
 				
 				map.clearAllMarkers();
 				if (currentSearch.equals("TV")) {
-					playLink.setVisible(true);
+					playLink.setVisible(true); newlocLink.setVisible(true);
 					TVShow show = new TVRetriever().retrieve(id);
 					selectedMedia = show;
 
@@ -841,7 +842,7 @@ public class MainDisplay {
 				} // End of TV if
 
 				if (currentSearch.equals("Film")) {
-					playLink.setVisible(true);
+					playLink.setVisible(true); newlocLink.setVisible(true);
 					
 					Film film = new FilmRetriever().retrieve(id);
 					selectedMedia = film;
@@ -921,7 +922,7 @@ public class MainDisplay {
 				} // End of Location If
 
 				if (currentSearch.equals("Media By Actor")) {
-					playLink.setVisible(true);
+					playLink.setVisible(true); newlocLink.setVisible(true);
 					Media media = new MediaByActorRetriever().retrieve(id);
 					selectedMedia = media;
 
@@ -990,6 +991,7 @@ public class MainDisplay {
 
 				if (currentSearch.equals("User")) {
 					playLink.setVisible(false);
+					newlocLink.setVisible(false);
 					User user = new UserRetriever().retrieveById(id);
 					selectedMedia = null;
 					
