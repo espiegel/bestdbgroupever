@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.SWTResourceManager;
@@ -331,6 +332,10 @@ public class AdminPanel {
 		btnDelete.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
+				MessageBox mb = new MessageBox(shellAdminPanel, SWT.YES | SWT.NO | SWT.ICON_WARNING);
+				mb.setMessage("Are you sure you want to delete this entry ?");
+				int res = mb.open();
+				if (res==SWT.NO) return;
 				try {
 				Updater update = new Updater();
 				int id = Integer.parseInt(txt1.getText());
@@ -359,11 +364,14 @@ public class AdminPanel {
 						break;						
 				}
 				} catch (Exception ex) {
+					lblStatus.setText("Error deleting entry");
 					ex.printStackTrace();
+					return;
 				}
-				lblStatus.setText("deleted entry successfully");
+				lblStatus.setText("Deleted entry successfully");
 			}
 		});
+		
 		btnDelete.setText("Delete By ID");
 		btnDelete.setBounds(160, 29, 120, 48);
 		
