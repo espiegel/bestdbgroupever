@@ -224,7 +224,9 @@ public class MassiveUpload extends Dialog {
 							finish();
 							return;
 						}
+						System.out.println("WOOP");
 						finish();
+						System.out.println("VROOM");
 						showInfo("Finished", false);
 					}
 				});
@@ -269,8 +271,8 @@ public class MassiveUpload extends Dialog {
 		lblNoticeBatchUpload.setText("Notice batch upload can take several hours for hundreds of items, depending on DB load");
 		
 		Label lblCompareOnlyTo = new Label(shlBatchUploadScreen, SWT.NONE);
-		lblCompareOnlyTo.setText("compare only to N medias (optional):");
-		lblCompareOnlyTo.setBounds(167, 68, 212, 14);
+		lblCompareOnlyTo.setText("compare to N medias (optional):");
+		lblCompareOnlyTo.setBounds(167, 68, 190, 14);
 		
 		txtIMDBLimit = new Text(shlBatchUploadScreen, SWT.BORDER);
 		txtIMDBLimit.setBounds(375, 65, 40, 19);
