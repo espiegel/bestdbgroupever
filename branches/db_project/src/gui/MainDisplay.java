@@ -1205,8 +1205,8 @@ public class MainDisplay {
 			int downvotes = c.getDownvotes();
 			String comment = c.getComment();
 			Date date = c.getDatetime();
-			ti.setText(new String[] { date.toString(), user,
-					String.valueOf(upvotes), String.valueOf(downvotes), comment });
+			ti.setText(new String[] {comment, date.toString(), user,
+					String.valueOf(upvotes), String.valueOf(downvotes)});
 			commentIds.add(c.getId());
 		}
 	}
