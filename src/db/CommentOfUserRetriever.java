@@ -40,9 +40,9 @@ public class CommentOfUserRetriever extends RetrieverBase<CommentOfUser> {
 		
 		try
 		{
-			commentOfUser.setComment_id(rs.getInt(1));
-			commentOfUser.setUser_id(rs.getInt(2));
-			commentOfUser.setVote(rs.getInt(3));
+			commentOfUser.setComment_id(rs.getInt("comment_id"));
+			commentOfUser.setUser_id(rs.getInt("user_id"));
+			commentOfUser.setVote(rs.getInt("vote"));
 			
 			return commentOfUser;
 		}

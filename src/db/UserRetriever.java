@@ -21,12 +21,12 @@ public class UserRetriever extends RetrieverBase<User> {
 		
 		try
 		{
-			user.setID(rs.getInt(1));
-			user.setUsername(rs.getString(2));
-			user.setPassword(rs.getString(3));
-			user.setUpvotes(rs.getInt(4));
-			user.setDownvotes(rs.getInt(5));
-			user.setAdmin(rs.getBoolean(6));
+			user.setID(rs.getInt("user_id"));
+			user.setUsername(rs.getString("name"));
+			user.setPassword(rs.getString("password"));
+			user.setUpvotes(rs.getInt("upvotes"));
+			user.setDownvotes(rs.getInt("downvotes"));
+			user.setAdmin(rs.getBoolean("is_admin"));
 			
 			return user;
 		}

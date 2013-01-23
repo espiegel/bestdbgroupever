@@ -39,14 +39,14 @@ public class CommentRetriever extends RetrieverBase<Comment> {
 		
 		try
 		{
-			comment.setId(rs.getInt(1));
-			comment.setUser_id(rs.getInt(2));
-			comment.setLocation_id(rs.getInt(3));
-			comment.setComment(rs.getString(4));
-			comment.setUpvotes(rs.getInt(5));
-			comment.setDownvotes(rs.getInt(6));
-			comment.setIs_check_in(rs.getInt(7));
-			comment.setDatetime(rs.getDate(9));
+			comment.setId(rs.getInt("comment_id"));
+			comment.setUser_id(rs.getInt("user_id"));
+			comment.setLocation_id(rs.getInt("location_id"));
+			comment.setComment(rs.getString("comment"));
+			comment.setUpvotes(rs.getInt("upvotes"));
+			comment.setDownvotes(rs.getInt("downvotes"));
+			comment.setIs_check_in(rs.getInt("is_check_in"));
+			comment.setDatetime(rs.getDate("date"));
 			
 			return comment;
 		}
