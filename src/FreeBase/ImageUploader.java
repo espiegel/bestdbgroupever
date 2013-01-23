@@ -77,7 +77,7 @@ public class ImageUploader {
 				}
 			});
 			performDBInsertion(mockResults);
-			_connection.commit();
+			if (!_connection.getAutoCommit()) _connection.commit();
 		} catch (Exception e) {
 			System.err.println("Error loading image to DB.");
 			e.printStackTrace();
@@ -214,7 +214,7 @@ public class ImageUploader {
 		}
 		
 		try {
-			_connection.commit();
+			if (!_connection.getAutoCommit()) _connection.commit();
 		} catch (SQLException e) {
 			System.err.println("Error commiting changes to DB.");
 			e.printStackTrace();
