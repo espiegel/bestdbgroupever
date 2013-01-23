@@ -224,9 +224,7 @@ public class MassiveUpload extends Dialog {
 							finish();
 							return;
 						}
-						System.out.println("WOOP");
 						finish();
-						System.out.println("VROOM");
 						showInfo("Finished", false);
 					}
 				});
