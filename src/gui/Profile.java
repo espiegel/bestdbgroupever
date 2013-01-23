@@ -1,18 +1,16 @@
 package gui;
 
 import main.Main;
-
 import objects.User;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class Profile {
 
@@ -70,7 +68,7 @@ public class Profile {
 		shlProfile.setText("User Profile");
 		shlProfile.setImage(SWTResourceManager.getImage(Profile.class, "/gui/tv.png"));
 		shlProfile.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		shlProfile.setSize(481, 448);
+		shlProfile.setSize(481, 307);
 		
 		Label lblUsername = new Label(shlProfile, SWT.NONE);
 		lblUsername.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
@@ -112,10 +110,6 @@ public class Profile {
 		Label lblIsAdmin = new Label(shlProfile, SWT.BORDER);
 		lblIsAdmin.setBounds(87, 175, 70, 20);
 		
-		Group grpBadges = new Group(shlProfile, SWT.NONE);
-		grpBadges.setText("Badges");
-		grpBadges.setBounds(10, 224, 448, 110);
-		
 		Button btnOk = new Button(shlProfile, SWT.NONE);
 		btnOk.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -124,7 +118,7 @@ public class Profile {
 				shlProfile.dispose();
 			}
 		});
-		btnOk.setBounds(158, 359, 157, 46);
+		btnOk.setBounds(161, 230, 157, 46);
 		btnOk.setText("Ok");
 		
 		Label lblProfile = new Label(shlProfile, SWT.NONE);
