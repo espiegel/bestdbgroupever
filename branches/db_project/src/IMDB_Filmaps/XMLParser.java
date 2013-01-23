@@ -167,9 +167,6 @@ public class XMLParser extends DefaultHandler {
 			}
 			return false;
 		} else {
-			System.out
-					.println("IMPORTANT: a full Filmaps XML parsing takes at least 60 minutes and must not be interrupted until completion.\nPress any key to start parsing...");
-			System.in.read();
 			f = new File(filePath);
 			in = new Scanner(new FileReader(f));
 			parseFilmMaps();
