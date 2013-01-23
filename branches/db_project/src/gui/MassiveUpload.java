@@ -164,16 +164,16 @@ public class MassiveUpload extends Dialog {
 			public void widgetSelected(SelectionEvent e) {
 				Connection conn = db.ConnectionManager.conn;
 				try {
-				if (rdbIMDB.getSelection()) {
-					DataUploader.IMDBUpload(conn, txtIMDBPath.getText(), "IMDB\\IMDBLocations.xml", "IMDB\\geocode.html", 0, Integer.MAX_VALUE);
-				} else if (rdbFilmaps.getSelection()) {
-					DataUploader.FilmapsUpload(conn, txtFilmapsPath.getText(), parseText(txtFilmapsLimit, Integer.MAX_VALUE));
-				} else if (rdbFreebase.getSelection()) {
-					DataUploader.FreebaseUpload(conn, parseText(txtFreebaseLimit, Integer.MAX_VALUE), cmbFreebaseType.getSelectionIndex()==0);
-				} else if (rdbTsv.getSelection()) {
-					FileUploader fu = new FileUploader(conn, new File(txtTsvMediaPath.getText()), new File(txtTsvCastPath.getText()), cmbTsvType.getSelectionIndex()==0);
-					fu.upload(parseText(txtTsvLimit, Integer.MAX_VALUE));
-				}
+					if (rdbIMDB.getSelection()) {
+						DataUploader.IMDBUpload(conn, txtIMDBPath.getText(), "IMDB\\IMDBLocations.xml", "IMDB\\geocode.html", 0, Integer.MAX_VALUE);
+					} else if (rdbFilmaps.getSelection()) {
+						DataUploader.FilmapsUpload(conn, txtFilmapsPath.getText(), parseText(txtFilmapsLimit, Integer.MAX_VALUE));
+					} else if (rdbFreebase.getSelection()) {
+						DataUploader.FreebaseUpload(conn, parseText(txtFreebaseLimit, Integer.MAX_VALUE), cmbFreebaseType.getSelectionIndex()==0);
+					} else if (rdbTsv.getSelection()) {
+						FileUploader fu = new FileUploader(conn, new File(txtTsvMediaPath.getText()), new File(txtTsvCastPath.getText()), cmbTsvType.getSelectionIndex()==0);
+						fu.upload(parseText(txtTsvLimit, Integer.MAX_VALUE));
+					}
 				} catch (SQLException ex) {
 					showInfo("Error in dealing with the DB", true);
 					ex.printStackTrace();
