@@ -8,7 +8,6 @@ public class User {
 	private String password;
 	private int upvotes;
 	private int downvotes;
-	private int badges;
 	@ObjectID("user_id")
 	private int id;
 	private boolean isAdmin;
@@ -17,7 +16,6 @@ public class User {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + badges;
 		result = prime * result + downvotes;
 		result = prime * result + id;
 		result = prime * result + (isAdmin ? 1231 : 1237);
@@ -38,8 +36,6 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (badges != other.badges)
-			return false;
 		if (downvotes != other.downvotes)
 			return false;
 		if (id != other.id)
@@ -69,7 +65,6 @@ public class User {
 		password = "";
 		upvotes = 0;
 		downvotes = 0;
-		badges = 0;
 		isAdmin = false;
 		id = -1;
 	}
@@ -98,12 +93,7 @@ public class User {
 	public void setDownvotes(int downvotes) {
 		this.downvotes = downvotes;
 	}
-	public int getBadges() {
-		return badges;
-	}
-	public void setBadges(int badges) {
-		this.badges = badges;
-	}
+
 	public boolean isAdmin() {
 		return isAdmin;
 	}

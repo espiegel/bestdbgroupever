@@ -74,8 +74,8 @@ public class Main
 			// Otherwise we successfully registered.
 			//TODO: should be moved to db package
 			stmt = ConnectionManager.conn.createStatement();
-			stmt.executeUpdate("INSERT INTO Users (name, password, upvotes, downvotes, badges, is_admin) "+
-			                   "VALUES ('"+user+"', '"+password+"', 0, 0, 0, 0)");
+			stmt.executeUpdate("INSERT INTO Users (name, password, upvotes, downvotes, is_admin) "+
+			                   "VALUES ('"+user+"', '"+password+"', 0, 0, 0)");
 						
 			// closing
 			stmt.close();

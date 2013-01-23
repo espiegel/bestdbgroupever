@@ -26,8 +26,7 @@ public class UserRetriever extends RetrieverBase<User> {
 			user.setPassword(rs.getString(3));
 			user.setUpvotes(rs.getInt(4));
 			user.setDownvotes(rs.getInt(5));
-			user.setBadges(rs.getInt(6));
-			user.setAdmin(rs.getBoolean(7));
+			user.setAdmin(rs.getBoolean(6));
 			
 			return user;
 		}
