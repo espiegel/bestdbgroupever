@@ -1,8 +1,16 @@
 package db;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import objects.*;
+import objects.Actor;
+import objects.ActorInMedia;
+import objects.Film;
+import objects.Location;
+import objects.LocationOfMedia;
+import objects.Media;
+import objects.TVShow;
 
 /**
  * A class that handles all admin insert/update/delete operations 
@@ -290,32 +298,32 @@ public class Updater {
 	}
 
 	/* Delete */
-	public void deleteMedia(Media med) throws SQLException {
-		query = "DELETE FROM " + mediaTable + " WHERE media_id='" + med.media_id+"'";
+	public void deleteMedia(int med) throws SQLException {
+		query = "DELETE FROM " + mediaTable + " WHERE media_id='" + med+"'";
 		connect.createStatement().execute(query);
 	}
 
-	public void deleteLocation(Location loc) throws SQLException {
+	public void deleteLocation(int loc) throws SQLException {
 		query = "DELETE FROM " + locTable + " WHERE location_id='"
-				+ loc.location_id+"'";
+				+ loc+"'";
 		connect.createStatement().execute(query);
 	}
 
-	public void deleteActor(Actor act) throws SQLException {
+	public void deleteActor(int act) throws SQLException {
 		query = "DELETE FROM " + actorsTable + " WHERE actor_id='"
-				+ act.actor_id+"'";
+				+ act+"'";
 		connect.createStatement().execute(query);
 	}
 
-	public void deleteLocationOfMedia(LocationOfMedia lom) throws SQLException {
+	public void deleteLocationOfMedia(int location_id, int media_id) throws SQLException {
 		query = "DELETE FROM " + medialocTable + " WHERE media_id='"
-				+ lom.media_id + "' AND location_id='" + lom.location.location_id+"'";
+				+ media_id + "' AND location_id='" + location_id+"'";
 		connect.createStatement().execute(query);
 	}
 
-	public void deleteActorInMedia(ActorInMedia aim) throws SQLException {
+	public void deleteActorInMedia(int actor_id, int media_id) throws SQLException {
 		query = "DELETE FROM " + actinmediaTable + " WHERE media_id='"
-				+ aim.media_id + "' AND actor_id='" + aim.actor_id+"'";
+				+ media_id + "' AND actor_id='" + actor_id+"'";
 		connect.createStatement().execute(query);
 	}
 
