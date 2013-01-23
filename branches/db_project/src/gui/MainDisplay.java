@@ -14,6 +14,7 @@ import objects.Film;
 import objects.Location;
 import objects.LocationOfMedia;
 import objects.Media;
+import objects.MediaByActor;
 import objects.ObjectDisplayField;
 import objects.ObjectID;
 import objects.TVShow;
@@ -905,7 +906,7 @@ public class MainDisplay {
 
 				if (currentSearch.equals("Media By Actor")) {
 					playLink.setVisible(true); newlocLink.setVisible(true);
-					Media media = new MediaByActorRetriever().retrieve(id);
+					Media media = new MediaByActorRetriever().retrieve(id).media;
 					selectedMedia = media;
 
 					try {
@@ -1148,23 +1149,19 @@ public class MainDisplay {
 	private void searchMediaByActor(List list, String text, int id,
 			boolean searchByText) {
 		setCurrentSearch("Media By Actor");
-		java.util.List<Media> medias;
 
 		if (searchByText) {
-			LimitsToken<Media> token = new MediaByActorRetriever()
+			java.util.List<MediaByActor> medias;
+			LimitsToken<MediaByActor> token = new MediaByActorRetriever()
 					.searchBySearchField(text);
 			medias = token.curr();
 			setTraversalButtons(token);
+			refreshList(medias);
 		} else {
+			java.util.List<Media> medias;
 			medias = new MediaByActorIDRetriever().searchByID(id);
+			refreshList(medias);
 		}
-
-		if (medias.isEmpty()) {
-			System.out.println("Empty resultset");
-			return;
-		}
-
-		refreshList(medias);
 	}
 
 	public String canonicalize(String str) {
