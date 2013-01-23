@@ -277,10 +277,9 @@ public class MainDisplay {
 				public void mouseUp(MouseEvent arg0) {}
 				public void mouseDown(MouseEvent arg0) {
 					if(selectedMedia!=null){
-					String filePath = fd.open();
-					System.out.println(filePath);
-					//if(selected!=null)
-					//		iu.addFile(selectedMedia.media_id,filePath)
+						String filePath = fd.open();
+						System.out.println(filePath);
+						iu.addFile(selectedMedia.media_id,filePath);
 					}
 				}
 				public void mouseDoubleClick(MouseEvent arg0) {}
@@ -1245,8 +1244,6 @@ public class MainDisplay {
 
 		// Add a new entry to CommentOfUser Table
 		if (commentOfUser == null) {
-			// TODO: remove this println later
-			System.out.println("Created new row in CommentOfUser table");
 
 			try {
 				Statement stmt;

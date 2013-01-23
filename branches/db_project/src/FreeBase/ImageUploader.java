@@ -2,6 +2,7 @@ package FreeBase;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -12,9 +13,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.ImageData;
@@ -37,10 +41,49 @@ public class ImageUploader {
 	public ImageUploader(Connection db_connection) {
 		_connection = db_connection;
 	}
-	//TODO
+
 	public void addFile(int media_id,String filePath){
-		
+		try {
+			final byte[] image = performImageLoading(new FileInputStream(filePath));
+			Map<Integer, Future<byte[]>> mockResults = new HashMap<Integer, Future<byte[]>>(1);
+			mockResults.put(media_id, new Future<byte[]>() {
+
+				@Override
+				public boolean cancel(boolean mayInterruptIfRunning) {
+					return false;
+				}
+
+				@Override
+				public byte[] get() throws InterruptedException,
+						ExecutionException {
+					return image;
+				}
+
+				@Override
+				public byte[] get(long timeout, TimeUnit unit)
+						throws InterruptedException, ExecutionException,
+						TimeoutException {
+					return image;
+				}
+
+				@Override
+				public boolean isCancelled() {
+					return false;
+				}
+
+				@Override
+				public boolean isDone() {
+					return true;
+				}
+			});
+			performDBInsertion(mockResults);
+			_connection.commit();
+		} catch (Exception e) {
+			System.err.println("Error loading image to DB.");
+			e.printStackTrace();
+		}
 	}
+	
 	public void add(int media_id, String image_url) {
 		_list.put(media_id, image_url);
 	}
@@ -102,6 +145,10 @@ public class ImageUploader {
 	private byte[] performImageLoading(String curr_url) throws Exception {
 		final URL url = new URL("http://img.freebase.com/api/trans/image_thumb"+curr_url+"?maxheight=200&mode=fit&maxwidth=150");
 		InputStream is = url.openStream();
+		return performImageLoading(is);
+	}
+
+	private byte[] performImageLoading(InputStream is) throws IOException {
 		ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 		
 		int nRead;
