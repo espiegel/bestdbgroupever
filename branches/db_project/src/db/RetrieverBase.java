@@ -207,11 +207,15 @@ public abstract class RetrieverBase<T> {
 		String[] search_fields = getFieldForGeneralSearch();
 		StringBuilder full_sql = new StringBuilder();
 		for (int i = 0; i < search_fields.length; i++) {
+			if (i==0) //first
+				full_sql.append("(");
 			final String search_field = search_fields[i];
 			full_sql.append(search_field);
 			full_sql.append(" LIKE ?");
 			if (i<search_fields.length-1) { //not last one
 				full_sql.append(" OR ");
+			} else {
+				full_sql.append(")");
 			}
 		}
 		
