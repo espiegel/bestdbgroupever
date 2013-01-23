@@ -31,6 +31,10 @@ import db.DataUploader;
 
 public class MassiveUpload extends Dialog {
 
+	private static final String DEFAULT_MEDIA_TV = "TV/tv_program.tsv";
+	private static final String DEFAULT_CAST_TV = "TV/regular_tv_appearance.tsv";
+	private static final String DEFAULT_MEDIA_FILM = "Film/film.tsv";
+	private static final String DEFAULT_CAST_FILM = "Film/performance.tsv";
 	protected Object result;
 	protected Shell shlBatchUploadScreen;
 	private Text txtIMDBPath;
@@ -139,6 +143,22 @@ public class MassiveUpload extends Dialog {
 		rdbTsv.setBounds(10, 186, 134, 18);
 		
 		final Combo cmbTsvType = new Combo(shlBatchUploadScreen, SWT.NONE);
+		cmbTsvType.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				if (cmbTsvType.getSelectionIndex()==0) {
+					if (txtTsvCastPath.getText().equals(DEFAULT_CAST_FILM) && txtTsvMediaPath.getText().equals(DEFAULT_MEDIA_FILM)) {
+						txtTsvCastPath.setText(DEFAULT_CAST_TV);
+						txtTsvMediaPath.setText(DEFAULT_MEDIA_TV);
+					}
+				} else {
+					if (txtTsvCastPath.getText().equals(DEFAULT_CAST_TV) && txtTsvMediaPath.getText().equals(DEFAULT_MEDIA_TV)) {
+						txtTsvCastPath.setText(DEFAULT_CAST_FILM);
+						txtTsvMediaPath.setText(DEFAULT_MEDIA_FILM);
+					}
+				}
+			}
+		});
 		cmbTsvType.setItems(new String[] {"TV Shows", "Films"});
 		cmbTsvType.setBounds(167, 186, 97, 22);
 		cmbTsvType.select(0);
@@ -155,7 +175,7 @@ public class MassiveUpload extends Dialog {
 		lblMediaFile.setBounds(167, 227, 71, 14);
 		
 		txtTsvMediaPath = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtTsvMediaPath.setText("TV/tv_program.tsv");
+		txtTsvMediaPath.setText(DEFAULT_MEDIA_TV);
 		txtTsvMediaPath.setBounds(265, 227, 150, 19);
 		
 		Label lblCastDetails = new Label(shlBatchUploadScreen, SWT.NONE);
@@ -163,7 +183,7 @@ public class MassiveUpload extends Dialog {
 		lblCastDetails.setBounds(167, 252, 71, 14);
 		
 		txtTsvCastPath = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtTsvCastPath.setText("TV/regular_tv_appearance.tsv");
+		txtTsvCastPath.setText(DEFAULT_CAST_TV);
 		txtTsvCastPath.setBounds(265, 252, 150, 19);
 		
 		btnUpload = new Button(shlBatchUploadScreen, SWT.NONE);
