@@ -1341,11 +1341,11 @@ public class MainDisplay {
 		lastSetToken = token;
 	}
 
-	private void refreshList(java.util.List<?> curr) {
+	private <T> void refreshList(java.util.List<T> curr){
 		list.removeAll();
 		list.redraw();
 		listIds.clear();
-		for (Object object : curr) {
+		for (T object : curr) {
 			final Field[] fields = object.getClass().getFields();
 			Field fieldID = null;
 			Field fieldName = null;
