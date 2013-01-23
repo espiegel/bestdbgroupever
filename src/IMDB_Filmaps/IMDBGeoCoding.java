@@ -84,9 +84,6 @@ public class IMDBGeoCoding {
 	 */
 	public void initAndStart() throws  SQLException,
 			IOException {
-		System.out
-				.println("IMPORTANT: geocoding of 200 medias takes at least 60 minutes and must not be interrupted until completion.\nPress any key to start geocoding...");
-		System.in.read();
 		Display display = new Display();
 		shell = new Shell(display);
 		shell.setLayout(new FillLayout());

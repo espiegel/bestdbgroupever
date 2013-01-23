@@ -237,9 +237,6 @@ public class Uploader {
 	 */
 	private void insert(boolean tv, int limit) throws IOException,
 			SQLException, FreebaseServiceException {
-		System.out
-				.println("IMPORTANT: a full Freebase import takes at least 60 minutes and must not be interrupted until completion.\nAll of the DB's current data will be overwritten.\nPress any key to start importing...");
-		System.in.read();
 		int batchNum = 1;
 		String insert2 = null;
 		String mql_path = null;
