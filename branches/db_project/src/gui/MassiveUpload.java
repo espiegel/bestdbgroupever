@@ -42,7 +42,7 @@ public class MassiveUpload extends Dialog {
 	private Text txtTsvCastPath;
 	private Label lblInfo;
 	private ProgressBar progressBar;
-	private Display display;
+	private volatile Display display;
 	private Button btnUpload;
 	private volatile Connection conn = null;
 
@@ -195,7 +195,7 @@ public class MassiveUpload extends Dialog {
 								FileUploader fu = new FileUploader(conn, new File(txtTsvMediaPath.getText()), new File(txtTsvCastPath.getText()), cmbTsvType.getSelectionIndex()==0);
 								fu.upload(parseText(txtTsvLimit, Integer.MAX_VALUE));
 							}
-							conn.commit();
+							if (!conn.getAutoCommit()) conn.commit();
 							conn.close();
 						} catch (SQLException ex) {
 							showInfo("Error in dealing with the DB", true);
