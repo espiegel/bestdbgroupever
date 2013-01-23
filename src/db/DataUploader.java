@@ -5,6 +5,7 @@ import java.sql.SQLException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.swt.widgets.Display;
 import org.xml.sax.SAXException;
 
 import FreeBase.Uploader;
@@ -106,13 +107,13 @@ public class DataUploader {
 	}
 	public static boolean IMDBUpload(Connection connect,
 			String IMDBListBeforeParsing, String IMDBListAfterParsing,
-			String geoCodeHTML, int startNum, int limit) throws IOException,
+			String geoCodeHTML, int startNum, int limit, Display display) throws IOException,
 			SQLException, ParserConfigurationException,
 			SAXException {
 		IMDBGeoCoding geoCoder = new IMDBGeoCoding(connect,
 				IMDBListBeforeParsing, IMDBListAfterParsing, geoCodeHTML,
 				startNum, limit);
-		geoCoder.initAndStart();
+		geoCoder.initAndStart(display);
 		
 		//int geoCodingStatus = geoCoder.getStatus();
 		//System.out.println("geocoded "+geoCodingStatus+" from "+limit);

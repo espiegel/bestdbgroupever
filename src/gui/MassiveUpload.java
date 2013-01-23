@@ -42,7 +42,7 @@ public class MassiveUpload extends Dialog {
 	private Text txtTsvCastPath;
 	private Label lblInfo;
 	private ProgressBar progressBar;
-	private volatile Display display;
+	private Display display;
 	private Button btnUpload;
 	private volatile Connection conn = null;
 
@@ -95,7 +95,7 @@ public class MassiveUpload extends Dialog {
 		lblListAddressFor.setText("list to parse:");
 		
 		txtIMDBPath = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtIMDBPath.setText("IMDB\\IMDBLocations.list");
+		txtIMDBPath.setText("IMDB/IMDBLocations.list");
 		txtIMDBPath.setBounds(265, 40, 150, 19);
 		
 		final Button rdbFilmaps = new Button(shlBatchUploadScreen, SWT.RADIO);
@@ -114,7 +114,7 @@ public class MassiveUpload extends Dialog {
 		label_1.setBounds(167, 77, 71, 14);
 		
 		txtFilmapsPath = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtFilmapsPath.setText("Filmaps\\FilmapsLocations.list");
+		txtFilmapsPath.setText("Filmaps/FilmapsLocations.list");
 		txtFilmapsPath.setBounds(265, 77, 150, 19);
 		
 		final Button rdbFreebase = new Button(shlBatchUploadScreen, SWT.RADIO);
@@ -154,7 +154,7 @@ public class MassiveUpload extends Dialog {
 		lblMediaFile.setBounds(167, 213, 71, 14);
 		
 		txtTsvMediaPath = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtTsvMediaPath.setText("TV\\tv_program.tsv");
+		txtTsvMediaPath.setText("TV/tv_program.tsv");
 		txtTsvMediaPath.setBounds(265, 213, 150, 19);
 		
 		Label lblCastDetails = new Label(shlBatchUploadScreen, SWT.NONE);
@@ -162,7 +162,7 @@ public class MassiveUpload extends Dialog {
 		lblCastDetails.setBounds(167, 238, 71, 14);
 		
 		txtTsvCastPath = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtTsvCastPath.setText("TV\\regular_tv_appearance.tsv");
+		txtTsvCastPath.setText("TV/regular_tv_appearance.tsv");
 		txtTsvCastPath.setBounds(265, 238, 150, 19);
 		
 		btnUpload = new Button(shlBatchUploadScreen, SWT.NONE);
@@ -179,7 +179,7 @@ public class MassiveUpload extends Dialog {
 						try {
 							conn = db.ConnectionManager.makeConnection();
 							if (rdbIMDB.getSelection()) {
-								DataUploader.IMDBUpload(conn, txtIMDBPath.getText(), "IMDB\\IMDBLocations.xml", "IMDB\\geocode.html", 0, Integer.MAX_VALUE);
+								DataUploader.IMDBUpload(conn, txtIMDBPath.getText(), "IMDB/IMDBLocations.xml", "IMDB/geocode.html", 0, Integer.MAX_VALUE, display);
 							} else if (rdbFilmaps.getSelection()) {
 								DataUploader.FilmapsUpload(conn, txtFilmapsPath.getText(), parseText(txtFilmapsLimit, Integer.MAX_VALUE));
 							} else if (rdbFreebase.getSelection()) {
