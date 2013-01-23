@@ -34,10 +34,7 @@ public class ConnectionManager {
 		System.out.print("Trying to connect... ");
 		try
 		{
-			conn = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3305/"+ConfigurationManager.DB_SCHEMA,
-					ConfigurationManager.DB_USER,
-					ConfigurationManager.DB_PASS);
+			conn = makeConnection();
 		}
 		catch (SQLException e)
 		{
@@ -48,6 +45,13 @@ public class ConnectionManager {
 		
 	}
 	
+	public static Connection makeConnection() throws SQLException {
+		return DriverManager.getConnection(
+				"jdbc:mysql://localhost:3305/"+ConfigurationManager.DB_SCHEMA,
+				ConfigurationManager.DB_USER,
+				ConfigurationManager.DB_PASS);
+	}
+
 	/**
 	 * close the connection
 	 */
