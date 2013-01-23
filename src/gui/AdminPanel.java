@@ -1,17 +1,23 @@
 package gui;
 
-import objects.*;
+import objects.Actor;
+import objects.ActorInMedia;
+import objects.Film;
+import objects.Location;
+import objects.LocationOfMedia;
+import objects.Media;
+import objects.TVShow;
 
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.wb.swt.SWTResourceManager;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 import db.Updater;
 
@@ -51,6 +57,7 @@ public class AdminPanel {
 	
 	private int currentSelection = 0;
 	private Button btnExit;
+	private Button btnDelete;
 	
 	public Media getCurrentMedia() {
 		return currentMedia;
@@ -250,7 +257,7 @@ public class AdminPanel {
 			}
 		});
 		btnAdd.setText("Add New Entry");
-		btnAdd.setBounds(178, 29, 137, 48);
+		btnAdd.setBounds(286, 29, 120, 48);
 		
 		Button btnUpdate = new Button(grpStatus, SWT.NONE);
 		btnUpdate.addSelectionListener(new SelectionAdapter() {
@@ -307,7 +314,7 @@ public class AdminPanel {
 			}
 		});
 		btnUpdate.setText("Update Existing");
-		btnUpdate.setBounds(321, 29, 137, 48);
+		btnUpdate.setBounds(412, 29, 120, 48);
 		
 		btnExit = new Button(grpStatus, SWT.NONE);
 		btnExit.addSelectionListener(new SelectionAdapter() {
@@ -317,8 +324,47 @@ public class AdminPanel {
 				shellAdminPanel.dispose();
 			}
 		});
-		btnExit.setBounds(464, 29, 137, 48);
+		btnExit.setBounds(538, 29, 59, 48);
 		btnExit.setText("Exit");
+		
+		btnDelete = new Button(grpStatus, SWT.NONE);
+		btnDelete.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				try {
+				Updater update = new Updater();
+				int id = Integer.parseInt(txt1.getText());
+				switch(currentSelection)
+				{
+					case TV:
+					case FILM:
+					case MEDIA:
+						update.deleteMedia(id);
+						break;
+					case ACTOR:
+						update.deleteActor(id);
+						break;
+					case ACTORINMEDIA:
+						int actor_id = id;
+						int media_id = Integer.parseInt(txt2.getText());
+						update.deleteActorInMedia(actor_id, media_id);
+						break;
+					case LOCATION:
+						update.deleteLocation(id);
+						break;
+					case LOCATIONOFMEDIA:
+						int med_id = id;
+						int location_id = Integer.parseInt(txt2.getText());
+						update.deleteLocationOfMedia(location_id, med_id);
+						break;						
+				}
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		btnDelete.setText("Delete By ID");
+		btnDelete.setBounds(160, 29, 120, 48);
 		
 		btnMedia.addSelectionListener(new SelectionAdapter() {
 			@Override
