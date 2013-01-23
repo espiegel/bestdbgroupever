@@ -83,7 +83,7 @@ public class Login {
 		
 		lblError = new Label(shlTvTraveler, SWT.NONE);
 		lblError.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND_GRADIENT));
-		lblError.setText("Version: pre-alpha");
+		lblError.setText("Version: for-submission");
 		lblError.setBounds(85, 179, 262, 26);
 		
 		txtUsername = new Text(shlTvTraveler, SWT.BORDER);
