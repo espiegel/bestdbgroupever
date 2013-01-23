@@ -43,7 +43,9 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -180,7 +182,7 @@ public class MainDisplay {
 			public void widgetSelected(SelectionEvent e) {
 				if (selectedMedia != null) {
 					NewLocationWindow locwin = new NewLocationWindow(
-							shlTvTraveler, selectedMedia.media_id, selectedMedia.name);
+							shlTvTraveler, selectedMedia.media_id, canonicalize(selectedMedia.name));
 					locwin.open();
 					System.out.println("Reached");
 				}
@@ -188,7 +190,7 @@ public class MainDisplay {
 					showMessage("Please search and select a TV show / Film");
 			}
 		});
-		mntmLoctest.setText("LocTest");
+		mntmLoctest.setText("Add Location");
 
 		MenuItem mntmLogout = new MenuItem(menu_1, SWT.NONE);
 		mntmLogout.addSelectionListener(new SelectionAdapter() {
@@ -302,11 +304,14 @@ public class MainDisplay {
 		compExtra.setLayoutData(new RowData(190, 220));
 		compExtra.setVisible(false);
 
+
+		
 		Label lblNewLabel = new Label(compExtra, SWT.NONE);
 		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
 		gd_lblNewLabel.widthHint = 181;
 		lblNewLabel.setLayoutData(gd_lblNewLabel);
 		lblNewLabel.setText("Actors (doubleclick to search)");
+
 
 		final List lstActors = new List(compExtra, SWT.BORDER | SWT.V_SCROLL
 				| SWT.H_SCROLL);
@@ -335,6 +340,26 @@ public class MainDisplay {
 		sfDetails.setWeights(new int[] { 2, 2, 1, 1, 1, 1 });
 		// End of details group
 
+////////////////////////////////////////////////////////////////////////////////
+		final Link playLink = new Link(compExtra, SWT.NONE);
+		playLink.setVisible(false);
+		playLink.setText("<a>Player</a>");
+		playLink.addListener(SWT.Selection, new Listener() {
+			public void handleEvent(org.eclipse.swt.widgets.Event arg0) {
+				if (!currentMediaName.equals("")) {
+					if (currentSearch.equals("TV"))
+						currentMediaName += " opening intro";
+					else
+						currentMediaName += " trailer";
+					YouTube player = new YouTube(currentMediaName);
+					player.open();
+				} else
+					showMessage("Please search a TV show / Film");
+			}
+
+		});
+//////////////////////////////////////////////////////////////////////////////////
+		
 		Group grpMap = new Group(shlTvTraveler, SWT.NONE);
 		FormData fd_grpMap = new FormData();
 		fd_grpMap.bottom = new FormAttachment(0, 575);
@@ -373,6 +398,10 @@ public class MainDisplay {
 		commentTable.setHeaderVisible(true);
 		commentTable.setBounds(10, 59, 538, 256);
 
+		TableColumn tblclmnComment = new TableColumn(commentTable, SWT.NONE);
+		tblclmnComment.setWidth(333);
+		tblclmnComment.setText("Comment");
+
 		TableColumn tblclmnDate = new TableColumn(commentTable, SWT.NONE);
 		tblclmnDate.setWidth(89);
 		tblclmnDate.setText("Date");
@@ -388,10 +417,6 @@ public class MainDisplay {
 		TableColumn tblclmnDownvotes = new TableColumn(commentTable, SWT.NONE);
 		tblclmnDownvotes.setWidth(89);
 		tblclmnDownvotes.setText("Downvotes");
-
-		TableColumn tblclmnComment = new TableColumn(commentTable, SWT.NONE);
-		tblclmnComment.setWidth(333);
-		tblclmnComment.setText("Comment");
 
 		Button btnAddComment = new Button(grpComments, SWT.NONE);
 		final MainDisplay mainDisplay = this;
@@ -771,6 +796,7 @@ public class MainDisplay {
 				
 				map.clearAllMarkers();
 				if (currentSearch.equals("TV")) {
+					playLink.setVisible(true);
 					TVShow show = new TVRetriever().retrieve(id);
 					selectedMedia = show;
 
@@ -815,6 +841,8 @@ public class MainDisplay {
 				} // End of TV if
 
 				if (currentSearch.equals("Film")) {
+					playLink.setVisible(true);
+					
 					Film film = new FilmRetriever().retrieve(id);
 					selectedMedia = film;
 
@@ -849,8 +877,9 @@ public class MainDisplay {
 				} // End of Film If
 
 				if (currentSearch.equals("Location")) {
+					playLink.setVisible(false);
 					Location location = new LocationRetriever().retrieve(id);
-
+					selectedMedia = null;
 					try {
 						if (location == null) {
 							System.out.println("Empty resultset");
@@ -892,6 +921,7 @@ public class MainDisplay {
 				} // End of Location If
 
 				if (currentSearch.equals("Media By Actor")) {
+					playLink.setVisible(true);
 					Media media = new MediaByActorRetriever().retrieve(id);
 					selectedMedia = media;
 
@@ -959,7 +989,10 @@ public class MainDisplay {
 				} // End of MediaByActor If
 
 				if (currentSearch.equals("User")) {
+					playLink.setVisible(false);
 					User user = new UserRetriever().retrieveById(id);
+					selectedMedia = null;
+					
 					if (user == null) {
 						System.out.println("Empty resultset");
 						return;
