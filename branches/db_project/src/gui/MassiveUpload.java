@@ -183,7 +183,14 @@ public class MassiveUpload extends Dialog {
 							} else if (rdbFilmaps.getSelection()) {
 								DataUploader.FilmapsUpload(conn, txtFilmapsPath.getText(), parseText(txtFilmapsLimit, Integer.MAX_VALUE));
 							} else if (rdbFreebase.getSelection()) {
-								DataUploader.FreebaseUpload(conn, parseText(txtFreebaseLimit, Integer.MAX_VALUE), cmbFreebaseType.getSelectionIndex()==0);
+								int limit = parseText(txtFreebaseLimit, Integer.MAX_VALUE);
+								
+								if (limit%500==0 || limit==Integer.MAX_VALUE)
+									limit/=500;
+								else
+									limit=limit/500+1;
+									
+								DataUploader.FreebaseUpload(conn, limit, cmbFreebaseType.getSelectionIndex()==0);
 							} else if (rdbTsv.getSelection()) {
 								FileUploader fu = new FileUploader(conn, new File(txtTsvMediaPath.getText()), new File(txtTsvCastPath.getText()), cmbTsvType.getSelectionIndex()==0);
 								fu.upload(parseText(txtTsvLimit, Integer.MAX_VALUE));
