@@ -189,24 +189,6 @@ public class MainDisplay {
 			}
 		});
 		mntmLogout.setText("Logout");
-
-		MenuItem mntmPlayer = new MenuItem(menu, SWT.NONE);
-		mntmPlayer.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
-				if (!currentMediaName.equals("")) {
-					if (currentSearch.equals("TV"))
-						currentMediaName += " opening intro";
-					else
-						currentMediaName += " trailer";
-					YouTube player = new YouTube(currentMediaName);
-					player.open();
-				}
-				else
-					showMessage("Please search and select a TV show / Film");
-			}
-		});
-		mntmPlayer.setText("Player");
 		
 		// Admin menu item
 		if(Main.getCurrentUser().isAdmin()) {
