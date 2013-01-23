@@ -1,17 +1,28 @@
 package IMDB_Filmaps;
 
-import java.io.*;
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
 
-import org.eclipse.swt.*;
-import org.eclipse.swt.browser.*;
-import org.eclipse.swt.custom.*;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.SWTError;
+import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
+import org.eclipse.swt.browser.TitleEvent;
+import org.eclipse.swt.browser.TitleListener;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * class that takes a IMDB locations list , geo code locations of media from
@@ -75,6 +86,11 @@ public class IMDBGeoCoding {
 		String start = "<Document>\r\n";
 		saveToFile(start,true);
 	}
+	
+	public void initAndStart() throws  SQLException,
+	IOException {
+		initAndStart(new Display());
+	}
 
 	/**
 	 * start all process
@@ -82,9 +98,8 @@ public class IMDBGeoCoding {
 	 * @throws SQLException
 	 * @throws IOException
 	 */
-	public void initAndStart() throws  SQLException,
+	public void initAndStart(Display display) throws  SQLException,
 			IOException {
-		Display display = new Display();
 		shell = new Shell(display);
 		shell.setLayout(new FillLayout());
 		SashForm sash = new SashForm(shell, SWT.HORIZONTAL);
