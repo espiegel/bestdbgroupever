@@ -121,7 +121,10 @@ public class MassiveUpload extends Dialog {
 		txtFilmapsPath = new Text(shlBatchUploadScreen, SWT.BORDER);
 		txtFilmapsPath.setText("Filmaps/FilmapsLocations.list");
 		txtFilmapsPath.setBounds(265, 91, 150, 19);
-		
+		/////////////////////////
+		label_1.setVisible(false);
+		txtFilmapsPath.setVisible(false);
+		/////////////////////////
 		final Button rdbFreebase = new Button(shlBatchUploadScreen, SWT.RADIO);
 		rdbFreebase.setText("Freebase:");
 		rdbFreebase.setBounds(10, 143, 91, 18);
@@ -289,7 +292,7 @@ public class MassiveUpload extends Dialog {
 		lblNoticeBatchUpload.setText("Notice batch upload can take several hours for hundreds of items, depending on DB load");
 		
 		Label lblCompareOnlyTo = new Label(shlBatchUploadScreen, SWT.NONE);
-		lblCompareOnlyTo.setText("compare to N medias (optional):");
+		lblCompareOnlyTo.setText("limit to top N (optional):");
 		lblCompareOnlyTo.setBounds(167, 68, 190, 14);
 		
 		txtIMDBLimit = new Text(shlBatchUploadScreen, SWT.BORDER);
