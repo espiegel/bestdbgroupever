@@ -237,7 +237,7 @@ public class MainDisplay {
 		final Label lblPic_1 = new Label(grpDetails, SWT.NONE);
 		lblPic_1.setLayoutData(new RowData(150, 220));
 		
-		if(Main.getCurrentUser().isAdmin()) {
+		/*if(Main.getCurrentUser().isAdmin()) {
 			final ImageUploader iu = new ImageUploader(ConnectionManager.conn);
 			final FileDialog fd=new FileDialog(shlTvTraveler,SWT.OPEN);
 			 fd.setText("Open");
@@ -254,7 +254,7 @@ public class MainDisplay {
 				}
 				public void mouseDoubleClick(MouseEvent arg0) {}
 			});
-		}
+		}*/
 		
 		
 		
