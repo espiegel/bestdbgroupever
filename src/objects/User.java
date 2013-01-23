@@ -4,12 +4,12 @@ package objects;
 public class User {
 
 	@ObjectDisplayField
-	private String username;
+	public String username;
 	private String password;
 	private int upvotes;
 	private int downvotes;
 	@ObjectID("user_id")
-	private int id;
+	public int id;
 	private boolean isAdmin;
 	
 	@Override
