@@ -249,7 +249,10 @@ public class MainDisplay {
 					if(selectedMedia!=null){
 						String filePath = fd.open();
 						System.out.println(filePath);
-						iu.addFile(selectedMedia.media_id,filePath);
+						if(!filePath.equals("")&& filePath !=null){
+							iu.addFile(selectedMedia.media_id,filePath);
+							//setExtras(selectedMedia, lblPic_1, lstActors);
+						}
 					}
 				}
 				public void mouseDoubleClick(MouseEvent arg0) {}
