@@ -45,6 +45,7 @@ public class MassiveUpload extends Dialog {
 	private Display display;
 	private Button btnUpload;
 	private volatile Connection conn = null;
+	private Text txtIMDBLimit;
 
 	/**
 	 * Create the dialog.
@@ -99,71 +100,71 @@ public class MassiveUpload extends Dialog {
 		txtIMDBPath.setBounds(265, 40, 150, 19);
 		
 		final Button rdbFilmaps = new Button(shlBatchUploadScreen, SWT.RADIO);
-		rdbFilmaps.setBounds(10, 74, 91, 18);
+		rdbFilmaps.setBounds(10, 88, 91, 18);
 		rdbFilmaps.setText("Filmaps:");
 		
 		txtFilmapsLimit = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtFilmapsLimit.setBounds(375, 104, 40, 19);
+		txtFilmapsLimit.setBounds(375, 118, 40, 19);
 		
 		Label label = new Label(shlBatchUploadScreen, SWT.NONE);
 		label.setText("limit to top N (optional):");
-		label.setBounds(167, 104, 134, 14);
+		label.setBounds(167, 118, 134, 14);
 		
 		Label label_1 = new Label(shlBatchUploadScreen, SWT.NONE);
 		label_1.setText("list to parse:");
-		label_1.setBounds(167, 77, 71, 14);
+		label_1.setBounds(167, 91, 71, 14);
 		
 		txtFilmapsPath = new Text(shlBatchUploadScreen, SWT.BORDER);
 		txtFilmapsPath.setText("Filmaps/FilmapsLocations.list");
-		txtFilmapsPath.setBounds(265, 77, 150, 19);
+		txtFilmapsPath.setBounds(265, 91, 150, 19);
 		
 		final Button rdbFreebase = new Button(shlBatchUploadScreen, SWT.RADIO);
 		rdbFreebase.setText("Freebase:");
-		rdbFreebase.setBounds(10, 129, 91, 18);
+		rdbFreebase.setBounds(10, 143, 91, 18);
 		
 		txtFreebaseLimit = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtFreebaseLimit.setBounds(375, 147, 40, 19);
+		txtFreebaseLimit.setBounds(375, 161, 40, 19);
 		
 		Label label_2 = new Label(shlBatchUploadScreen, SWT.NONE);
 		label_2.setText("limit to top N (optional):");
-		label_2.setBounds(167, 150, 134, 14);
+		label_2.setBounds(167, 164, 134, 14);
 		
 		final Combo cmbFreebaseType = new Combo(shlBatchUploadScreen, SWT.NONE);
 		cmbFreebaseType.setItems(new String[] {"TV Shows", "Films"});
 		cmbFreebaseType.select(0);
-		cmbFreebaseType.setBounds(167, 129, 97, 22);
+		cmbFreebaseType.setBounds(167, 143, 97, 22);
 		
 		final Button rdbTsv = new Button(shlBatchUploadScreen, SWT.RADIO);
 		rdbTsv.setText("Freebase (TSV files):");
-		rdbTsv.setBounds(10, 172, 134, 18);
+		rdbTsv.setBounds(10, 186, 134, 18);
 		
 		final Combo cmbTsvType = new Combo(shlBatchUploadScreen, SWT.NONE);
 		cmbTsvType.setItems(new String[] {"TV Shows", "Films"});
-		cmbTsvType.setBounds(167, 172, 97, 22);
+		cmbTsvType.setBounds(167, 186, 97, 22);
 		cmbTsvType.select(0);
 		
 		Label label_3 = new Label(shlBatchUploadScreen, SWT.NONE);
 		label_3.setText("limit to top N (optional):");
-		label_3.setBounds(167, 193, 134, 14);
+		label_3.setBounds(167, 207, 134, 14);
 		
 		txtTsvLimit = new Text(shlBatchUploadScreen, SWT.BORDER);
-		txtTsvLimit.setBounds(375, 190, 40, 19);
+		txtTsvLimit.setBounds(375, 204, 40, 19);
 		
 		Label lblMediaFile = new Label(shlBatchUploadScreen, SWT.NONE);
 		lblMediaFile.setText("media file:");
-		lblMediaFile.setBounds(167, 213, 71, 14);
+		lblMediaFile.setBounds(167, 227, 71, 14);
 		
 		txtTsvMediaPath = new Text(shlBatchUploadScreen, SWT.BORDER);
 		txtTsvMediaPath.setText("TV/tv_program.tsv");
-		txtTsvMediaPath.setBounds(265, 213, 150, 19);
+		txtTsvMediaPath.setBounds(265, 227, 150, 19);
 		
 		Label lblCastDetails = new Label(shlBatchUploadScreen, SWT.NONE);
 		lblCastDetails.setText("cast details:");
-		lblCastDetails.setBounds(167, 238, 71, 14);
+		lblCastDetails.setBounds(167, 252, 71, 14);
 		
 		txtTsvCastPath = new Text(shlBatchUploadScreen, SWT.BORDER);
 		txtTsvCastPath.setText("TV/regular_tv_appearance.tsv");
-		txtTsvCastPath.setBounds(265, 238, 150, 19);
+		txtTsvCastPath.setBounds(265, 252, 150, 19);
 		
 		btnUpload = new Button(shlBatchUploadScreen, SWT.NONE);
 		btnUpload.addSelectionListener(new SelectionAdapter() {
@@ -179,7 +180,7 @@ public class MassiveUpload extends Dialog {
 						try {
 							conn = db.ConnectionManager.makeConnection();
 							if (rdbIMDB.getSelection()) {
-								DataUploader.IMDBUpload(conn, txtIMDBPath.getText(), "IMDB/IMDBLocations.xml", "IMDB/geocode.html", 0, Integer.MAX_VALUE, display);
+								DataUploader.IMDBUpload(conn, txtIMDBPath.getText(), "IMDB/IMDBLocations.xml", "IMDB/geocode.html", 0, parseText(txtIMDBLimit,  Integer.MAX_VALUE), display);
 							} else if (rdbFilmaps.getSelection()) {
 								DataUploader.FilmapsUpload(conn, txtFilmapsPath.getText(), parseText(txtFilmapsLimit, Integer.MAX_VALUE));
 							} else if (rdbFreebase.getSelection()) {
@@ -229,7 +230,7 @@ public class MassiveUpload extends Dialog {
 				});
 			}
 		});
-		btnUpload.setBounds(298, 263, 117, 28);
+		btnUpload.setBounds(298, 277, 117, 28);
 		btnUpload.setText("Start upload");
 		
 		progressBar = new ProgressBar(shlBatchUploadScreen, SWT.NONE);
@@ -259,13 +260,20 @@ public class MassiveUpload extends Dialog {
 				shlBatchUploadScreen.close();
 			}
 		});
-		btnCancel.setBounds(201, 263, 94, 28);
+		btnCancel.setBounds(201, 277, 94, 28);
 		btnCancel.setText("Cancel");
 		
 		Label lblNoticeBatchUpload = new Label(shlBatchUploadScreen, SWT.WRAP);
 		lblNoticeBatchUpload.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLUE));
-		lblNoticeBatchUpload.setBounds(10, 200, 134, 83);
+		lblNoticeBatchUpload.setBounds(10, 214, 134, 83);
 		lblNoticeBatchUpload.setText("Notice batch upload can take several hours for hundreds of items, depending on DB load");
+		
+		Label lblCompareOnlyTo = new Label(shlBatchUploadScreen, SWT.NONE);
+		lblCompareOnlyTo.setText("compare only to N medias (optional):");
+		lblCompareOnlyTo.setBounds(167, 68, 212, 14);
+		
+		txtIMDBLimit = new Text(shlBatchUploadScreen, SWT.BORDER);
+		txtIMDBLimit.setBounds(375, 65, 40, 19);
 	}
 
 	private static int parseText(Text txt, int default_val) {
