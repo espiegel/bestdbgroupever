@@ -361,6 +361,7 @@ public class AdminPanel {
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
+				lblStatus.setText("deleted entry successfully");
 			}
 		});
 		btnDelete.setText("Delete By ID");
@@ -423,7 +424,16 @@ public class AdminPanel {
 		currentSelection = selection;
 		updateDetails();
 	}
-	
+	private String canonicalize(String str) {
+		if (str == null || str.equals("null") || str.equals(""))
+			return "Unknown";
+		else {
+			str = str.replaceAll("'","&#039");
+			str = str.replaceAll("&","&amp;");
+
+			return str;
+		}
+	}
 	protected Object createCurrentObject()
 	{
 		try
@@ -431,37 +441,37 @@ public class AdminPanel {
 			switch(currentSelection)
 			{
 				case MEDIA:
-					Media media = new Media(Integer.parseInt(txt1.getText()), txt3.getText(), txt2.getText(),
+					Media media = new Media(Integer.parseInt(txt1.getText()), canonicalize(txt3.getText()), canonicalize(txt2.getText()),
 							txt4.getText(), txt5.getText(), Integer.parseInt(txt6.getText()));
 					return media;
 				
 				case TV:
-					TVShow tv = new TVShow(Integer.parseInt(txt1.getText()), txt2.getText(), txt3.getText(),
+					TVShow tv = new TVShow(Integer.parseInt(txt1.getText()), canonicalize(txt2.getText()), canonicalize(txt3.getText()),
 							Integer.parseInt(txt4.getText()), Integer.parseInt(txt5.getText()));
 					return tv;
 				
 				case FILM:
-					Film film = new Film(Integer.parseInt(txt1.getText()), txt2.getText());
+					Film film = new Film(Integer.parseInt(txt1.getText()), canonicalize(txt2.getText()));
 					return film;
 				
 				case ACTOR:
-					Actor actor = new Actor(Integer.parseInt(txt1.getText()),txt2.getText(), txt3.getText());
+					Actor actor = new Actor(Integer.parseInt(txt1.getText()),canonicalize(txt2.getText()), canonicalize(txt3.getText()));
 					return actor;
 				
 				case ACTORINMEDIA:
-					ActorInMedia AIM = new ActorInMedia(Integer.parseInt(txt1.getText()), Integer.parseInt(txt2.getText()), txt3.getText());
+					ActorInMedia AIM = new ActorInMedia(Integer.parseInt(txt1.getText()), Integer.parseInt(txt2.getText()), canonicalize(txt3.getText()));
 					return AIM;
 				
 				case LOCATION:
-					Location loc = new Location(Integer.parseInt(txt1.getText()), txt2.getText(), txt3.getText(),
-							txt4.getText(), txt5.getText(), txt6.getText(), Integer.parseInt(txt7.getText()), Integer.parseInt(txt8.getText()));
+					Location loc = new Location(Integer.parseInt(txt1.getText()), canonicalize(txt2.getText()), canonicalize(txt3.getText()),
+							canonicalize(txt4.getText()), canonicalize(txt5.getText()), canonicalize(txt6.getText()), Integer.parseInt(txt7.getText()), Integer.parseInt(txt8.getText()));
 					return loc;
 				
 				case LOCATIONOFMEDIA:
 					Location loc2 = new Location();
 					loc2.setLocation_id(Integer.parseInt(txt2.getText()));
 					
-					LocationOfMedia LOM = new LocationOfMedia(Integer.parseInt(txt1.getText()), loc2, txt3.getText());
+					LocationOfMedia LOM = new LocationOfMedia(Integer.parseInt(txt1.getText()), loc2, canonicalize(txt3.getText()));
 					return LOM;
 				
 				default:

@@ -130,8 +130,8 @@ public class MassiveUpload extends Dialog {
 		txtFreebaseLimit.setBounds(375, 161, 40, 19);
 		
 		Label label_2 = new Label(shlBatchUploadScreen, SWT.NONE);
-		label_2.setText("limit to top N (optional):");
-		label_2.setBounds(167, 164, 134, 14);
+		label_2.setText("limit to top N (optional) minimum=500:");
+		label_2.setBounds(167, 164, 180, 14);
 		
 		final Combo cmbFreebaseType = new Combo(shlBatchUploadScreen, SWT.NONE);
 		cmbFreebaseType.setItems(new String[] {"TV Shows", "Films"});
