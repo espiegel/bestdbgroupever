@@ -2,10 +2,10 @@ package db;
 
 import java.sql.ResultSet;
 
-import objects.Media;
+import objects.MediaByActor;
 
 public class MediaByActorRetriever extends
-		RetrieverBase<Media> {
+		RetrieverBase<MediaByActor> {
 
 	private final String[] default_fields = {"Media.media_id" };
 	private final String[] search_fields = { "Actors.name" };
@@ -29,11 +29,18 @@ public class MediaByActorRetriever extends
 	protected String[] getFieldForGeneralSearch() {
 		return search_fields;
 	}
-
+	
 	@Override
-	protected Media makeObject(ResultSet result_set) {
+	protected MediaByActor makeObject(ResultSet result_set) {
 		try {
-			return fillObjectByFields(result_set, new Media());
+			MediaByActor mba = new MediaByActor();
+			mba.display = result_set.getString("Media.name") + " - " + result_set.getString("Actors.name");
+			for (java.lang.reflect.Field field : mba.media.getClass().getFields()) {
+				final String fieldname = field.getName();
+				field.set(mba.media, result_set.getObject(fieldname));
+			}
+			mba.media_id = mba.media.media_id;
+			return mba;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
